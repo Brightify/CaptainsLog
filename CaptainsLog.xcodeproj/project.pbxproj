@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		133413EA4F5283BB9CE35578 /* Pods_CaptainsLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 675333309AA91474E5C73C24 /* Pods_CaptainsLog.framework */; };
+		7100DFCE21529B0200C8BAA9 /* Disovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7100DFCD21529B0200C8BAA9 /* Disovery.swift */; };
 		7120C417215277AA0084BD38 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 7120C414215277AA0084BD38 /* README.md */; };
 		7120C418215277AA0084BD38 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 7120C415215277AA0084BD38 /* LICENSE */; };
 		7120C419215277AA0084BD38 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 7120C416215277AA0084BD38 /* Podfile */; };
@@ -19,10 +20,13 @@
 		7120C42C21528D010084BD38 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42B21528D010084BD38 /* Device.swift */; };
 		7120C42E21528E100084BD38 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42D21528E100084BD38 /* Token.swift */; };
 		7120C43021528E170084BD38 /* ChallengeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42F21528E170084BD38 /* ChallengeResult.swift */; };
+		7120C4322152901B0084BD38 /* CaptainsLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C4312152901B0084BD38 /* CaptainsLog.swift */; };
+		7120C434215290910084BD38 /* CaptainsLogEnhancer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C433215290910084BD38 /* CaptainsLogEnhancer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		675333309AA91474E5C73C24 /* Pods_CaptainsLog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7100DFCD21529B0200C8BAA9 /* Disovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Disovery.swift; sourceTree = "<group>"; };
 		7120C409215276B40084BD38 /* CaptainsLog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CaptainsLog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7120C40D215276B40084BD38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7120C414215277AA0084BD38 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -36,6 +40,8 @@
 		7120C42B21528D010084BD38 /* Device.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		7120C42D21528E100084BD38 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		7120C42F21528E170084BD38 /* ChallengeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeResult.swift; sourceTree = "<group>"; };
+		7120C4312152901B0084BD38 /* CaptainsLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptainsLog.swift; sourceTree = "<group>"; };
+		7120C433215290910084BD38 /* CaptainsLogEnhancer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptainsLogEnhancer.swift; sourceTree = "<group>"; };
 		8258A7EF53CD2BCA7626C124 /* Pods-CaptainsLog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog.debug.xcconfig"; path = "Target Support Files/Pods-CaptainsLog/Pods-CaptainsLog.debug.xcconfig"; sourceTree = "<group>"; };
 		A0B5AA4C65536E98CBDB91DC /* Pods-CaptainsLog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog.release.xcconfig"; path = "Target Support Files/Pods-CaptainsLog/Pods-CaptainsLog.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -98,7 +104,6 @@
 				7120C421215284440084BD38 /* Discovery */,
 				7120C4222152844C0084BD38 /* Core */,
 				7120C4232152845D0084BD38 /* Fetcher */,
-				7120C424215286C00084BD38 /* Utils */,
 				7120C40D215276B40084BD38 /* Info.plist */,
 			);
 			path = Sources;
@@ -121,6 +126,7 @@
 		7120C421215284440084BD38 /* Discovery */ = {
 			isa = PBXGroup;
 			children = (
+				7100DFCD21529B0200C8BAA9 /* Disovery.swift */,
 			);
 			path = Discovery;
 			sourceTree = "<group>";
@@ -128,6 +134,7 @@
 		7120C4222152844C0084BD38 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				7120C4312152901B0084BD38 /* CaptainsLog.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -135,15 +142,9 @@
 		7120C4232152845D0084BD38 /* Fetcher */ = {
 			isa = PBXGroup;
 			children = (
+				7120C433215290910084BD38 /* CaptainsLogEnhancer.swift */,
 			);
 			path = Fetcher;
-			sourceTree = "<group>";
-		};
-		7120C424215286C00084BD38 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -230,15 +231,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-CaptainsLog-checkManifestLockResult.txt",
 			);
@@ -255,11 +252,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				7120C42A21528BF60084BD38 /* ApplicationRun.swift in Sources */,
+				7120C434215290910084BD38 /* CaptainsLogEnhancer.swift in Sources */,
+				7120C4322152901B0084BD38 /* CaptainsLog.swift in Sources */,
 				7120C42621528AD70084BD38 /* HTTPMethod.swift in Sources */,
 				7120C42821528B3C0084BD38 /* Request.swift in Sources */,
 				7120C43021528E170084BD38 /* ChallengeResult.swift in Sources */,
 				7120C42E21528E100084BD38 /* Token.swift in Sources */,
 				7120C41F21527D6B0084BD38 /* LogItem.swift in Sources */,
+				7100DFCE21529B0200C8BAA9 /* Disovery.swift in Sources */,
 				7120C42C21528D010084BD38 /* Device.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

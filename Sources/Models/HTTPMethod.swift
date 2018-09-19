@@ -21,4 +21,5 @@ public enum HTTPMethod: String, Codable {
     case delete  = "DELETE"
     case trace   = "TRACE"
     case connect = "CONNECT"
+    case unknown = "UNKNOWN"
 }

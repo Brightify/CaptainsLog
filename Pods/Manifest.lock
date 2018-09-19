@@ -1,3 +1,47 @@
-PODFILE CHECKSUM: a5085f7aa726554f19382356ceedfa64f92f08a3
+PODS:
+  - Alamofire (4.7.3)
+  - DataMapper (0.2.0):
+    - DataMapper/Core (= 0.2.0)
+    - DataMapper/JsonSerializer (= 0.2.0)
+  - DataMapper/Core (0.2.0)
+  - DataMapper/JsonSerializer (0.2.0):
+    - DataMapper/Core
+  - Fetcher (0.3.1):
+    - Fetcher/AlamofireRequestPerformer (= 0.3.1)
+    - Fetcher/Core (= 0.3.1)
+  - Fetcher/AlamofireRequestPerformer (0.3.1):
+    - Alamofire (~> 4.3)
+    - Fetcher/Core
+  - Fetcher/Core (0.3.1):
+    - DataMapper (~> 0.2)
+    - Result (~> 3.2)
+  - Result (3.2.4)
+
+DEPENDENCIES:
+  - Fetcher (from `https://github.com/Brightify/Fetcher.git`, branch `fix/xcode10`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - DataMapper
+    - Result
+
+EXTERNAL SOURCES:
+  Fetcher:
+    :branch: fix/xcode10
+    :git: https://github.com/Brightify/Fetcher.git
+
+CHECKOUT OPTIONS:
+  Fetcher:
+    :commit: 5ebe36d73d364628767642f2d2d5e93d9f34f9a9
+    :git: https://github.com/Brightify/Fetcher.git
+
+SPEC CHECKSUMS:
+  Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
+  DataMapper: f33d650f587a3241216763ee6377e3c3f1041c47
+  Fetcher: 887fc2c44d860d7881591954a3b09a7abdee4125
+  Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
+
+PODFILE CHECKSUM: 3eba1c82e5b6e71116735e280afb43a82f73a867
 
 COCOAPODS: 1.6.0.beta.1

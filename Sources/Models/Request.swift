@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Request: Codable, Hashable {
+public struct Request: Codable {
     public var method: HTTPMethod
     public var url: URL
     public var headers: [String: String]
@@ -34,11 +34,18 @@ public struct Request: Codable, Hashable {
 }
 
 public extension Request {
-    public struct Response: Codable, Hashable {
+    public struct Response: Codable {
         public var time: Date
         public var code: Int
         public var headers: [String: String]
         public var body: Data
+
+        public init(time: Date, code: Int, headers: [String: String], body: Data) {
+            self.time = time
+            self.code = code
+            self.headers = headers
+            self.body = body
+        }
     }
 }
 

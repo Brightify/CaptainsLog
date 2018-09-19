@@ -1,10 +1,8 @@
-# Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
+inhibit_all_warnings!
 
 target 'CaptainsLog' do
-  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
   use_frameworks!
 
-  # Pods for CaptainsLog
+  pod 'Fetcher', :git => 'https://github.com/Brightify/Fetcher.git', :branch => 'fix/xcode10', :subspecs => ['Core']
 
 end

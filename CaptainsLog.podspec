@@ -26,26 +26,25 @@ Pod::Spec.new do |spec|
 
   spec.ios.deployment_target = "10.0"
   spec.osx.deployment_target = "10.13"
-  spec.default_subspec = 'Models', 'Discovery', 'Core'
+  spec.default_subspec = 'Models', 'Discovery', 'Core', 'Fetcher'
 
   spec.subspec 'Models' do |subspec|
     subspec.source_files = [
-      'Source/Models/**/*.swift'
+      'Sources/Models/**/*.swift'
     ]
   end
 
   spec.subspec 'Discovery' do |subspec|
     subspec.dependency 'CaptainsLog/Models'
     subspec.source_files = [ 
-      'Source/Discovery/**/*.swift'
+      'Sources/Discovery/**/*.swift'
     ]
   end
 
   spec.subspec 'Core' do |subspec|
     subspec.dependency 'CaptainsLog/Discovery'
     subspec.source_files = [ 
-      'Source/Core/**/*.swift',
-      'Source/Utils/**/*.swift'
+      'Sources/Core/**/*.swift'
     ]
   end
 
@@ -53,7 +52,7 @@ Pod::Spec.new do |spec|
     subspec.dependency 'CaptainsLog/Core'
     subspec.dependency 'Fetcher/Core'
     subspec.source_files = [
-      'Source/Fetcher/**/*.swift'
+      'Sources/Fetcher/**/*.swift'
     ]
   end
 end
