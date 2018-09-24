@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Token: Hashable {
+public struct Token: Codable, Hashable {
     public var token: String
 
     public init(token: String) {

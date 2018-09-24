@@ -7,31 +7,97 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		133413EA4F5283BB9CE35578 /* Pods_CaptainsLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 675333309AA91474E5C73C24 /* Pods_CaptainsLog.framework */; };
-		7100DFCE21529B0200C8BAA9 /* Disovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7100DFCD21529B0200C8BAA9 /* Disovery.swift */; };
-		7120C417215277AA0084BD38 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 7120C414215277AA0084BD38 /* README.md */; };
-		7120C418215277AA0084BD38 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 7120C415215277AA0084BD38 /* LICENSE */; };
-		7120C419215277AA0084BD38 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 7120C416215277AA0084BD38 /* Podfile */; };
-		7120C41B215278D50084BD38 /* CaptainsLog.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 7120C41A215278D40084BD38 /* CaptainsLog.podspec */; };
-		7120C41F21527D6B0084BD38 /* LogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C41E21527D6B0084BD38 /* LogItem.swift */; };
-		7120C42621528AD70084BD38 /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42521528AD70084BD38 /* HTTPMethod.swift */; };
-		7120C42821528B3C0084BD38 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42721528B3C0084BD38 /* Request.swift */; };
-		7120C42A21528BF60084BD38 /* ApplicationRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42921528BF60084BD38 /* ApplicationRun.swift */; };
-		7120C42C21528D010084BD38 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42B21528D010084BD38 /* Device.swift */; };
-		7120C42E21528E100084BD38 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42D21528E100084BD38 /* Token.swift */; };
-		7120C43021528E170084BD38 /* ChallengeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42F21528E170084BD38 /* ChallengeResult.swift */; };
-		7120C4322152901B0084BD38 /* CaptainsLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C4312152901B0084BD38 /* CaptainsLog.swift */; };
-		7120C434215290910084BD38 /* CaptainsLogEnhancer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C433215290910084BD38 /* CaptainsLogEnhancer.swift */; };
+		1240063E25E12F78DCFDEE86 /* Pods_CaptainsLog_CaptainsLog_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A4A8E004A84310DBF7F42FB /* Pods_CaptainsLog_CaptainsLog_iOS.framework */; };
+		18CB4E4B2155C80A00D1A93C /* CaptainsLog_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18CB4E422155C80A00D1A93C /* CaptainsLog_macOS.framework */; };
+		18CB4E522155C80A00D1A93C /* CaptainsLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CB4E442155C80A00D1A93C /* CaptainsLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		18CB4E672155C82C00D1A93C /* CaptainsLog_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18CB4E5E2155C82C00D1A93C /* CaptainsLog_iOS.framework */; };
+		18CB4E6C2155C82C00D1A93C /* DiscoveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CB4E6B2155C82C00D1A93C /* DiscoveryTests.swift */; };
+		18CB4E832155C86B00D1A93C /* CaptainsLog_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18CB4E7A2155C86B00D1A93C /* CaptainsLog_tvOS.framework */; };
+		18CB4E932155CAD800D1A93C /* CaptainsLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CB4E442155C80A00D1A93C /* CaptainsLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		18CB4E942155CAD900D1A93C /* CaptainsLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CB4E442155C80A00D1A93C /* CaptainsLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		18CB4E952155CB7D00D1A93C /* DiscoveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CB4E6B2155C82C00D1A93C /* DiscoveryTests.swift */; };
+		18CB4E962155CB7E00D1A93C /* DiscoveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CB4E6B2155C82C00D1A93C /* DiscoveryTests.swift */; };
+		18CB4E972155CCBF00D1A93C /* CaptainsLogEnhancer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C433215290910084BD38 /* CaptainsLogEnhancer.swift */; };
+		18CB4E992155CCC100D1A93C /* CaptainsLogEnhancer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C433215290910084BD38 /* CaptainsLogEnhancer.swift */; };
+		18CB4E9A2155CCC100D1A93C /* CaptainsLogEnhancer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C433215290910084BD38 /* CaptainsLogEnhancer.swift */; };
+		18CB4E9B2155CCC800D1A93C /* LogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C41E21527D6B0084BD38 /* LogItem.swift */; };
+		18CB4E9C2155CCC800D1A93C /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42721528B3C0084BD38 /* Request.swift */; };
+		18CB4E9D2155CCC800D1A93C /* ApplicationRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42921528BF60084BD38 /* ApplicationRun.swift */; };
+		18CB4E9E2155CCC800D1A93C /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42B21528D010084BD38 /* Device.swift */; };
+		18CB4E9F2155CCC800D1A93C /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42D21528E100084BD38 /* Token.swift */; };
+		18CB4EA02155CCC800D1A93C /* ChallengeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42F21528E170084BD38 /* ChallengeResult.swift */; };
+		18CB4EA12155CCC800D1A93C /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42521528AD70084BD38 /* HTTPMethod.swift */; };
+		18CB4EA22155CCC800D1A93C /* LogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C41E21527D6B0084BD38 /* LogItem.swift */; };
+		18CB4EA32155CCC800D1A93C /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42721528B3C0084BD38 /* Request.swift */; };
+		18CB4EA42155CCC800D1A93C /* ApplicationRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42921528BF60084BD38 /* ApplicationRun.swift */; };
+		18CB4EA52155CCC800D1A93C /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42B21528D010084BD38 /* Device.swift */; };
+		18CB4EA62155CCC800D1A93C /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42D21528E100084BD38 /* Token.swift */; };
+		18CB4EA72155CCC800D1A93C /* ChallengeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42F21528E170084BD38 /* ChallengeResult.swift */; };
+		18CB4EA82155CCC800D1A93C /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42521528AD70084BD38 /* HTTPMethod.swift */; };
+		18CB4EA92155CCC900D1A93C /* LogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C41E21527D6B0084BD38 /* LogItem.swift */; };
+		18CB4EAA2155CCC900D1A93C /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42721528B3C0084BD38 /* Request.swift */; };
+		18CB4EAB2155CCC900D1A93C /* ApplicationRun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42921528BF60084BD38 /* ApplicationRun.swift */; };
+		18CB4EAC2155CCC900D1A93C /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42B21528D010084BD38 /* Device.swift */; };
+		18CB4EAD2155CCC900D1A93C /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42D21528E100084BD38 /* Token.swift */; };
+		18CB4EAE2155CCC900D1A93C /* ChallengeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42F21528E170084BD38 /* ChallengeResult.swift */; };
+		18CB4EAF2155CCC900D1A93C /* HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C42521528AD70084BD38 /* HTTPMethod.swift */; };
+		18CB4EB02155CCCC00D1A93C /* CaptainsLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C4312152901B0084BD38 /* CaptainsLog.swift */; };
+		18CB4EB12155CCCC00D1A93C /* CaptainsLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C4312152901B0084BD38 /* CaptainsLog.swift */; };
+		18CB4EB22155CCCD00D1A93C /* CaptainsLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C4312152901B0084BD38 /* CaptainsLog.swift */; };
+		18CB4EB42155CD3C00D1A93C /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CB4EB32155CD3C00D1A93C /* Discovery.swift */; };
+		18CB4EB52155CD3C00D1A93C /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CB4EB32155CD3C00D1A93C /* Discovery.swift */; };
+		18CB4EB62155CD3C00D1A93C /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CB4EB32155CD3C00D1A93C /* Discovery.swift */; };
+		2C17BD14BF021DAF71C28900 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5DA03AF819AF7D4B082E49 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework */; };
+		3F3C978EBA0CD87C82260D7B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252E2324FE387B686D80423B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework */; };
+		761AB4A722ABBA5486424DD4 /* Pods_CaptainsLog_CaptainsLog_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 055EDB3FA82AD1E321BBD18E /* Pods_CaptainsLog_CaptainsLog_macOS.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		18CB4E4C2155C80A00D1A93C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7120C400215276B40084BD38 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 18CB4E412155C80A00D1A93C;
+			remoteInfo = "CaptainsLog-macOS";
+		};
+		18CB4E682155C82C00D1A93C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7120C400215276B40084BD38 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 18CB4E5D2155C82C00D1A93C;
+			remoteInfo = "CaptainsLog-iOS";
+		};
+		18CB4E842155C86B00D1A93C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7120C400215276B40084BD38 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 18CB4E792155C86B00D1A93C;
+			remoteInfo = "CaptainsLog-tvOS";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		055EDB3FA82AD1E321BBD18E /* Pods_CaptainsLog_CaptainsLog_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog_CaptainsLog_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		18CB4E422155C80A00D1A93C /* CaptainsLog_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CaptainsLog_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		18CB4E442155C80A00D1A93C /* CaptainsLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CaptainsLog.h; sourceTree = "<group>"; };
+		18CB4E452155C80A00D1A93C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		18CB4E4A2155C80A00D1A93C /* CaptainsLog-macOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CaptainsLog-macOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		18CB4E5E2155C82C00D1A93C /* CaptainsLog_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CaptainsLog_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		18CB4E662155C82C00D1A93C /* CaptainsLog-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CaptainsLog-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		18CB4E6B2155C82C00D1A93C /* DiscoveryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryTests.swift; sourceTree = "<group>"; };
+		18CB4E6D2155C82C00D1A93C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		18CB4E7A2155C86B00D1A93C /* CaptainsLog_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CaptainsLog_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		18CB4E822155C86B00D1A93C /* CaptainsLog-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CaptainsLog-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		18CB4EB32155CD3C00D1A93C /* Discovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Discovery.swift; sourceTree = "<group>"; };
+		1A4A8E004A84310DBF7F42FB /* Pods_CaptainsLog_CaptainsLog_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog_CaptainsLog_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		252E2324FE387B686D80423B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C754E16DC4F038D41D7D146 /* Pods-CaptainsLog-CaptainsLog-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog-CaptainsLog-iOS.debug.xcconfig"; path = "Target Support Files/Pods-CaptainsLog-CaptainsLog-iOS/Pods-CaptainsLog-CaptainsLog-iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		41F140158E4746BA57CDDB8F /* Pods-CaptainsLog-Tests-CaptainsLog-macOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog-Tests-CaptainsLog-macOSTests.release.xcconfig"; path = "Target Support Files/Pods-CaptainsLog-Tests-CaptainsLog-macOSTests/Pods-CaptainsLog-Tests-CaptainsLog-macOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		49ADAA82FCD0FE4BD9C7D23F /* Pods-CaptainsLog-CaptainsLog-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog-CaptainsLog-iOS.release.xcconfig"; path = "Target Support Files/Pods-CaptainsLog-CaptainsLog-iOS/Pods-CaptainsLog-CaptainsLog-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		675333309AA91474E5C73C24 /* Pods_CaptainsLog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7100DFCD21529B0200C8BAA9 /* Disovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Disovery.swift; sourceTree = "<group>"; };
-		7120C409215276B40084BD38 /* CaptainsLog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CaptainsLog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7120C40D215276B40084BD38 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7120C414215277AA0084BD38 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		7120C415215277AA0084BD38 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		7120C416215277AA0084BD38 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		7120C416215277AA0084BD38 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		7120C41A215278D40084BD38 /* CaptainsLog.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CaptainsLog.podspec; sourceTree = "<group>"; };
 		7120C41E21527D6B0084BD38 /* LogItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogItem.swift; sourceTree = "<group>"; };
 		7120C42521528AD70084BD38 /* HTTPMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
@@ -42,26 +108,106 @@
 		7120C42F21528E170084BD38 /* ChallengeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeResult.swift; sourceTree = "<group>"; };
 		7120C4312152901B0084BD38 /* CaptainsLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptainsLog.swift; sourceTree = "<group>"; };
 		7120C433215290910084BD38 /* CaptainsLogEnhancer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptainsLogEnhancer.swift; sourceTree = "<group>"; };
+		800DD1AE64AC476F1E925F01 /* Pods-CaptainsLog-Tests-CaptainsLog-iOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog-Tests-CaptainsLog-iOSTests.debug.xcconfig"; path = "Target Support Files/Pods-CaptainsLog-Tests-CaptainsLog-iOSTests/Pods-CaptainsLog-Tests-CaptainsLog-iOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		8258A7EF53CD2BCA7626C124 /* Pods-CaptainsLog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog.debug.xcconfig"; path = "Target Support Files/Pods-CaptainsLog/Pods-CaptainsLog.debug.xcconfig"; sourceTree = "<group>"; };
+		9B5DA03AF819AF7D4B082E49 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0B5AA4C65536E98CBDB91DC /* Pods-CaptainsLog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog.release.xcconfig"; path = "Target Support Files/Pods-CaptainsLog/Pods-CaptainsLog.release.xcconfig"; sourceTree = "<group>"; };
+		AB4708781FB5CBA71344649C /* Pods-CaptainsLog-CaptainsLog-macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog-CaptainsLog-macOS.release.xcconfig"; path = "Target Support Files/Pods-CaptainsLog-CaptainsLog-macOS/Pods-CaptainsLog-CaptainsLog-macOS.release.xcconfig"; sourceTree = "<group>"; };
+		D691BEBDAC5BCF3CB84A1567 /* Pods-CaptainsLog-Tests-CaptainsLog-iOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog-Tests-CaptainsLog-iOSTests.release.xcconfig"; path = "Target Support Files/Pods-CaptainsLog-Tests-CaptainsLog-iOSTests/Pods-CaptainsLog-Tests-CaptainsLog-iOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		E65777E668D97801C65C264D /* Pods-CaptainsLog-CaptainsLog-macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog-CaptainsLog-macOS.debug.xcconfig"; path = "Target Support Files/Pods-CaptainsLog-CaptainsLog-macOS/Pods-CaptainsLog-CaptainsLog-macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		F77D269BB36A7E6E4344FF30 /* Pods-CaptainsLog-Tests-CaptainsLog-macOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog-Tests-CaptainsLog-macOSTests.debug.xcconfig"; path = "Target Support Files/Pods-CaptainsLog-Tests-CaptainsLog-macOSTests/Pods-CaptainsLog-Tests-CaptainsLog-macOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		7120C406215276B40084BD38 /* Frameworks */ = {
+		18CB4E3F2155C80A00D1A93C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				133413EA4F5283BB9CE35578 /* Pods_CaptainsLog.framework in Frameworks */,
+				761AB4A722ABBA5486424DD4 /* Pods_CaptainsLog_CaptainsLog_macOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E472155C80A00D1A93C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18CB4E4B2155C80A00D1A93C /* CaptainsLog_macOS.framework in Frameworks */,
+				2C17BD14BF021DAF71C28900 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E5B2155C82C00D1A93C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1240063E25E12F78DCFDEE86 /* Pods_CaptainsLog_CaptainsLog_iOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E632155C82C00D1A93C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18CB4E672155C82C00D1A93C /* CaptainsLog_iOS.framework in Frameworks */,
+				3F3C978EBA0CD87C82260D7B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E772155C86B00D1A93C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E7F2155C86B00D1A93C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18CB4E832155C86B00D1A93C /* CaptainsLog_tvOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		18CB4E6A2155C82C00D1A93C /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				18CB4E6B2155C82C00D1A93C /* DiscoveryTests.swift */,
+				18CB4E6D2155C82C00D1A93C /* Info.plist */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		18CB4E912155C8B600D1A93C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				18CB4E452155C80A00D1A93C /* Info.plist */,
+				18CB4E442155C80A00D1A93C /* CaptainsLog.h */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		18CB4E922155C90300D1A93C /* Podspec Metadata */ = {
+			isa = PBXGroup;
+			children = (
+				7120C41A215278D40084BD38 /* CaptainsLog.podspec */,
+				7120C415215277AA0084BD38 /* LICENSE */,
+				7120C416215277AA0084BD38 /* Podfile */,
+				7120C414215277AA0084BD38 /* README.md */,
+			);
+			name = "Podspec Metadata";
+			sourceTree = "<group>";
+		};
 		29A3BCE54D8939990C49018F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				675333309AA91474E5C73C24 /* Pods_CaptainsLog.framework */,
+				1A4A8E004A84310DBF7F42FB /* Pods_CaptainsLog_CaptainsLog_iOS.framework */,
+				055EDB3FA82AD1E321BBD18E /* Pods_CaptainsLog_CaptainsLog_macOS.framework */,
+				252E2324FE387B686D80423B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework */,
+				9B5DA03AF819AF7D4B082E49 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -71,6 +217,14 @@
 			children = (
 				8258A7EF53CD2BCA7626C124 /* Pods-CaptainsLog.debug.xcconfig */,
 				A0B5AA4C65536E98CBDB91DC /* Pods-CaptainsLog.release.xcconfig */,
+				3C754E16DC4F038D41D7D146 /* Pods-CaptainsLog-CaptainsLog-iOS.debug.xcconfig */,
+				49ADAA82FCD0FE4BD9C7D23F /* Pods-CaptainsLog-CaptainsLog-iOS.release.xcconfig */,
+				E65777E668D97801C65C264D /* Pods-CaptainsLog-CaptainsLog-macOS.debug.xcconfig */,
+				AB4708781FB5CBA71344649C /* Pods-CaptainsLog-CaptainsLog-macOS.release.xcconfig */,
+				800DD1AE64AC476F1E925F01 /* Pods-CaptainsLog-Tests-CaptainsLog-iOSTests.debug.xcconfig */,
+				D691BEBDAC5BCF3CB84A1567 /* Pods-CaptainsLog-Tests-CaptainsLog-iOSTests.release.xcconfig */,
+				F77D269BB36A7E6E4344FF30 /* Pods-CaptainsLog-Tests-CaptainsLog-macOSTests.debug.xcconfig */,
+				41F140158E4746BA57CDDB8F /* Pods-CaptainsLog-Tests-CaptainsLog-macOSTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -78,11 +232,10 @@
 		7120C3FF215276B40084BD38 = {
 			isa = PBXGroup;
 			children = (
-				7120C41A215278D40084BD38 /* CaptainsLog.podspec */,
-				7120C415215277AA0084BD38 /* LICENSE */,
-				7120C416215277AA0084BD38 /* Podfile */,
-				7120C414215277AA0084BD38 /* README.md */,
 				7120C40B215276B40084BD38 /* Sources */,
+				18CB4E912155C8B600D1A93C /* Resources */,
+				18CB4E6A2155C82C00D1A93C /* Tests */,
+				18CB4E922155C90300D1A93C /* Podspec Metadata */,
 				7120C40A215276B40084BD38 /* Products */,
 				6084EB8887C79B6D28C89FE9 /* Pods */,
 				29A3BCE54D8939990C49018F /* Frameworks */,
@@ -92,7 +245,12 @@
 		7120C40A215276B40084BD38 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7120C409215276B40084BD38 /* CaptainsLog.framework */,
+				18CB4E422155C80A00D1A93C /* CaptainsLog_macOS.framework */,
+				18CB4E4A2155C80A00D1A93C /* CaptainsLog-macOSTests.xctest */,
+				18CB4E5E2155C82C00D1A93C /* CaptainsLog_iOS.framework */,
+				18CB4E662155C82C00D1A93C /* CaptainsLog-iOSTests.xctest */,
+				18CB4E7A2155C86B00D1A93C /* CaptainsLog_tvOS.framework */,
+				18CB4E822155C86B00D1A93C /* CaptainsLog-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -104,7 +262,6 @@
 				7120C421215284440084BD38 /* Discovery */,
 				7120C4222152844C0084BD38 /* Core */,
 				7120C4232152845D0084BD38 /* Fetcher */,
-				7120C40D215276B40084BD38 /* Info.plist */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -126,7 +283,7 @@
 		7120C421215284440084BD38 /* Discovery */ = {
 			isa = PBXGroup;
 			children = (
-				7100DFCD21529B0200C8BAA9 /* Disovery.swift */,
+				18CB4EB32155CD3C00D1A93C /* Discovery.swift */,
 			);
 			path = Discovery;
 			sourceTree = "<group>";
@@ -150,34 +307,146 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		7120C404215276B40084BD38 /* Headers */ = {
+		18CB4E3D2155C80A00D1A93C /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18CB4E522155C80A00D1A93C /* CaptainsLog.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E592155C82C00D1A93C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18CB4E932155CAD800D1A93C /* CaptainsLog.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E752155C86B00D1A93C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18CB4E942155CAD900D1A93C /* CaptainsLog.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		7120C408215276B40084BD38 /* CaptainsLog */ = {
+		18CB4E412155C80A00D1A93C /* CaptainsLog-macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7120C411215276B40084BD38 /* Build configuration list for PBXNativeTarget "CaptainsLog" */;
+			buildConfigurationList = 18CB4E532155C80A00D1A93C /* Build configuration list for PBXNativeTarget "CaptainsLog-macOS" */;
 			buildPhases = (
-				E0656D9FC39BCB1871E0B4F3 /* [CP] Check Pods Manifest.lock */,
-				7120C404215276B40084BD38 /* Headers */,
-				7120C405215276B40084BD38 /* Sources */,
-				7120C406215276B40084BD38 /* Frameworks */,
-				7120C407215276B40084BD38 /* Resources */,
+				24DEF8CC5155A1B7740C7709 /* [CP] Check Pods Manifest.lock */,
+				18CB4E3D2155C80A00D1A93C /* Headers */,
+				18CB4E3E2155C80A00D1A93C /* Sources */,
+				18CB4E3F2155C80A00D1A93C /* Frameworks */,
+				18CB4E402155C80A00D1A93C /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = CaptainsLog;
-			productName = CaptainsLog;
-			productReference = 7120C409215276B40084BD38 /* CaptainsLog.framework */;
+			name = "CaptainsLog-macOS";
+			productName = "CaptainsLog-macOS";
+			productReference = 18CB4E422155C80A00D1A93C /* CaptainsLog_macOS.framework */;
 			productType = "com.apple.product-type.framework";
+		};
+		18CB4E492155C80A00D1A93C /* CaptainsLog-macOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 18CB4E562155C80A00D1A93C /* Build configuration list for PBXNativeTarget "CaptainsLog-macOSTests" */;
+			buildPhases = (
+				FFEA38E00020B6798DA9657C /* [CP] Check Pods Manifest.lock */,
+				18CB4E462155C80A00D1A93C /* Sources */,
+				18CB4E472155C80A00D1A93C /* Frameworks */,
+				18CB4E482155C80A00D1A93C /* Resources */,
+				8068C7207FF6AAA59DA798A6 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				18CB4E4D2155C80A00D1A93C /* PBXTargetDependency */,
+			);
+			name = "CaptainsLog-macOSTests";
+			productName = "CaptainsLog-macOSTests";
+			productReference = 18CB4E4A2155C80A00D1A93C /* CaptainsLog-macOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		18CB4E5D2155C82C00D1A93C /* CaptainsLog-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 18CB4E6F2155C82C00D1A93C /* Build configuration list for PBXNativeTarget "CaptainsLog-iOS" */;
+			buildPhases = (
+				F67AD489F781F672918B04EC /* [CP] Check Pods Manifest.lock */,
+				18CB4E592155C82C00D1A93C /* Headers */,
+				18CB4E5A2155C82C00D1A93C /* Sources */,
+				18CB4E5B2155C82C00D1A93C /* Frameworks */,
+				18CB4E5C2155C82C00D1A93C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "CaptainsLog-iOS";
+			productName = "CaptainsLog-iOS";
+			productReference = 18CB4E5E2155C82C00D1A93C /* CaptainsLog_iOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		18CB4E652155C82C00D1A93C /* CaptainsLog-iOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 18CB4E722155C82C00D1A93C /* Build configuration list for PBXNativeTarget "CaptainsLog-iOSTests" */;
+			buildPhases = (
+				3E802CF6D7761E0CBACBCF98 /* [CP] Check Pods Manifest.lock */,
+				18CB4E622155C82C00D1A93C /* Sources */,
+				18CB4E632155C82C00D1A93C /* Frameworks */,
+				18CB4E642155C82C00D1A93C /* Resources */,
+				96CF44BE193DB7E52CC0D8EF /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				18CB4E692155C82C00D1A93C /* PBXTargetDependency */,
+			);
+			name = "CaptainsLog-iOSTests";
+			productName = "CaptainsLog-iOSTests";
+			productReference = 18CB4E662155C82C00D1A93C /* CaptainsLog-iOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		18CB4E792155C86B00D1A93C /* CaptainsLog-tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 18CB4E8B2155C86B00D1A93C /* Build configuration list for PBXNativeTarget "CaptainsLog-tvOS" */;
+			buildPhases = (
+				18CB4E752155C86B00D1A93C /* Headers */,
+				18CB4E762155C86B00D1A93C /* Sources */,
+				18CB4E772155C86B00D1A93C /* Frameworks */,
+				18CB4E782155C86B00D1A93C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "CaptainsLog-tvOS";
+			productName = "CaptainsLog-tvOS";
+			productReference = 18CB4E7A2155C86B00D1A93C /* CaptainsLog_tvOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		18CB4E812155C86B00D1A93C /* CaptainsLog-tvOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 18CB4E8E2155C86B00D1A93C /* Build configuration list for PBXNativeTarget "CaptainsLog-tvOSTests" */;
+			buildPhases = (
+				18CB4E7E2155C86B00D1A93C /* Sources */,
+				18CB4E7F2155C86B00D1A93C /* Frameworks */,
+				18CB4E802155C86B00D1A93C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				18CB4E852155C86B00D1A93C /* PBXTargetDependency */,
+			);
+			name = "CaptainsLog-tvOSTests";
+			productName = "CaptainsLog-tvOSTests";
+			productReference = 18CB4E822155C86B00D1A93C /* CaptainsLog-tvOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -185,12 +454,27 @@
 		7120C400215276B40084BD38 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1000;
 				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = Brightify;
 				TargetAttributes = {
-					7120C408215276B40084BD38 = {
+					18CB4E412155C80A00D1A93C = {
 						CreatedOnToolsVersion = 10.0;
-						LastSwiftMigration = 1000;
+					};
+					18CB4E492155C80A00D1A93C = {
+						CreatedOnToolsVersion = 10.0;
+					};
+					18CB4E5D2155C82C00D1A93C = {
+						CreatedOnToolsVersion = 10.0;
+					};
+					18CB4E652155C82C00D1A93C = {
+						CreatedOnToolsVersion = 10.0;
+					};
+					18CB4E792155C86B00D1A93C = {
+						CreatedOnToolsVersion = 10.0;
+					};
+					18CB4E812155C86B00D1A93C = {
+						CreatedOnToolsVersion = 10.0;
 					};
 				};
 			};
@@ -206,38 +490,204 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7120C408215276B40084BD38 /* CaptainsLog */,
+				18CB4E412155C80A00D1A93C /* CaptainsLog-macOS */,
+				18CB4E5D2155C82C00D1A93C /* CaptainsLog-iOS */,
+				18CB4E792155C86B00D1A93C /* CaptainsLog-tvOS */,
+				18CB4E492155C80A00D1A93C /* CaptainsLog-macOSTests */,
+				18CB4E652155C82C00D1A93C /* CaptainsLog-iOSTests */,
+				18CB4E812155C86B00D1A93C /* CaptainsLog-tvOSTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		7120C407215276B40084BD38 /* Resources */ = {
+		18CB4E402155C80A00D1A93C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7120C41B215278D50084BD38 /* CaptainsLog.podspec in Resources */,
-				7120C419215277AA0084BD38 /* Podfile in Resources */,
-				7120C418215277AA0084BD38 /* LICENSE in Resources */,
-				7120C417215277AA0084BD38 /* README.md in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E482155C80A00D1A93C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E5C2155C82C00D1A93C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E642155C82C00D1A93C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E782155C86B00D1A93C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E802155C86B00D1A93C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		E0656D9FC39BCB1871E0B4F3 /* [CP] Check Pods Manifest.lock */ = {
+		24DEF8CC5155A1B7740C7709 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-CaptainsLog-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-CaptainsLog-CaptainsLog-macOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3E802CF6D7761E0CBACBCF98 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CaptainsLog-Tests-CaptainsLog-iOSTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8068C7207FF6AAA59DA798A6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CaptainsLog-Tests-CaptainsLog-macOSTests/Pods-CaptainsLog-Tests-CaptainsLog-macOSTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/DataMapper-macOS/DataMapper.framework",
+				"${BUILT_PRODUCTS_DIR}/Fetcher-macOS/Fetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/Result-macOS/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/Nimble-macOS/Nimble.framework",
+				"${BUILT_PRODUCTS_DIR}/Quick-macOS/Quick.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DataMapper.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Fetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quick.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CaptainsLog-Tests-CaptainsLog-macOSTests/Pods-CaptainsLog-Tests-CaptainsLog-macOSTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		96CF44BE193DB7E52CC0D8EF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CaptainsLog-Tests-CaptainsLog-iOSTests/Pods-CaptainsLog-Tests-CaptainsLog-iOSTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/DataMapper-iOS/DataMapper.framework",
+				"${BUILT_PRODUCTS_DIR}/Fetcher-iOS/Fetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/Result-iOS/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/Nimble-iOS/Nimble.framework",
+				"${BUILT_PRODUCTS_DIR}/Quick-iOS/Quick.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DataMapper.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Fetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quick.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CaptainsLog-Tests-CaptainsLog-iOSTests/Pods-CaptainsLog-Tests-CaptainsLog-iOSTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F67AD489F781F672918B04EC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CaptainsLog-CaptainsLog-iOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FFEA38E00020B6798DA9657C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CaptainsLog-Tests-CaptainsLog-macOSTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -247,26 +697,396 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		7120C405215276B40084BD38 /* Sources */ = {
+		18CB4E3E2155C80A00D1A93C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7120C42A21528BF60084BD38 /* ApplicationRun.swift in Sources */,
-				7120C434215290910084BD38 /* CaptainsLogEnhancer.swift in Sources */,
-				7120C4322152901B0084BD38 /* CaptainsLog.swift in Sources */,
-				7120C42621528AD70084BD38 /* HTTPMethod.swift in Sources */,
-				7120C42821528B3C0084BD38 /* Request.swift in Sources */,
-				7120C43021528E170084BD38 /* ChallengeResult.swift in Sources */,
-				7120C42E21528E100084BD38 /* Token.swift in Sources */,
-				7120C41F21527D6B0084BD38 /* LogItem.swift in Sources */,
-				7100DFCE21529B0200C8BAA9 /* Disovery.swift in Sources */,
-				7120C42C21528D010084BD38 /* Device.swift in Sources */,
+				18CB4EAB2155CCC900D1A93C /* ApplicationRun.swift in Sources */,
+				18CB4E992155CCC100D1A93C /* CaptainsLogEnhancer.swift in Sources */,
+				18CB4EB22155CCCD00D1A93C /* CaptainsLog.swift in Sources */,
+				18CB4EAA2155CCC900D1A93C /* Request.swift in Sources */,
+				18CB4EAE2155CCC900D1A93C /* ChallengeResult.swift in Sources */,
+				18CB4EAF2155CCC900D1A93C /* HTTPMethod.swift in Sources */,
+				18CB4EB42155CD3C00D1A93C /* Discovery.swift in Sources */,
+				18CB4EAD2155CCC900D1A93C /* Token.swift in Sources */,
+				18CB4EA92155CCC900D1A93C /* LogItem.swift in Sources */,
+				18CB4EAC2155CCC900D1A93C /* Device.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E462155C80A00D1A93C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18CB4E952155CB7D00D1A93C /* DiscoveryTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E5A2155C82C00D1A93C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18CB4EA42155CCC800D1A93C /* ApplicationRun.swift in Sources */,
+				18CB4E9A2155CCC100D1A93C /* CaptainsLogEnhancer.swift in Sources */,
+				18CB4EB12155CCCC00D1A93C /* CaptainsLog.swift in Sources */,
+				18CB4EA32155CCC800D1A93C /* Request.swift in Sources */,
+				18CB4EA72155CCC800D1A93C /* ChallengeResult.swift in Sources */,
+				18CB4EA82155CCC800D1A93C /* HTTPMethod.swift in Sources */,
+				18CB4EB52155CD3C00D1A93C /* Discovery.swift in Sources */,
+				18CB4EA62155CCC800D1A93C /* Token.swift in Sources */,
+				18CB4EA22155CCC800D1A93C /* LogItem.swift in Sources */,
+				18CB4EA52155CCC800D1A93C /* Device.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E622155C82C00D1A93C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18CB4E6C2155C82C00D1A93C /* DiscoveryTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E762155C86B00D1A93C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18CB4E9D2155CCC800D1A93C /* ApplicationRun.swift in Sources */,
+				18CB4E972155CCBF00D1A93C /* CaptainsLogEnhancer.swift in Sources */,
+				18CB4EB02155CCCC00D1A93C /* CaptainsLog.swift in Sources */,
+				18CB4E9C2155CCC800D1A93C /* Request.swift in Sources */,
+				18CB4EA02155CCC800D1A93C /* ChallengeResult.swift in Sources */,
+				18CB4EA12155CCC800D1A93C /* HTTPMethod.swift in Sources */,
+				18CB4EB62155CD3C00D1A93C /* Discovery.swift in Sources */,
+				18CB4E9F2155CCC800D1A93C /* Token.swift in Sources */,
+				18CB4E9B2155CCC800D1A93C /* LogItem.swift in Sources */,
+				18CB4E9E2155CCC800D1A93C /* Device.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		18CB4E7E2155C86B00D1A93C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18CB4E962155CB7E00D1A93C /* DiscoveryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		18CB4E4D2155C80A00D1A93C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 18CB4E412155C80A00D1A93C /* CaptainsLog-macOS */;
+			targetProxy = 18CB4E4C2155C80A00D1A93C /* PBXContainerItemProxy */;
+		};
+		18CB4E692155C82C00D1A93C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 18CB4E5D2155C82C00D1A93C /* CaptainsLog-iOS */;
+			targetProxy = 18CB4E682155C82C00D1A93C /* PBXContainerItemProxy */;
+		};
+		18CB4E852155C86B00D1A93C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 18CB4E792155C86B00D1A93C /* CaptainsLog-tvOS */;
+			targetProxy = 18CB4E842155C86B00D1A93C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		18CB4E542155C80A00D1A93C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E65777E668D97801C65C264D /* Pods-CaptainsLog-CaptainsLog-macOS.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Z4J75M6GAC;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = "hyperdrive.ios.CaptainsLog-macOS";
+				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+			};
+			name = Debug;
+		};
+		18CB4E552155C80A00D1A93C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AB4708781FB5CBA71344649C /* Pods-CaptainsLog-CaptainsLog-macOS.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Z4J75M6GAC;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = "hyperdrive.ios.CaptainsLog-macOS";
+				PRODUCT_MODULE_NAME = "$(PRODUCT_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+			};
+			name = Release;
+		};
+		18CB4E572155C80A00D1A93C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F77D269BB36A7E6E4344FF30 /* Pods-CaptainsLog-Tests-CaptainsLog-macOSTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Z4J75M6GAC;
+				INFOPLIST_FILE = Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = "hyperdrive.ios.CaptainsLog-macOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 4.2;
+			};
+			name = Debug;
+		};
+		18CB4E582155C80A00D1A93C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 41F140158E4746BA57CDDB8F /* Pods-CaptainsLog-Tests-CaptainsLog-macOSTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Z4J75M6GAC;
+				INFOPLIST_FILE = Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				PRODUCT_BUNDLE_IDENTIFIER = "hyperdrive.ios.CaptainsLog-macOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 4.2;
+			};
+			name = Release;
+		};
+		18CB4E702155C82C00D1A93C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3C754E16DC4F038D41D7D146 /* Pods-CaptainsLog-CaptainsLog-iOS.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Z4J75M6GAC;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "hyperdrive.ios.CaptainsLog-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		18CB4E712155C82C00D1A93C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 49ADAA82FCD0FE4BD9C7D23F /* Pods-CaptainsLog-CaptainsLog-iOS.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Z4J75M6GAC;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "hyperdrive.ios.CaptainsLog-iOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		18CB4E732155C82C00D1A93C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 800DD1AE64AC476F1E925F01 /* Pods-CaptainsLog-Tests-CaptainsLog-iOSTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Z4J75M6GAC;
+				INFOPLIST_FILE = Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "hyperdrive.ios.CaptainsLog-iOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		18CB4E742155C82C00D1A93C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D691BEBDAC5BCF3CB84A1567 /* Pods-CaptainsLog-Tests-CaptainsLog-iOSTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Z4J75M6GAC;
+				INFOPLIST_FILE = Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "hyperdrive.ios.CaptainsLog-iOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		18CB4E8C2155C86B00D1A93C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Z4J75M6GAC;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "hyperdrive.ios.CaptainsLog-tvOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
+			};
+			name = Debug;
+		};
+		18CB4E8D2155C86B00D1A93C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Z4J75M6GAC;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "hyperdrive.ios.CaptainsLog-tvOS";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
+			};
+			name = Release;
+		};
+		18CB4E8F2155C86B00D1A93C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Z4J75M6GAC;
+				INFOPLIST_FILE = Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "hyperdrive.ios.CaptainsLog-tvOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
+			};
+			name = Debug;
+		};
+		18CB4E902155C86B00D1A93C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Z4J75M6GAC;
+				INFOPLIST_FILE = Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "hyperdrive.ios.CaptainsLog-tvOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
+			};
+			name = Release;
+		};
 		7120C40F215276B40084BD38 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -319,7 +1139,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -377,7 +1198,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -389,78 +1211,68 @@
 			};
 			name = Release;
 		};
-		7120C412215276B40084BD38 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8258A7EF53CD2BCA7626C124 /* Pods-CaptainsLog.debug.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Z4J75M6GAC;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = Sources/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.Brightify.CaptainsLog;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		7120C413215276B40084BD38 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = A0B5AA4C65536E98CBDB91DC /* Pods-CaptainsLog.release.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = Z4J75M6GAC;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = Sources/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.Brightify.CaptainsLog;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		18CB4E532155C80A00D1A93C /* Build configuration list for PBXNativeTarget "CaptainsLog-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18CB4E542155C80A00D1A93C /* Debug */,
+				18CB4E552155C80A00D1A93C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		18CB4E562155C80A00D1A93C /* Build configuration list for PBXNativeTarget "CaptainsLog-macOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18CB4E572155C80A00D1A93C /* Debug */,
+				18CB4E582155C80A00D1A93C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		18CB4E6F2155C82C00D1A93C /* Build configuration list for PBXNativeTarget "CaptainsLog-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18CB4E702155C82C00D1A93C /* Debug */,
+				18CB4E712155C82C00D1A93C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		18CB4E722155C82C00D1A93C /* Build configuration list for PBXNativeTarget "CaptainsLog-iOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18CB4E732155C82C00D1A93C /* Debug */,
+				18CB4E742155C82C00D1A93C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		18CB4E8B2155C86B00D1A93C /* Build configuration list for PBXNativeTarget "CaptainsLog-tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18CB4E8C2155C86B00D1A93C /* Debug */,
+				18CB4E8D2155C86B00D1A93C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		18CB4E8E2155C86B00D1A93C /* Build configuration list for PBXNativeTarget "CaptainsLog-tvOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18CB4E8F2155C86B00D1A93C /* Debug */,
+				18CB4E902155C86B00D1A93C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		7120C403215276B40084BD38 /* Build configuration list for PBXProject "CaptainsLog" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7120C40F215276B40084BD38 /* Debug */,
 				7120C410215276B40084BD38 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		7120C411215276B40084BD38 /* Build configuration list for PBXNativeTarget "CaptainsLog" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				7120C412215276B40084BD38 /* Debug */,
-				7120C413215276B40084BD38 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

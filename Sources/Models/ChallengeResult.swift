@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct ChallengeResult: Hashable {
+public struct ChallengeResult: Codable, Hashable {
     public var pin: String
 
     public init(pin: String) {
