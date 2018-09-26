@@ -4,6 +4,7 @@ abstract_target 'CaptainsLog' do
     use_frameworks!
 
     pod 'Fetcher', :git => 'https://github.com/Brightify/Fetcher.git', :branch => 'fix/xcode10', :subspecs => ['Core']
+    pod 'SwiftyBeaver'
 
     target 'CaptainsLog-macOS'
     target 'CaptainsLog-iOS'

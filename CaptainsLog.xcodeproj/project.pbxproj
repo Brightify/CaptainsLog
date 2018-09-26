@@ -49,6 +49,11 @@
 		18CB4EB62155CD3C00D1A93C /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CB4EB32155CD3C00D1A93C /* Discovery.swift */; };
 		2C17BD14BF021DAF71C28900 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5DA03AF819AF7D4B082E49 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework */; };
 		3F3C978EBA0CD87C82260D7B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252E2324FE387B686D80423B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework */; };
+		71EE7CA6215BC5DD00958149 /* CaptainsLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CA5215BC5DD00958149 /* CaptainsLogDestination.swift */; };
+		71EE7CA8215BC8AC00958149 /* CaptainsLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CA5215BC5DD00958149 /* CaptainsLogDestination.swift */; };
+		71EE7CA9215BC8AC00958149 /* CaptainsLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CA5215BC5DD00958149 /* CaptainsLogDestination.swift */; };
+		71EE7CAB215BCA8D00958149 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CAA215BCA8D00958149 /* Log.swift */; };
+		71EE7CAD215BCADC00958149 /* LogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CAC215BCADC00958149 /* LogLevel.swift */; };
 		761AB4A722ABBA5486424DD4 /* Pods_CaptainsLog_CaptainsLog_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 055EDB3FA82AD1E321BBD18E /* Pods_CaptainsLog_CaptainsLog_macOS.framework */; };
 /* End PBXBuildFile section */
 
@@ -108,6 +113,9 @@
 		7120C42F21528E170084BD38 /* ChallengeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeResult.swift; sourceTree = "<group>"; };
 		7120C4312152901B0084BD38 /* CaptainsLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptainsLog.swift; sourceTree = "<group>"; };
 		7120C433215290910084BD38 /* CaptainsLogEnhancer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptainsLogEnhancer.swift; sourceTree = "<group>"; };
+		71EE7CA5215BC5DD00958149 /* CaptainsLogDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptainsLogDestination.swift; sourceTree = "<group>"; };
+		71EE7CAA215BCA8D00958149 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		71EE7CAC215BCADC00958149 /* LogLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogLevel.swift; sourceTree = "<group>"; };
 		800DD1AE64AC476F1E925F01 /* Pods-CaptainsLog-Tests-CaptainsLog-iOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog-Tests-CaptainsLog-iOSTests.debug.xcconfig"; path = "Target Support Files/Pods-CaptainsLog-Tests-CaptainsLog-iOSTests/Pods-CaptainsLog-Tests-CaptainsLog-iOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		8258A7EF53CD2BCA7626C124 /* Pods-CaptainsLog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog.debug.xcconfig"; path = "Target Support Files/Pods-CaptainsLog/Pods-CaptainsLog.debug.xcconfig"; sourceTree = "<group>"; };
 		9B5DA03AF819AF7D4B082E49 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -262,6 +270,7 @@
 				7120C421215284440084BD38 /* Discovery */,
 				7120C4222152844C0084BD38 /* Core */,
 				7120C4232152845D0084BD38 /* Fetcher */,
+				71EE7CA7215BC5E500958149 /* SwiftyBeaver */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -271,11 +280,13 @@
 			children = (
 				7120C41E21527D6B0084BD38 /* LogItem.swift */,
 				7120C42721528B3C0084BD38 /* Request.swift */,
+				71EE7CAA215BCA8D00958149 /* Log.swift */,
 				7120C42921528BF60084BD38 /* ApplicationRun.swift */,
 				7120C42B21528D010084BD38 /* Device.swift */,
 				7120C42D21528E100084BD38 /* Token.swift */,
 				7120C42F21528E170084BD38 /* ChallengeResult.swift */,
 				7120C42521528AD70084BD38 /* HTTPMethod.swift */,
+				71EE7CAC215BCADC00958149 /* LogLevel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -302,6 +313,14 @@
 				7120C433215290910084BD38 /* CaptainsLogEnhancer.swift */,
 			);
 			path = Fetcher;
+			sourceTree = "<group>";
+		};
+		71EE7CA7215BC5E500958149 /* SwiftyBeaver */ = {
+			isa = PBXGroup;
+			children = (
+				71EE7CA5215BC5DD00958149 /* CaptainsLogDestination.swift */,
+			);
+			path = SwiftyBeaver;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -602,6 +621,7 @@
 				"${BUILT_PRODUCTS_DIR}/DataMapper-macOS/DataMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/Fetcher-macOS/Fetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/Result-macOS/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyBeaver-macOS/SwiftyBeaver.framework",
 				"${BUILT_PRODUCTS_DIR}/Nimble-macOS/Nimble.framework",
 				"${BUILT_PRODUCTS_DIR}/Quick-macOS/Quick.framework",
 			);
@@ -612,6 +632,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DataMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Fetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyBeaver.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quick.framework",
 			);
@@ -632,6 +653,7 @@
 				"${BUILT_PRODUCTS_DIR}/DataMapper-iOS/DataMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/Fetcher-iOS/Fetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/Result-iOS/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyBeaver-iOS/SwiftyBeaver.framework",
 				"${BUILT_PRODUCTS_DIR}/Nimble-iOS/Nimble.framework",
 				"${BUILT_PRODUCTS_DIR}/Quick-iOS/Quick.framework",
 			);
@@ -642,6 +664,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DataMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Fetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyBeaver.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quick.framework",
 			);
@@ -703,13 +726,16 @@
 			files = (
 				18CB4EAB2155CCC900D1A93C /* ApplicationRun.swift in Sources */,
 				18CB4E992155CCC100D1A93C /* CaptainsLogEnhancer.swift in Sources */,
+				71EE7CAB215BCA8D00958149 /* Log.swift in Sources */,
 				18CB4EB22155CCCD00D1A93C /* CaptainsLog.swift in Sources */,
 				18CB4EAA2155CCC900D1A93C /* Request.swift in Sources */,
 				18CB4EAE2155CCC900D1A93C /* ChallengeResult.swift in Sources */,
+				71EE7CAD215BCADC00958149 /* LogLevel.swift in Sources */,
 				18CB4EAF2155CCC900D1A93C /* HTTPMethod.swift in Sources */,
 				18CB4EB42155CD3C00D1A93C /* Discovery.swift in Sources */,
 				18CB4EAD2155CCC900D1A93C /* Token.swift in Sources */,
 				18CB4EA92155CCC900D1A93C /* LogItem.swift in Sources */,
+				71EE7CA6215BC5DD00958149 /* CaptainsLogDestination.swift in Sources */,
 				18CB4EAC2155CCC900D1A93C /* Device.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -735,6 +761,7 @@
 				18CB4EB52155CD3C00D1A93C /* Discovery.swift in Sources */,
 				18CB4EA62155CCC800D1A93C /* Token.swift in Sources */,
 				18CB4EA22155CCC800D1A93C /* LogItem.swift in Sources */,
+				71EE7CA8215BC8AC00958149 /* CaptainsLogDestination.swift in Sources */,
 				18CB4EA52155CCC800D1A93C /* Device.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -760,6 +787,7 @@
 				18CB4EB62155CD3C00D1A93C /* Discovery.swift in Sources */,
 				18CB4E9F2155CCC800D1A93C /* Token.swift in Sources */,
 				18CB4E9B2155CCC800D1A93C /* LogItem.swift in Sources */,
+				71EE7CA9215BC8AC00958149 /* CaptainsLogDestination.swift in Sources */,
 				18CB4E9E2155CCC800D1A93C /* Device.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

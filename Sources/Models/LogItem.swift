@@ -11,6 +11,7 @@ import Foundation
 public struct LogItem: Codable {
     public enum Kind {
         case request(Request)
+        case log(Log)
     }
 
     public var id: String
@@ -20,6 +21,8 @@ public struct LogItem: Codable {
         switch kind {
         case .request(let request):
             return request.time
+        case .log(let log):
+            return log.time
         }
     }
 
@@ -38,6 +41,9 @@ extension LogItem.Kind: Codable {
         case .request:
             let request = try container.decode(Request.self, forKey: .value)
             self = .request(request)
+        case .log:
+            let log = try container.decode(Log.self, forKey: .value)
+            self = .log(log)
         }
     }
 
@@ -48,11 +54,15 @@ extension LogItem.Kind: Codable {
         case .request(let request):
             try container.encode(Raw.request, forKey: .kind)
             try container.encode(request, forKey: .value)
+        case .log(let log):
+            try container.encode(Raw.log, forKey: .kind)
+            try container.encode(log, forKey: .value)
         }
     }
 
     public enum Raw: String, Codable {
         case request
+        case log
     }
 
     private enum CodingKeys: String, CodingKey {
