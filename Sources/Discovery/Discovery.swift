@@ -8,7 +8,81 @@
 
 import Foundation
 
-final class DiscoveryClient: NSObject, NetServiceBrowserDelegate {
+struct Test: Codable {
+    var a = 10
+}
+
+final class DiscoveryServiceConnector {
+    struct Connection {
+        let inputStream: InputStream
+        let outputStream: OutputStream
+    }
+
+    let connection: Connection
+    var sent: Int = -2
+
+    let queue = DispatchQueue(label: "connector-queue")
+
+    init(service: NetService) {
+
+//        service
+
+//        CFStreamCreatePairWithSocketToNetService(nil, cfNetService, &readStream, &writeStream)
+        var inputStream: InputStream?
+        var outputStream: OutputStream?
+
+        precondition(service.getInputStream(&inputStream, outputStream: &outputStream), "Couldn't get streams!")
+
+        connection = Connection(inputStream: inputStream!, outputStream: outputStream!)
+    }
+
+    func connect() {
+        queue.async {
+        self.connection.inputStream.schedule(in: RunLoop.main, forMode: .default)
+        self.connection.outputStream.schedule(in: RunLoop.main, forMode: .default)
+
+//        DispatchQueue(label: "background send").async {
+        self.connection.inputStream.open()
+        self.connection.outputStream.open()
+
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(Test())
+
+        self.sent = data.withUnsafeBytes {
+            self.connection.outputStream.write($0, maxLength: data.count)
+        }
+
+        self.connection.inputStream.close()
+        self.connection.outputStream.close()
+        }
+//        }
+    }
+
+//    func connect() -> (i: InputStream?, o: OutputStream?) {
+//let a = CFAllocatorGetDefault()
+//        let socket = SocketPort(remoteWithTCPPort: port, host: host)
+//CFStreamCreatePairWithSocketToNetService(<#T##alloc: CFAllocator?##CFAllocator?#>, <#T##service: CFNetService##CFNetService#>, <#T##readStream: UnsafeMutablePointer<Unmanaged<CFReadStream>?>?##UnsafeMutablePointer<Unmanaged<CFReadStream>?>?#>, <#T##writeStream: UnsafeMutablePointer<Unmanaged<CFWriteStream>?>?##UnsafeMutablePointer<Unmanaged<CFWriteStream>?>?#>)
+//        var inputStream: InputStream?
+//        var outputStream: OutputStream?
+//
+//
+//
+//
+//        Stream.getStreamsToHost(withName: host, port: port, inputStream: &inputStream, outputStream: &outputStream)
+//        fatalError()
+//        return (i: inputStream, o: outputStream)
+//        inputStream?.close()
+//        outputStream?.close()
+
+//        CFStreamCreatePairWithSocket(a, socket?.socket, UnsafeMutablePointer<Unmanaged<CFReadStream>?>!, UnsafeMutablePointer<Unmanaged<CFWriteStream>?>!)
+
+
+//        socket?.socket.
+//    }
+
+}
+
+final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
     final class NetServiceClientDelegate: NSObject, NetServiceDelegate {
         struct ResolutionError: Error {
             let info: [String: NSNumber]
@@ -34,12 +108,18 @@ final class DiscoveryClient: NSObject, NetServiceBrowserDelegate {
     }
 
     private let browser = NetServiceBrowser()
-    private let loggerFound: ([URL]) -> Void
+//    private let loggerFound: ([URL]) -> Void
+    private let resolvedService: (NetService) -> Void
 
     private var discoveredServices: [NetService: NetServiceClientDelegate] = [:]
 
-    init(loggerFound: @escaping ([URL]) -> Void) {
-        self.loggerFound = loggerFound
+    let queue = DispatchQueue(label: "browser-queue")
+
+//    init(loggerFound: @escaping ([URL]) -> Void) {
+
+    init(resolvedService: @escaping (NetService) -> Void) {
+//        self.loggerFound = loggerFound
+        self.resolvedService = resolvedService
 
         super.init()
 
@@ -47,7 +127,9 @@ final class DiscoveryClient: NSObject, NetServiceBrowserDelegate {
     }
 
     func search() {
-        browser.searchForServices(ofType: "_captainslog-server._tcp.", inDomain: "local.")
+        queue.sync {
+            browser.searchForServices(ofType: "_captainslog-transmitter._tcp.", inDomain: "local.")
+        }
     }
 
     deinit {
@@ -60,16 +142,12 @@ final class DiscoveryClient: NSObject, NetServiceBrowserDelegate {
         let delegate = NetServiceClientDelegate { [unowned self] error in
             self.discoveredServices[service] = nil
 
-            let urls: [URL] = service.addresses?.compactMap {
-                guard let url = $0.asURL(),
-                    var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return nil }
+//            let urls: [URL] = service.addresses?.compactMap { addressData in
+//                self.resolveLoggerUrl(from: addressData, port: service.port)
+//            } ?? []
 
-                components.port = service.port
-                components.scheme = "http"
-                return components.url
-            } ?? []
-
-            self.loggerFound(urls)
+            self.resolvedService(service)
+//            self.loggerFound(urls)
         }
         service.delegate = delegate
         discoveredServices[service] = delegate
@@ -83,12 +161,11 @@ final class DiscoveryClient: NSObject, NetServiceBrowserDelegate {
         discoveredServices[service] = nil
     }
 
-    private func resolveLoggerUrl(from data: Data) -> URL? {
+    private func resolveLoggerUrl(from data: Data, port: Int) -> URL? {
         guard var urlComponents = URLComponents(string: "") else {
             fatalError("Never supposed to happen. If crash occurs here, report it immediately!")
         }
 
-        urlComponents.scheme = "http"
         urlComponents.port = 1111
 
         let inetAddress = data.withUnsafeBytes { (pointer: UnsafePointer<sockaddr_in>) -> sockaddr_in in
@@ -118,31 +195,43 @@ final class DiscoveryClient: NSObject, NetServiceBrowserDelegate {
             return nil
         }
 
-        return urlComponents
+        return urlComponents.url
     }
 }
 
-final class DiscoveryLoggerService: NSObject, NetServiceDelegate {
-    private let service = NetService(
-        domain: "local.",
-        type: "_captainslog-server._tcp.",
-        name: Host.current().localizedName ?? "Unknown",
-        port: 1111)
+final class DiscoveryService: NSObject, NetServiceDelegate {
+    static let domain = "local."
+    static let type = "_captainslog-transmitter._tcp."
 
-    init(id: String) {
+    private let service: NetService
+
+    let queue = DispatchQueue(label: "service-queue")
+
+    init(name: String, id: String) {
+        service = NetService(
+            domain: DiscoveryService.domain,
+            type: DiscoveryService.type,
+            name: name, // Host.current().localizedName ?? "Unknown"
+            port: 0)
+
         super.init()
-        
+
         service.delegate = self
 
         precondition(service.setTXTRecord(NetService.data(fromTXTRecord: ["id": id.data(using: .utf8)!])))
     }
 
     func publish() {
-        service.publish()
+        queue.sync {
+            service.publish(options: .listenForConnections)
+            service.schedule(in: RunLoop.main, forMode: RunLoop.Mode.default)
+        }
     }
 
     deinit {
-        service.stop()
+        queue.sync {
+            service.stop()
+        }
     }
 
     func netService(_ sender: NetService, didAcceptConnectionWith inputStream: InputStream, outputStream: OutputStream) {
