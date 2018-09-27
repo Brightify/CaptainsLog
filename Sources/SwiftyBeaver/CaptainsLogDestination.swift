@@ -12,7 +12,6 @@ public class CaptainsLogDestination: BaseDestination {
     private let captainsLogBaseURL: URL
     private let port = 1111
     private let applicationId: String
-    private let uuid: String
 
     public init(captainsLogBaseURL: String) {
         var components = URLComponents(string: captainsLogBaseURL)!
@@ -20,7 +19,6 @@ public class CaptainsLogDestination: BaseDestination {
 
         self.captainsLogBaseURL = components.url!
         self.applicationId = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
-        self.uuid = UUID().uuidString
 
         super.init()
 
@@ -38,14 +36,14 @@ public class CaptainsLogDestination: BaseDestination {
                                              function: function,
                                              line: line)))
 
-        try? post(to: "api/runs/\(uuid)/logItems", value: logItem)
+        try? post(to: "api/runs/\(CaptainsLog.instance.uuid)/logItems", value: logItem)
         
         return msg
     }
 
     private func register() throws {
         let appRun = ApplicationRun(
-            id: uuid,
+            id: CaptainsLog.instance.uuid,
             name: Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String,
             identifier: Bundle.main.bundleIdentifier!,
             version: Bundle.main.infoDictionary![kCFBundleVersionKey as String] as! String,

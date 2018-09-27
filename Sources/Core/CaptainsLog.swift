@@ -10,4 +10,6 @@ import Foundation
 
 final class CaptainsLog {
     static let instance = CaptainsLog()
+
+    let uuid = UUID().uuidString
 }
