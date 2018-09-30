@@ -23,7 +23,7 @@ Pod::Spec.new do |spec|
     :git => "https://github.com/Brightify/CaptainsLog.git",
     :tag => spec.version.to_s
    }
-
+  spec.swift_version = "4.2"
   spec.ios.deployment_target = "10.0"
   spec.osx.deployment_target = "10.13"
   spec.default_subspec = 'Models', 'Discovery', 'Core', 'Fetcher', 'SwiftyBeaver'
@@ -36,6 +36,8 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'Discovery' do |subspec|
     subspec.dependency 'CaptainsLog/Models'
+    # TODO Remove before going public
+    subspec.dependency 'RxSwift'
     subspec.source_files = [ 
       'Sources/Discovery/**/*.swift'
     ]

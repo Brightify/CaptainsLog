@@ -19,18 +19,16 @@ internal struct NetInspectorTimestamp: RequestModifier {
 }
 
 public final class CaptainsLogEnhancer: RequestEnhancer {
-    private let captainsLogBaseURL: URL
-    private let port = 1111
-    private let applicationId: String
+    private let log: CaptainsLog
 
-    public init(captainsLogBaseURL: String) {
-        var components = URLComponents(string: captainsLogBaseURL)!
-        components.port = 1111
+    public init() {
+//        self.captainsLogBaseURL = components.url!
+//        self.applicationId = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
+//        self.uuid = UUID().uuidString
 
-        self.captainsLogBaseURL = components.url!
-        self.applicationId = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
+//        try! register()
 
-        try! register()
+        log = CaptainsLog.instance
     }
 
     public func enhance(request: inout Fetcher.Request) {
@@ -38,6 +36,7 @@ public final class CaptainsLogEnhancer: RequestEnhancer {
     }
 
     public func deenhance(response: inout Fetcher.Response<SupportedType>) {
+        print("Deenhancing log")
         guard let timestamp = response.request.modifiers.compactMap({ $0 as? NetInspectorTimestamp }).first else { return }
 
         let allRequestHeaders = response.request.allHTTPHeaderFields?.compactMap { key, value -> (key: String, value: String)? in
@@ -54,7 +53,7 @@ public final class CaptainsLogEnhancer: RequestEnhancer {
         let logItem = LogItem(
             id: UUID().uuidString,
             kind: .request(Request(method: HTTPMethod(rawValue: response.request.httpMethod.rawValue)!,
-                                   url: response.request.url ?? captainsLogBaseURL,
+                                   url: response.request.url ?? URL(fileURLWithPath: ""),
                                    headers: requestHeaders,
                                    time: timestamp.time,
                                    body: response.request.httpBody ?? Data(),
@@ -63,30 +62,19 @@ public final class CaptainsLogEnhancer: RequestEnhancer {
                                                               headers: responseHeaders,
                                                               body: response.rawData ?? Data()))))
 
-        try? post(to: "api/runs/\(CaptainsLog.instance.uuid)/logItems", value: logItem)
+        log.log(item: logItem)
+//        try? post(to: "api/runs/\(uuid)/logItems", value: logItem)
     }
 
-    private func register() throws {
-        let appRun = ApplicationRun(
-            id: CaptainsLog.instance.uuid,
-            name: Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String,
-            identifier: Bundle.main.bundleIdentifier!,
-            version: Bundle.main.infoDictionary![kCFBundleVersionKey as String] as! String,
-            date: Date()
-        )
-
-        try post(to: "api/runs", value: appRun)
-    }
-
-    private func post<T: Encodable>(to endpoint: String, value: T) throws {
-        let url = captainsLogBaseURL.appendingPathComponent(endpoint)
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(value)
-
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            // TODO Handle the response
-            }.resume()
-    }
+//    private func register() throws {
+//        let appRun = ApplicationRun(
+//            id: uuid,
+//            name: Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String,
+//            identifier: Bundle.main.bundleIdentifier!,
+//            version: Bundle.main.infoDictionary![kCFBundleVersionKey as String] as! String,
+//            date: Date()
+//        )
+//
+//        try post(to: "api/runs", value: appRun)
+//    }
 }

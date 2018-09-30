@@ -5,6 +5,8 @@ abstract_target 'CaptainsLog' do
 
     pod 'Fetcher', :git => 'https://github.com/Brightify/Fetcher.git', :branch => 'fix/xcode10', :subspecs => ['Core']
     pod 'SwiftyBeaver'
+    # TODO Remove
+    pod 'RxSwift'
 
     target 'CaptainsLog-macOS'
     target 'CaptainsLog-iOS'

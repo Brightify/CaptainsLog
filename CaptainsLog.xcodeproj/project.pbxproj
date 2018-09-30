@@ -47,6 +47,9 @@
 		18CB4EB42155CD3C00D1A93C /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CB4EB32155CD3C00D1A93C /* Discovery.swift */; };
 		18CB4EB52155CD3C00D1A93C /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CB4EB32155CD3C00D1A93C /* Discovery.swift */; };
 		18CB4EB62155CD3C00D1A93C /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CB4EB32155CD3C00D1A93C /* Discovery.swift */; };
+		18CC16E1215CCC4800BA7B96 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC16E0215CCC4800BA7B96 /* Async.swift */; };
+		18CC16E2215CCC4800BA7B96 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC16E0215CCC4800BA7B96 /* Async.swift */; };
+		18CC16E3215CCC4800BA7B96 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC16E0215CCC4800BA7B96 /* Async.swift */; };
 		2C17BD14BF021DAF71C28900 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5DA03AF819AF7D4B082E49 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework */; };
 		3F3C978EBA0CD87C82260D7B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252E2324FE387B686D80423B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework */; };
 		71EE7CA6215BC5DD00958149 /* CaptainsLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CA5215BC5DD00958149 /* CaptainsLogDestination.swift */; };
@@ -94,6 +97,7 @@
 		18CB4E7A2155C86B00D1A93C /* CaptainsLog_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CaptainsLog_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		18CB4E822155C86B00D1A93C /* CaptainsLog-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CaptainsLog-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		18CB4EB32155CD3C00D1A93C /* Discovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Discovery.swift; sourceTree = "<group>"; };
+		18CC16E0215CCC4800BA7B96 /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 		1A4A8E004A84310DBF7F42FB /* Pods_CaptainsLog_CaptainsLog_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog_CaptainsLog_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		252E2324FE387B686D80423B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C754E16DC4F038D41D7D146 /* Pods-CaptainsLog-CaptainsLog-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog-CaptainsLog-iOS.debug.xcconfig"; path = "Target Support Files/Pods-CaptainsLog-CaptainsLog-iOS/Pods-CaptainsLog-CaptainsLog-iOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -103,7 +107,7 @@
 		7120C414215277AA0084BD38 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		7120C415215277AA0084BD38 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		7120C416215277AA0084BD38 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		7120C41A215278D40084BD38 /* CaptainsLog.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CaptainsLog.podspec; sourceTree = "<group>"; };
+		7120C41A215278D40084BD38 /* CaptainsLog.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CaptainsLog.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		7120C41E21527D6B0084BD38 /* LogItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogItem.swift; sourceTree = "<group>"; };
 		7120C42521528AD70084BD38 /* HTTPMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPMethod.swift; sourceTree = "<group>"; };
 		7120C42721528B3C0084BD38 /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
@@ -295,6 +299,7 @@
 			isa = PBXGroup;
 			children = (
 				18CB4EB32155CD3C00D1A93C /* Discovery.swift */,
+				18CC16E0215CCC4800BA7B96 /* Async.swift */,
 			);
 			path = Discovery;
 			sourceTree = "<group>";
@@ -621,6 +626,7 @@
 				"${BUILT_PRODUCTS_DIR}/DataMapper-macOS/DataMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/Fetcher-macOS/Fetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/Result-macOS/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift-macOS/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyBeaver-macOS/SwiftyBeaver.framework",
 				"${BUILT_PRODUCTS_DIR}/Nimble-macOS/Nimble.framework",
 				"${BUILT_PRODUCTS_DIR}/Quick-macOS/Quick.framework",
@@ -632,6 +638,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DataMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Fetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyBeaver.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quick.framework",
@@ -653,6 +660,7 @@
 				"${BUILT_PRODUCTS_DIR}/DataMapper-iOS/DataMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/Fetcher-iOS/Fetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/Result-iOS/Result.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift-iOS/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyBeaver-iOS/SwiftyBeaver.framework",
 				"${BUILT_PRODUCTS_DIR}/Nimble-iOS/Nimble.framework",
 				"${BUILT_PRODUCTS_DIR}/Quick-iOS/Quick.framework",
@@ -664,6 +672,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DataMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Fetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyBeaver.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quick.framework",
@@ -726,6 +735,7 @@
 			files = (
 				18CB4EAB2155CCC900D1A93C /* ApplicationRun.swift in Sources */,
 				18CB4E992155CCC100D1A93C /* CaptainsLogEnhancer.swift in Sources */,
+				18CC16E1215CCC4800BA7B96 /* Async.swift in Sources */,
 				71EE7CAB215BCA8D00958149 /* Log.swift in Sources */,
 				18CB4EB22155CCCD00D1A93C /* CaptainsLog.swift in Sources */,
 				18CB4EAA2155CCC900D1A93C /* Request.swift in Sources */,
@@ -754,6 +764,7 @@
 			files = (
 				18CB4EA42155CCC800D1A93C /* ApplicationRun.swift in Sources */,
 				18CB4E9A2155CCC100D1A93C /* CaptainsLogEnhancer.swift in Sources */,
+				18CC16E2215CCC4800BA7B96 /* Async.swift in Sources */,
 				18CB4EB12155CCCC00D1A93C /* CaptainsLog.swift in Sources */,
 				18CB4EA32155CCC800D1A93C /* Request.swift in Sources */,
 				18CB4EA72155CCC800D1A93C /* ChallengeResult.swift in Sources */,
@@ -780,6 +791,7 @@
 			files = (
 				18CB4E9D2155CCC800D1A93C /* ApplicationRun.swift in Sources */,
 				18CB4E972155CCBF00D1A93C /* CaptainsLogEnhancer.swift in Sources */,
+				18CC16E3215CCC4800BA7B96 /* Async.swift in Sources */,
 				18CB4EB02155CCCC00D1A93C /* CaptainsLog.swift in Sources */,
 				18CB4E9C2155CCC800D1A93C /* Request.swift in Sources */,
 				18CB4EA02155CCC800D1A93C /* ChallengeResult.swift in Sources */,

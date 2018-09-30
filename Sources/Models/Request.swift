@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Request: Codable {
+public struct Request: Codable, Equatable {
     public var method: HTTPMethod
     public var url: URL
     public var headers: [String: String]
@@ -34,7 +34,7 @@ public struct Request: Codable {
 }
 
 public extension Request {
-    public struct Response: Codable {
+    public struct Response: Codable, Equatable {
         public var time: Date
         public var code: Int
         public var headers: [String: String]

@@ -8,8 +8,8 @@
 
 import Foundation
 
-public struct LogItem: Codable {
-    public enum Kind {
+public struct LogItem: Codable, Equatable {
+    public enum Kind: Equatable {
         case request(Request)
         case log(Log)
     }
