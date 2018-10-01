@@ -28,48 +28,50 @@ public final class LogReceiver {
                 return Observable.concat(Observable.just(item), readLogItem())
             }
         }
-//
-//        async {
-//            repeat {
-//
-//
-//                itemReceived(item)
-//            } while true
-//        }.debug("log receiver")
+
+        itemReceived = readLogItem()
     }
 }
 
-public final class CaptainsLogServer {
-    private let browser: DiscoveryServiceBrowser
-
-    public init() {
-        browser = DiscoveryServiceBrowser()
-    }
-
-    public func start(applicationRegistered: @escaping (DiscoveryConnection, DiscoveryHandshake.Application) -> Void) {
-        let connector = DiscoveryClientConnector()
-
-        let logger = DiscoveryHandshake.LogViewer(
-            id: UUID().uuidString,
-            name: "A logger")
-
-        browser.didResolveServices = { services in
-            for service in services {
-                async {
-                    let connection = try await(connector.connect(service: service))
-                    connection.open()
-                    fatalError()
-//                    let application = try DiscoveryHandshake().perform(on: connection, for: logger)
+//public final class CaptainsLogServer {
+//    private let browser: DiscoveryServiceBrowser
+//    private let logViewer = DiscoveryHandshake.LogViewer(
+//        id: UUID().uuidString,
+//        name: "A logger")
+//    let connector: DiscoveryClientConnector
 //
-//                    print("Registered", connection, application)
-//                    applicationRegistered(connection, application)
-                }
-            }
-        }
-
-        browser.search()
-    }
-}
+//    public init() {
+//        browser = DiscoveryServiceBrowser()
+//
+//        connector = DiscoveryClientConnector(logViewer: logViewer)
+//    }
+//
+//    public func start(applicationRegistered: @escaping (LoggerConnection, DiscoveryHandshake.Application) -> Void) {
+//        browser.unresolvedServices
+//            .concatMap { services in
+//                Observable.merge(services.map(connector.connect(service: <#T##NetService#>, lastLogItemId: <#T##LastLogItemId#>)) { $0.resolved(withTimeout: 30).asObservable() }).toArray()
+//            }
+//
+//
+//
+//
+//        browser.didResolveServices = { services in
+//            for service in services {
+//                async {
+//                    let connection = try await(connector.connect(service: service))
+////                    connection.open()
+//                    fatalError()
+////                    let application = try DiscoveryHandshake().perform(on: connection, for: logger)
+////
+////                    print("Registered", connection, application)
+////                    applicationRegistered(connection, application)
+//                }
+//            }
+//        }
+//
+//        browser.search()
+//    }
+//}
 
 final class LogSender {
     private let flushLock = DispatchQueue(label: "org.brightify.CaptainsLog.flushlock")

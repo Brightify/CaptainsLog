@@ -81,23 +81,6 @@ public extension Stream {
             .take(1)
             .asSingle()
     }
-
-//    func status(equalTo newStatus: Status) -> Promise<Void> {
-//        return Promise<Void> { resolved, _ in
-//            func checkAndDelay() {
-//                guard self.streamStatus != newStatus else {
-//                    resolved(())
-//                    return
-//                }
-//
-//                Queue.work.asyncAfter(deadline: .now() + 0.1) {
-//                    checkAndDelay()
-//                }
-//            }
-//
-//            checkAndDelay()
-//        }
-//    }
 }
 
 extension Stream.Status: CustomStringConvertible {
@@ -283,11 +266,13 @@ public enum LastLogItemId: Codable {
 
 public final class LoggerConnection {
     public let service: NetService
-    public private(set) var stream: TwoWayStream
+    public let stream: TwoWayStream
+    public let application: DiscoveryHandshake.Application
 
-    init(service: NetService, stream: TwoWayStream) {
+    init(service: NetService, stream: TwoWayStream, application: DiscoveryHandshake.Application) {
         self.service = service
         self.stream = stream
+        self.application = application
 
 //        var inputStream: InputStream?
 //        var outputStream: OutputStream?
@@ -300,11 +285,11 @@ public final class LoggerConnection {
 //        scheduleStreams()
     }
 
-    public func reconnected(newStream: TwoWayStream) {
-        print("Old stream", self.stream, ", new stream", newStream)
-
-        self.stream = newStream
-    }
+//    public func reconnected(newStream: TwoWayStream) {
+//        print("Old stream", self.stream, ", new stream", newStream)
+//
+//        self.stream = newStream
+//    }
 
 //    private func scheduleStreams() {
 //        inputStream.schedule(in: .current, forMode: .default)
@@ -345,7 +330,7 @@ final class DiscoveryServerConnector {
 
     func connect(stream: TwoWayStream) -> Single<LogViewerConnection> {
         return async {
-            try await(self.open(stream: stream))
+            try await(stream.open())
 
             let logViewer = try DiscoveryHandshake(stream: stream).perform(for: self.application)
 
@@ -372,74 +357,138 @@ final class DiscoveryServerConnector {
 //            return ServerConnection(id: "", service: service, inputStream: inputStream, outputStream: outputStream)
 //        }
 //    }
-
-    private func open(stream: TwoWayStream) -> Single<Void> {
-        return async {
-            self.schedule(stream: stream)
-
-            stream.input.open()
-            stream.output.open()
-
-            // Wait for streams to open
-            _ = try await(stream.input.status(equalTo: .open))
-            _ = try await(stream.output.status(equalTo: .open))
-        }
-    }
-
-    private func schedule(stream: TwoWayStream) {
-        stream.input.schedule(in: .current, forMode: .default)
-        stream.output.schedule(in: .current, forMode: .default)
-    }
 }
 
 final class DiscoveryClientConnector {
-    init() {
+    private let logViewer: DiscoveryHandshake.LogViewer
+
+    init(logViewer: DiscoveryHandshake.LogViewer) {
+        self.logViewer = logViewer
     }
 
-    func connect(service: NetService) -> Single<LoggerConnection> {
+    func connect(service: NetService, lastLogItemId: LastLogItemId) -> Single<LoggerConnection> {
         return async {
-            return ClientConnection(id: "", service: service)
+            let resolvedService = try await(service.resolved(withTimeout: 30))
+
+            var inputStream: InputStream?
+            var outputStream: OutputStream?
+
+            precondition(resolvedService.getInputStream(&inputStream, outputStream: &outputStream), "Couldn't get streams!")
+
+            let stream = TwoWayStream(input: inputStream!, output: outputStream!)
+
+            try await(stream.open())
+
+            let application = try DiscoveryHandshake(stream: stream).perform(for: self.logViewer)
+
+            try stream.output.write(encodable: lastLogItemId)
+
+            return LoggerConnection(service: resolvedService, stream: stream, application: application)
         }
     }
 
-    public func withReconnecting<T>(of connection: LoggerConnection, reconnectDelay: TimeInterval = 1, do work: () throws -> T) throws -> T {
-        do {
-            return try work()
-        } catch _ as StreamDisconnectedError {
-            print("Will reconnect")
-            Thread.sleep(forTimeInterval: reconnectDelay)
+//    public func withReconnecting<T>(of connection: LoggerConnection, reconnectDelay: TimeInterval = 1, do work: () throws -> T) throws -> T {
+//        do {
+//            return try work()
+//        } catch _ as StreamDisconnectedError {
+//            print("Will reconnect")
+//            Thread.sleep(forTimeInterval: reconnectDelay)
+//
+//            connect(service: connection.service)
+//
+//            return try withReconnecting(of: connection, do: work)
+//        } catch {
+//            throw error
+//        }
+//    }
 
-            return try withReconnecting(of: connection, do: work)
-        } catch {
-            throw error
-        }
-    }
+//    private func prepareStreams(inputStream: InputStream, outputStream: OutputStream) {
+//        inputStream.schedule(in: .current, forMode: .default)
+//        outputStream.schedule(in: .current, forMode: .default)
+//
+//
+//    }
 
-    private func prepareStreams(inputStream: InputStream, outputStream: OutputStream) {
-        inputStream.schedule(in: .current, forMode: .default)
-        outputStream.schedule(in: .current, forMode: .default)
+//    public func reconnect(client: LoggerConnection) {
+//        // TODO Check if we can close the stream right away or if we need to check if it wasn't closed first
+//        // if inputStream.streamStatus != .closed {
+//        client.stream.input.close()
+//        client.stream.output.close()
+//
+//        var inputStream: InputStream?
+//        var outputStream: OutputStream?
+//
+//        precondition(client.service.getInputStream(&inputStream, outputStream: &outputStream), "Couldn't get streams!")
+//
+//        let stream = TwoWayStream(input: inputStream!, output: outputStream!)
+//
+//        client.
+//
+//        fatalError("TODO")
+////        client.reconnected(inputStream: inputStream!, outputStream: outputStream!)
+//    }
 
-
-    }
-
-    public func reconnect(client: LoggerConnection) {
-        // TODO Check if we can close the stream right away or if we need to check if it wasn't closed first
-        // if inputStream.streamStatus != .closed {
-        client.stream.input.close()
-        client.stream.output.close()
-
-        var inputStream: InputStream?
-        var outputStream: OutputStream?
-
-        precondition(client.service.getInputStream(&inputStream, outputStream: &outputStream), "Couldn't get streams!")
-
-        fatalError("TODO")
-//        client.reconnected(inputStream: inputStream!, outputStream: outputStream!)
-    }
+//    private func connect(service: NetService) -> TwoWayStream {
+//        var inputStream: InputStream?
+//        var outputStream: OutputStream?
+//
+//        precondition(service.getInputStream(&inputStream, outputStream: &outputStream), "Couldn't get streams!")
+//
+//        return TwoWayStream(input: inputStream!, output: outputStream!)
+//    }
 }
 
 protocol DiscoveryServiceBrowserDelegate: AnyObject {
     func discoveryServiceBrowser(_ browser: DiscoveryServiceBrowser, didResolveServices: [NetService])
+}
+
+extension NetService {
+    private final class ResolutionDelegate: NSObject, NetServiceDelegate {
+        struct ResolutionError: Error {
+            let info: [String: NSNumber]
+        }
+
+        let serviceResolved: (ResolutionError?) -> Void
+
+        init(serviceResolved: @escaping (ResolutionError?) -> Void) {
+            self.serviceResolved = serviceResolved
+        }
+
+        func netServiceDidResolveAddress(_ sender: NetService) {
+            print(#function, sender)
+
+            serviceResolved(nil)
+        }
+
+        func netService(_ sender: NetService, didNotResolve errorDict: [String : NSNumber]) {
+            print(#function, sender, errorDict)
+
+            serviceResolved(ResolutionError(info: errorDict))
+        }
+    }
+
+    func resolved(withTimeout timeout: TimeInterval) -> Single<NetService> {
+        guard addresses == nil else { return .just(self) }
+
+        return Single.create { fullfill in
+            let delegate = ResolutionDelegate(serviceResolved: { error in
+                if let error = error {
+                    fullfill(.error(error))
+                } else {
+                    fullfill(.success(self))
+                }
+            })
+            self.delegate = delegate
+
+            self.resolve(withTimeout: timeout)
+
+            return Disposables.create {
+                withExtendedLifetime(delegate) { }
+                self.delegate = nil
+            }
+        }
+    }
+
 }
 
 final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
@@ -467,16 +516,16 @@ final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
         }
     }
 
-    var didResolveServices: (([NetService]) -> Void)?
+//    var didResolveServices: (([NetService]) -> Void)?
 
     private let browser = NetServiceBrowser()
-    private var services: [NetService] = [:]
+    private var services: [NetService] = []
 
-    private let resolutionQueue = DispatchQueue(label: "org.brightify.CaptainsLog.resolution")
+//    private let resolutionQueue = DispatchQueue(label: "org.brightify.CaptainsLog.resolution")
 
     private let unresolvedServicesSubject = BehaviorSubject<[NetService]>(value: [])
     public var unresolvedServices: Observable<[NetService]> {
-        return resolvedServicesSubject
+        return unresolvedServicesSubject
     }
 
     override init() {
@@ -591,6 +640,20 @@ struct Constants {
 public struct TwoWayStream {
     public let input: InputStream
     public let output: OutputStream
+
+    public func open(schedulingIn runLoop: RunLoop = .current, forMode runLoopMode: RunLoop.Mode = .default) -> Single<Void> {
+        return async {
+            self.input.schedule(in: runLoop, forMode: runLoopMode)
+            self.output.schedule(in: runLoop, forMode: runLoopMode)
+
+            self.input.open()
+            self.output.open()
+
+            // Wait for streams to open
+            _ = try await(self.input.status(equalTo: .open))
+            _ = try await(self.output.status(equalTo: .open))
+        }
+    }
 }
 
 extension NetService {

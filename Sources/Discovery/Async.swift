@@ -161,11 +161,16 @@ public func await<T>(timeout: DispatchTime = .distantFuture, _ single: Single<T>
     
     let semaphore = DispatchSemaphore(value: 0)
 
-    let subscription = single.subscribe { e in
-        event = e
+    let subscription = single
+        .subscribeOn(ConcurrentDispatchQueueScheduler(queue: Queue.await))
+        .observeOn(ConcurrentDispatchQueueScheduler(queue: Queue.await))
+        .subscribe { e in
+            dispatchPrecondition(condition: .onQueue(Queue.await))
 
-        semaphore.signal()
-    }
+            event = e
+
+            semaphore.signal()
+        }
     defer { subscription.dispose() }
 
     let waitingResult = semaphore.wait(timeout: timeout)
@@ -187,6 +192,8 @@ public func await<T>(timeout: DispatchTime = .distantFuture, _ single: Single<T>
 
 public func await<T>(timeout: DispatchTime = .distantFuture, _ body: @escaping () throws -> T) throws -> T {
     let single = Single<T>.create { resolve in
+        dispatchPrecondition(condition: .onQueue(Queue.await))
+
         do {
             resolve(.success(try body()))
         } catch {
