@@ -19,6 +19,9 @@ abstract_target 'CaptainsLog' do
         target 'CaptainsLog-iOSTests'
 #        target 'CaptainsLog-tvOSTests'
 
+        pod 'RxBlocking'
+        pod 'RxNimble'
+
         pod 'Quick'
         pod 'Nimble'
     end

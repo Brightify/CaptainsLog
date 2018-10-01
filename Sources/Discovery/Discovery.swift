@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 private func toByteArray<T>(_ value: T) -> [UInt8] {
     var value = value
@@ -67,22 +68,36 @@ public extension OutputStream {
 private let decoder = JSONDecoder()
 
 public extension Stream {
-    func status(equalTo newStatus: Status) -> Promise<Void> {
-        return Promise<Void> { resolved, _ in
-            func checkAndDelay() {
-                guard self.streamStatus != newStatus else {
-                    resolved(())
-                    return
-                }
-
-                Queue.work.asyncAfter(deadline: .now() + 0.1) {
-                    checkAndDelay()
-                }
-            }
-
-            checkAndDelay()
-        }
+    func observeStatus() -> Observable<Status> {
+        return Observable<Int>.timer(0.1, scheduler: MainScheduler.instance)
+            .map { _ in self.streamStatus }
+            .startWith(streamStatus)
+            .distinctUntilChanged()
     }
+
+    func status(equalTo newStatus: Status) -> Single<Status> {
+        return observeStatus()
+            .filter { $0 == newStatus }
+            .take(1)
+            .asSingle()
+    }
+
+//    func status(equalTo newStatus: Status) -> Promise<Void> {
+//        return Promise<Void> { resolved, _ in
+//            func checkAndDelay() {
+//                guard self.streamStatus != newStatus else {
+//                    resolved(())
+//                    return
+//                }
+//
+//                Queue.work.asyncAfter(deadline: .now() + 0.1) {
+//                    checkAndDelay()
+//                }
+//            }
+//
+//            checkAndDelay()
+//        }
+//    }
 }
 
 extension Stream.Status: CustomStringConvertible {
@@ -156,8 +171,9 @@ public extension InputStream {
     }
 }
 
+// TODO Handshake should encorporate encryption and signature verification
 public final class DiscoveryHandshake {
-    public struct Logger: Codable, Equatable {
+    public struct LogViewer: Codable, Equatable {
         public let id: String
         public let name: String
     }
@@ -169,42 +185,45 @@ public final class DiscoveryHandshake {
         public let date: Date
     }
 
-    init() {
+    private let stream: TwoWayStream
+
+    init(stream: TwoWayStream) {
+        self.stream = stream
     }
 
-    func perform(on connection: DiscoveryConnection, for logger: Logger) -> Promise<Application> {
-        return async {
-            try await(timeout: .now() + 3, connection.outputStream.status(equalTo: .open))
+    func perform(for viewer: LogViewer) throws -> Application {
+//        return async {
+//            try await(timeout: .now() + 3, connection.outputStream.status(equalTo: .open))
 
-            print("INFO: Sending logger info:", logger)
-            try connection.outputStream.write(encodable: logger)
+            print("INFO: Sending logger info:", viewer)
+            try stream.output.write(encodable: viewer)
             print("INFO: Sent logger info.")
 
-            try await(timeout: .now() + 3, connection.inputStream.status(equalTo: .open))
+//            try await(timeout: .now() + 3, connection.inputStream.status(equalTo: .open))
             print("INFO: Receiving app info.")
-            let application = try connection.inputStream.readDecodable(Application.self)
+            let application = try stream.input.readDecodable(Application.self)
             print("INFO: Receiving app info:", application)
 
             return application
-        }
+//        }
     }
 
 
-    func perform(on connection: DiscoveryConnection, for application: Application) -> Promise<Logger> {
-        return async {
-            try await(timeout: .now() + 3, connection.inputStream.status(equalTo: .open))
+    func perform(for application: Application) throws -> LogViewer {
+//        return async {
+//            try await(timeout: .now() + 3, connection.inputStream.status(equalTo: .open))
 
             print("INFO: Receiving logger info.")
-            let logger = try connection.inputStream.readDecodable(Logger.self)
-            print("INFO: Receiving logger info:", logger)
+            let logViewer = try stream.input.readDecodable(LogViewer.self)
+            print("INFO: Receiving logger info:", logViewer)
 
-            try await(timeout: .now() + 3, connection.outputStream.status(equalTo: .open))
+//            try await(timeout: .now() + 3, connection.outputStream.status(equalTo: .open))
             print("INFO: Sending app info:", application)
-            try connection.outputStream.write(encodable: application)
+            try stream.output.write(encodable: application)
             print("INFO: Sent app info.")
 
-            return logger
-        }
+            return logViewer
+//        }
     }
 }
 
@@ -213,7 +232,7 @@ public enum DiscoveryConnectionSide {
     case client
 }
 
-public enum DiscoveryConnectionId: Codable {
+public enum LastLogItemId: Codable {
     case unassigned
     case assigned(String)
 
@@ -249,130 +268,127 @@ public enum DiscoveryConnectionId: Codable {
     }
 }
 
-public protocol DiscoveryConnection {
-    var side: DiscoveryConnectionSide { get }
-    var id: String { get }
-    var service: NetService { get }
-    var inputStream: InputStream { get }
-    var outputStream: OutputStream { get }
+//public protocol DiscoveryConnection {
+//    var side: DiscoveryConnectionSide { get }
+//    var service: NetService { get }
+//    var inputStream: InputStream { get }
+//    var outputStream: OutputStream { get }
+//
+//    func reconnected(inputStream: InputStream, outputStream: OutputStream)
+//}
 
-    func reconnected(inputStream: InputStream, outputStream: OutputStream)
+//public extension DiscoveryConnection {
+//
+//}
+
+public final class LoggerConnection {
+    public let service: NetService
+    public private(set) var stream: TwoWayStream
+
+    init(service: NetService, stream: TwoWayStream) {
+        self.service = service
+        self.stream = stream
+
+//        var inputStream: InputStream?
+//        var outputStream: OutputStream?
+//
+//        precondition(service.getInputStream(&inputStream, outputStream: &outputStream), "Couldn't get streams!")
+//
+//        self.inputStream = inputStream!
+//        self.outputStream = outputStream!
+//
+//        scheduleStreams()
+    }
+
+    public func reconnected(newStream: TwoWayStream) {
+        print("Old stream", self.stream, ", new stream", newStream)
+
+        self.stream = newStream
+    }
+
+//    private func scheduleStreams() {
+//        inputStream.schedule(in: .current, forMode: .default)
+//        outputStream.schedule(in: .current, forMode: .default)
+//    }
+
+    func close() {
+        print("INFO: Closing connection for logger service:", service)
+        service.stop()
+        stream.input.close()
+        stream.output.close()
+    }
 }
 
-public extension DiscoveryConnection {
-    func open() {
-        print("INFO: Opening connection for service:", side, service)
-        inputStream.open()
-        print("ERROR:", inputStream.streamError)
-        outputStream.open()
-        print("ERROR:", outputStream.streamError)
+public final class LogViewerConnection {
+    public let stream: TwoWayStream
+    public let logViewer: DiscoveryHandshake.LogViewer
+    public let lastReceivedItemId: LastLogItemId
+
+    init(stream: TwoWayStream, logViewer: DiscoveryHandshake.LogViewer, lastReceivedItemId: LastLogItemId) {
+        self.stream = stream
+        self.logViewer = logViewer
+        self.lastReceivedItemId = lastReceivedItemId
     }
 
     func close() {
-        print("INFO: Closing connection for service:", side, service)
-        service.stop()
-        inputStream.close()
-        outputStream.close()
+        stream.input.close()
+        stream.output.close()
     }
-}
-
-public final class ClientConnection: DiscoveryConnection {
-    public let side = DiscoveryConnectionSide.client
-    public let id: String
-    public let service: NetService
-    public private(set) var inputStream: InputStream
-    public private(set) var outputStream: OutputStream
-
-    init(id: String, service: NetService) {
-        self.id = id
-        self.service = service
-
-        var inputStream: InputStream?
-        var outputStream: OutputStream?
-
-        precondition(service.getInputStream(&inputStream, outputStream: &outputStream), "Couldn't get streams!")
-
-        self.inputStream = inputStream!
-        self.outputStream = outputStream!
-
-        scheduleStreams()
-    }
-
-    public func reconnected(inputStream: InputStream, outputStream: OutputStream) {
-        print("Old input", self.inputStream, ", new input", inputStream)
-        print("Old output", self.outputStream, ", new output", outputStream)
-
-        self.inputStream = inputStream
-        self.outputStream = outputStream
-
-        scheduleStreams()
-    }
-
-    private func scheduleStreams() {
-        inputStream.schedule(in: .current, forMode: .default)
-        outputStream.schedule(in: .current, forMode: .default)
-    }
-}
-
-public final class ServerConnection: DiscoveryConnection {
-    public let side = DiscoveryConnectionSide.server
-    public let id: String
-    public let service: NetService
-    public private(set) var inputStream: InputStream
-    public private(set) var outputStream: OutputStream
-
-    init(id: String, service: NetService, inputStream: InputStream, outputStream: OutputStream) {
-        self.id = id
-        self.service = service
-        self.inputStream = inputStream
-        self.outputStream = outputStream
-
-//        scheduleStreams()
-    }
-
-    public func reconnected(inputStream: InputStream, outputStream: OutputStream) {
-        print("Old input", self.inputStream, ", new input", inputStream)
-        print("Old output", self.outputStream, ", new output", outputStream)
-
-        self.inputStream = inputStream
-        self.outputStream = outputStream
-
-//        scheduleStreams()
-    }
-
 }
 
 final class DiscoveryServerConnector {
-    private struct WeakBox<T: AnyObject> {
-        weak var object: T?
+    private let application: DiscoveryHandshake.Application
+
+    init(application: DiscoveryHandshake.Application) {
+        self.application = application
     }
 
-    private var pastConnections: [String: WeakBox<ServerConnection>] = [:]
-
-    init() {
-    }
-
-    func accept(service: NetService, inputStream: InputStream, outputStream: OutputStream) -> Promise<ServerConnection> {
+    func connect(stream: TwoWayStream) -> Single<LogViewerConnection> {
         return async {
-            self.prepareStreams(inputStream: inputStream, outputStream: outputStream)
+            try await(self.open(stream: stream))
 
-            let id = try inputStream.readDecodable(DiscoveryConnectionId.self)
+            let logViewer = try DiscoveryHandshake(stream: stream).perform(for: self.application)
 
-            switch id {
-            case .assigned(let identifier):
-                let existingConnection = self.pastConnections[identifier]
+            let lastItemId = try stream.input.readDecodable(LastLogItemId.self)
 
-            case .unassigned:
-                break
-            }
-
-            return ServerConnection(id: "", service: service, inputStream: inputStream, outputStream: outputStream)
+            return LogViewerConnection(stream: stream, logViewer: logViewer, lastReceivedItemId: lastItemId)
         }
     }
 
-    private func prepareStreams(inputStream: InputStream, outputStream: OutputStream) {
-        inputStream.schedule(in: .current, forMode: .default)
-        outputStream.schedule(in: .current, forMode: .default)
+//    func accept(service: NetService, inputStream: InputStream, outputStream: OutputStream) -> Promise<ServerConnection> {
+//        return async {
+//            self.prepareStreams(inputStream: inputStream, outputStream: outputStream)
+//
+//            let id = try inputStream.readDecodable(DiscoveryConnectionId.self)
+//
+//            switch id {
+//            case .assigned(let identifier):
+//                let existingConnection = self.pastConnections[identifier]
+//
+//            case .unassigned:
+//                break
+//            }
+//
+//            return ServerConnection(id: "", service: service, inputStream: inputStream, outputStream: outputStream)
+//        }
+//    }
+
+    private func open(stream: TwoWayStream) -> Single<Void> {
+        return async {
+            self.schedule(stream: stream)
+
+            stream.input.open()
+            stream.output.open()
+
+            // Wait for streams to open
+            _ = try await(stream.input.status(equalTo: .open))
+            _ = try await(stream.output.status(equalTo: .open))
+        }
+    }
+
+    private func schedule(stream: TwoWayStream) {
+        stream.input.schedule(in: .current, forMode: .default)
+        stream.output.schedule(in: .current, forMode: .default)
     }
 }
 
@@ -380,13 +396,13 @@ final class DiscoveryClientConnector {
     init() {
     }
 
-    func connect(service: NetService) -> Promise<DiscoveryConnection> {
+    func connect(service: NetService) -> Single<LoggerConnection> {
         return async {
             return ClientConnection(id: "", service: service)
         }
     }
 
-    public func withReconnecting<T>(of connection: ClientConnection, reconnectDelay: TimeInterval = 1, do work: () throws -> T) throws -> T {
+    public func withReconnecting<T>(of connection: LoggerConnection, reconnectDelay: TimeInterval = 1, do work: () throws -> T) throws -> T {
         do {
             return try work()
         } catch _ as StreamDisconnectedError {
@@ -406,18 +422,19 @@ final class DiscoveryClientConnector {
 
     }
 
-    public func reconnect(client: ClientConnection) {
+    public func reconnect(client: LoggerConnection) {
         // TODO Check if we can close the stream right away or if we need to check if it wasn't closed first
         // if inputStream.streamStatus != .closed {
-        client.inputStream.close()
-        client.outputStream.close()
+        client.stream.input.close()
+        client.stream.output.close()
 
         var inputStream: InputStream?
         var outputStream: OutputStream?
 
         precondition(client.service.getInputStream(&inputStream, outputStream: &outputStream), "Couldn't get streams!")
 
-        client.reconnected(inputStream: inputStream!, outputStream: outputStream!)
+        fatalError("TODO")
+//        client.reconnected(inputStream: inputStream!, outputStream: outputStream!)
     }
 }
 
@@ -453,9 +470,14 @@ final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
     var didResolveServices: (([NetService]) -> Void)?
 
     private let browser = NetServiceBrowser()
-    private var unresolvedServices: [NetService] = []
+    private var services: [NetService] = [:]
 
     private let resolutionQueue = DispatchQueue(label: "org.brightify.CaptainsLog.resolution")
+
+    private let unresolvedServicesSubject = BehaviorSubject<[NetService]>(value: [])
+    public var unresolvedServices: Observable<[NetService]> {
+        return resolvedServicesSubject
+    }
 
     override init() {
         super.init()
@@ -476,117 +498,177 @@ final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
     func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
         print(#function, browser, service, moreComing)
 
-        unresolvedServices.append(service)
+        services.append(service)
 
         if !moreComing {
-            let servicesCopy = unresolvedServices
-            unresolvedServices = []
+            unresolvedServicesSubject.onNext(services)
 
-            let group = DispatchGroup()
-
-            let delegates = servicesCopy.map { service -> NetServiceClientDelegate in
-                group.enter()
-
-                let delegate = NetServiceClientDelegate { error in
-                    group.leave()
-                }
-                service.delegate = delegate
-                service.schedule(in: .current, forMode: .default)
-                service.resolve(withTimeout: 30)
-                return delegate
-            }
-
-            group.notify(queue: .main) {
-                withExtendedLifetime(delegates) { }
-                self.didResolveServices?(servicesCopy)
-            }
+//            let servicesCopy = unresolvedServices
+//
+//            let group = DispatchGroup()
+//
+//            let delegates = servicesCopy.map { service -> NetServiceClientDelegate in
+//                group.enter()
+//
+//                let delegate = NetServiceClientDelegate { error in
+//                    group.leave()
+//                }
+//                service.delegate = delegate
+//                service.schedule(in: .current, forMode: .default)
+//                service.resolve(withTimeout: 30)
+//                return delegate
+//            }
+//
+//            group.notify(queue: .main) {
+//                withExtendedLifetime(delegates) { }
+//                self.didResolveServices?(servicesCopy)
+//            }
         }
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
         print(#function, browser, service, moreComing)
         // FIXME Implement removing properly
-        unresolvedServices.removeAll(where: { $0 == service })
+        services.removeAll(where: { $0 == service })
+
+        if moreComing {
+            unresolvedServicesSubject.onNext(services)
+        }
     }
 }
 
-final class DiscoveryService: NSObject {
+struct Constants {
     static let domain = "local."
     static let type = "_captainslog-transmitter._tcp."
     static let port = 0 as Int32
+}
 
-    private let service: NetService
+//final class DiscoveryService: NSObject {
+//    static let domain = "local."
+//    static let type = "_captainslog-transmitter._tcp."
+//    static let port = 0 as Int32
+//
+//    private let service: NetService
+//
+//    private let pendingConnectionLock = DispatchQueue(label: "service-queue")
+//    private var pendingConnectionPromise: Promise<DiscoveryConnection>?
+//    private var pendingConnections: [DiscoveryConnection] = [] {
+//        didSet {
+//            guard !pendingConnections.isEmpty else { return }
+//            pendingConnectionPromise?.resolve(pendingConnections.removeFirst())
+//        }
+//    }
+//
+//    private let connector = DiscoveryServerConnector()
+//
+//    init(
+//        domain: String = DiscoveryService.domain,
+//        type: String = DiscoveryService.type,
+//        name: String,
+//        port: Int32 = DiscoveryService.port) {
+//
+//        service = NetService(
+//            domain: domain,
+//            type: type,
+//            name: name, // Host.current().localizedName ?? "Unknown"
+//            port: port)
+//
+//        super.init()
+//
+//        service.delegate = self
+//
+//        service.schedule(in: .current, forMode: .default)
+//        service.publish(options: .listenForConnections)
+//    }
+//
+//    deinit {
+//        print("Service deinited")
+//        service.delegate = nil
+//        service.stop()
+//    }
+//}
 
-    private let pendingConnectionLock = DispatchQueue(label: "service-queue")
-    private var pendingConnectionPromise: Promise<DiscoveryConnection>?
-    private var pendingConnections: [DiscoveryConnection] = [] {
-        didSet {
-            guard !pendingConnections.isEmpty else { return }
-            pendingConnectionPromise?.resolve(pendingConnections.removeFirst())
-        }
-    }
+public struct TwoWayStream {
+    public let input: InputStream
+    public let output: OutputStream
+}
 
-    private let connector = DiscoveryServerConnector()
+extension NetService {
+    static func loggerService(
+        named name: String,
+        domain: String = Constants.domain,
+        type: String = Constants.type,
+        port: Int32 = Constants.port) -> NetService {
 
-    init(
-        domain: String = DiscoveryService.domain,
-        type: String = DiscoveryService.type,
-        name: String,
-        port: Int32 = DiscoveryService.port) {
-
-        service = NetService(
-            domain: domain,
-            type: type,
-            name: name, // Host.current().localizedName ?? "Unknown"
-            port: port)
-
-        super.init()
-
-        service.delegate = self
-
-        service.schedule(in: .current, forMode: .default)
-        service.publish(options: .listenForConnections)
-    }
-
-    deinit {
-        print("Service deinited")
-        service.delegate = nil
-        service.stop()
+        return NetService(domain: domain, type: type, name: name, port: port)
     }
 }
 
-extension DiscoveryService {
-    func acceptConnection() -> Promise<DiscoveryConnection> {
-        return pendingConnectionLock.sync {
-            if !pendingConnections.isEmpty {
-                let firstPendingConnection = pendingConnections.removeFirst()
-                let promise = Promise<DiscoveryConnection>.pending()
-                promise.resolve(firstPendingConnection)
-                return promise
-            } else {
-                let promise = Promise<DiscoveryConnection>.pending()
-                promise.ensure { [weak self] in
-                    self?.pendingConnectionPromise = nil
-                }
-                pendingConnectionPromise = promise
-                return promise
+extension NetService {
+    private class AcceptDelegate: NSObject, NetServiceDelegate {
+        private let didAcceptConnection: (TwoWayStream) -> Void
+
+        init(didAcceptConnection: @escaping (TwoWayStream) -> Void) {
+            self.didAcceptConnection = didAcceptConnection
+        }
+
+        func netService(_ sender: NetService, didAcceptConnectionWith inputStream: InputStream, outputStream: OutputStream) {
+            didAcceptConnection(TwoWayStream(input: inputStream, output: outputStream))
+        }
+    }
+
+    func publish() -> Observable<TwoWayStream> {
+        return Observable.create { observer in
+            let delegate = AcceptDelegate(didAcceptConnection: observer.onNext)
+            self.delegate = delegate
+
+            self.schedule(in: .current, forMode: .default)
+            self.publish(options: .listenForConnections)
+
+            return Disposables.create {
+                withExtendedLifetime(delegate) { }
+                self.delegate = nil
+                self.stop()
             }
         }
     }
 }
 
-extension DiscoveryService: NetServiceDelegate {
-    func netService(_ sender: NetService, didAcceptConnectionWith inputStream: InputStream, outputStream: OutputStream) {
-        print(#function)
+//extension DiscoveryService {
+//
+//
+//    func acceptConnection() -> Observable<DiscoveryConnection> {
+//        return Obser
+//        return pendingConnectionLock.sync {
+//            if !pendingConnections.isEmpty {
+//                let firstPendingConnection = pendingConnections.removeFirst()
+//                let promise = Promise<DiscoveryConnection>.pending()
+//                promise.resolve(firstPendingConnection)
+//                return promise
+//            } else {
+//                let promise = Promise<DiscoveryConnection>.pending()
+//                promise.ensure { [weak self] in
+//                    self?.pendingConnectionPromise = nil
+//                }
+//                pendingConnectionPromise = promise
+//                return promise
+//            }
+//        }
+//    }
+//}
 
-        async {
-            let connection = try await(self.connector.accept(service: sender, inputStream: inputStream, outputStream: outputStream))
-
-            self.pendingConnectionLock.sync {
-                self.pendingConnections.append(connection)
-            }
-        }
-    }
+//extension DiscoveryService: NetServiceDelegate {
+//    func netService(_ sender: NetService, didAcceptConnectionWith inputStream: InputStream, outputStream: OutputStream) {
+//        print(#function)
+//
+//        async {
+//            let connection = try await(self.connector.accept(service: sender, inputStream: inputStream, outputStream: outputStream))
+//
+//            self.pendingConnectionLock.sync {
+//                self.pendingConnections.append(connection)
+//            }
+//        }
+//    }
 
 //    func netService(_ sender: NetService, didNotPublish errorDict: [String : NSNumber]) {
 //        print(#function)
@@ -651,4 +733,4 @@ extension DiscoveryService: NetServiceDelegate {
 //            $0.netServiceWillResolve?(sender)
 //        }
 //    }
-}
+//}

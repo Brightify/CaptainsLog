@@ -7,24 +7,35 @@
 //
 
 import Foundation
+#if canImport(RxSwift)
+import RxSwift
+#endif
 
 public final class LogReceiver {
-    private let application: DiscoveryHandshake.Application
-    private let connection: DiscoveryConnection
-    private let itemReceived: (LogItem) -> Void
+    public let itemReceived: Observable<LogItem>
 
-    public init(application: DiscoveryHandshake.Application, connection: DiscoveryConnection, itemReceived: @escaping (LogItem) -> Void) {
+    private let application: DiscoveryHandshake.Application
+    private let connection: LoggerConnection
+
+    public init(application: DiscoveryHandshake.Application, connection: LoggerConnection) {
         self.application = application
         self.connection = connection
-        self.itemReceived = itemReceived
 
-        async {
-            repeat {
-                let item = try connection.inputStream.readDecodable(LogItem.self)
+        func readLogItem() -> Observable<LogItem> {
+            return Observable.deferred {
+                let item = try connection.stream.input.readDecodable(LogItem.self)
 
-                itemReceived(item)
-            } while true
-        }.debug("log receiver")
+                return Observable.concat(Observable.just(item), readLogItem())
+            }
+        }
+//
+//        async {
+//            repeat {
+//
+//
+//                itemReceived(item)
+//            } while true
+//        }.debug("log receiver")
     }
 }
 
@@ -38,7 +49,7 @@ public final class CaptainsLogServer {
     public func start(applicationRegistered: @escaping (DiscoveryConnection, DiscoveryHandshake.Application) -> Void) {
         let connector = DiscoveryClientConnector()
 
-        let logger = DiscoveryHandshake.Logger(
+        let logger = DiscoveryHandshake.LogViewer(
             id: UUID().uuidString,
             name: "A logger")
 
@@ -47,11 +58,11 @@ public final class CaptainsLogServer {
                 async {
                     let connection = try await(connector.connect(service: service))
                     connection.open()
-
-                    let application = try await(DiscoveryHandshake().perform(on: connection, for: logger))
-
-                    print("Registered", connection, application)
-                    applicationRegistered(connection, application)
+                    fatalError()
+//                    let application = try DiscoveryHandshake().perform(on: connection, for: logger)
+//
+//                    print("Registered", connection, application)
+//                    applicationRegistered(connection, application)
                 }
             }
         }
@@ -64,7 +75,7 @@ final class LogSender {
     private let flushLock = DispatchQueue(label: "org.brightify.CaptainsLog.flushlock")
     private let queueLock = DispatchQueue(label: "org.brightify.CaptainsLog.queuelock")
 
-    private let connection: DiscoveryConnection
+    private let connection: LogViewerConnection
     private var queue: [LogItem] {
         didSet {
             flush()
@@ -72,7 +83,7 @@ final class LogSender {
     }
     private var isFlushing = false
 
-    init(connection: DiscoveryConnection, queue: [LogItem]) {
+    init(connection: LogViewerConnection, queue: [LogItem]) {
         self.connection = connection
         self.queue = queue
 
@@ -109,7 +120,7 @@ final class LogSender {
             }
 
             for item in logQueueCopy {
-                try! self.connection.outputStream.write(encodable: item)
+                try! self.connection.stream.output.write(encodable: item)
             }
 
             self.isFlushing = false
@@ -138,29 +149,54 @@ final class CaptainsLog {
     private var logItems: [LogItem] = []
     private var senders: [LogSender] = []
 
-    private let deviceService: DiscoveryService
+    private let loggerService: NetService
+    private let connector: DiscoveryServerConnector
+    private let disposeBag = DisposeBag()
 
     init(info: DiscoveryHandshake.Application) {
-        deviceService = DiscoveryService(name: "device-name", port: 11111)
+        connector = DiscoveryServerConnector(application: info)
 
-        async { [weak self, deviceService] in
-            repeat {
-                let connection = try await(deviceService.acceptConnection())
+        loggerService = NetService.loggerService(named: "device-name", port: 11111)
 
-                async {
-                    connection.open()
-
-                    let logger = try await(DiscoveryHandshake().perform(on: connection, for: info))
-                    print("Connected to logger:", logger)
-
-                    self?.senderLock.sync {
-                        let sender = LogSender(connection: connection, queue: self?.logItems ?? [])
-
-                        self?.senders.append(sender)
+        loggerService.publish()
+            .flatMap(connector.connect)
+            .subscribe(onNext: { [unowned self] connection in
+                let initialQueue: [LogItem]
+                switch connection.lastReceivedItemId {
+                case .assigned(let lastItemId):
+                    if let fromIndex = self.logItems.lastIndex(where: { $0.id == lastItemId }) {
+                        initialQueue = Array(self.logItems[fromIndex...])
+                    } else {
+                        initialQueue = self.logItems
                     }
+                case .unassigned:
+                    initialQueue = self.logItems
                 }
-            } while true
-        }
+
+
+                let sender = LogSender(connection: connection, queue: initialQueue)
+            })
+            .disposed(by: disposeBag)
+
+
+//        async { [weak self, deviceService] in
+//            repeat {
+//                let connection = try await(deviceService.acceptConnection())
+//
+//                async {
+//                    connection.open()
+//
+//                    let logger = try await(DiscoveryHandshake().perform(on: connection, for: info))
+//                    print("Connected to logger:", logger)
+//
+//                    self?.senderLock.sync {
+//                        let sender = LogSender(connection: connection, queue: self?.logItems ?? [])
+//
+//                        self?.senders.append(sender)
+//                    }
+//                }
+//            } while true
+//        }
     }
 
     func log(item: LogItem) {

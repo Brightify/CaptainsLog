@@ -15,6 +15,9 @@ import XCTest
 @testable import CaptainsLog_tvOS
 #endif
 
+import RxBlocking
+import RxNimble
+
 import Quick
 import Nimble
 
@@ -40,7 +43,7 @@ class DiscoverySpec: QuickSpec {
                  4. Receive logger url from search
                  */
 
-                let deviceService = DiscoveryService(name: "device-name", port: 11111)
+                let deviceService = NetService.loggerService(named: "device-name", port: 11111)
 
                 var netService: NetService?
                 let browser = DiscoveryServiceBrowser()
@@ -61,14 +64,14 @@ class DiscoverySpec: QuickSpec {
             it("connects to device") {
                 var connection: DiscoveryConnection?
 
-                let connector = DiscoveryServiceConnector()
+                let connector = DiscoveryClientConnector()
 
 //                connectionEstablished: { newConnection in
 //                    connection = newConnection
 //                    newConnection.close()
 //                })
 
-                let deviceService = DiscoveryService(name: "device-name", port: 11111)
+                let deviceService = NetService.loggerService(named: "device-name", port: 11111)
 
                 let browser = DiscoveryServiceBrowser()
 
@@ -107,7 +110,8 @@ class DiscoverySpec: QuickSpec {
                 var application: DiscoveryHandshake.Application?
                 var logger: DiscoveryHandshake.Logger?
 
-                let connector = DiscoveryServiceConnector()
+                let serverConnector = DiscoveryServerConnector()
+                let clientConnector = DiscoveryClientConnector()
 
 //                connectionEstablished: { applicationConnection in
 //                    async {
@@ -118,13 +122,13 @@ class DiscoverySpec: QuickSpec {
 //                    }
 //                })
 
-                let deviceService = DiscoveryService(name: "device-name", port: 11111)
+                let deviceService = NetService.loggerService(named: "device-name", port: 11111)
 
                 let browser = DiscoveryServiceBrowser() //resolvedService: connector.connect(service:))
                 browser.didResolveServices = { services in
                     for service in services {
                         async {
-                            let connection = try await(connector.connect(service: service))
+                            let connection = try await(clientConnector.connect(service: service))
                             connection.open()
                             application = try await(DiscoveryHandshake().perform(on: connection, for: originalLogger))
                             print("Application:", application)
@@ -136,7 +140,7 @@ class DiscoverySpec: QuickSpec {
                 async {
                     browser.search()
 
-                    let connection = try await(deviceService.acceptConnection())
+                    let connection = deviceService.publish()
                     connection.open()
                     logger = try await(DiscoveryHandshake().perform(on: connection, for: originalApplication))
                     print("Logger:", logger)
