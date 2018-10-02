@@ -156,6 +156,16 @@ public struct AwaitTimeoutError: Error { }
 //    }
 //}
 
+public func await<T>(timeout: DispatchTime = .distantFuture, _ maybe: Maybe<T>) throws -> T? {
+    do {
+        return try await(timeout: timeout, maybe.asObservable().asSingle())
+    } catch RxError.noElements {
+        return nil
+    } catch {
+        throw error
+    }
+}
+
 public func await<T>(timeout: DispatchTime = .distantFuture, _ single: Single<T>) throws -> T {
     var event: SingleEvent<T>?
     

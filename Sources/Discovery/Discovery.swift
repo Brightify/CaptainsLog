@@ -39,11 +39,8 @@ public extension OutputStream {
 
             guard writtenBytes > 0 else {
                 if let streamError = streamError {
-                    print("Write error:", streamError)
                     throw streamError
                 } else {
-                    // FIXME Throw an error, don't crash
-//                    fatalError("Couldn't write before close")
                     throw StreamDisconnectedError()
                 }
             }
@@ -75,11 +72,12 @@ public extension Stream {
             .distinctUntilChanged()
     }
 
-    func status(equalTo newStatus: Status) -> Single<Status> {
+    func status(isOneOf acceptedStates: Status...) -> Maybe<Status> {
+        let acceptedStateSet = Set(acceptedStates)
         return observeStatus()
-            .filter { $0 == newStatus }
+            .filter(acceptedStateSet.contains)
             .take(1)
-            .asSingle()
+            .asMaybe()
     }
 }
 
@@ -115,17 +113,13 @@ public extension InputStream {
         var readBytes = 0
 
         repeat {
-            var buffer = bytesPointer.advanced(by: readBytes)
-// totalBytes[readBytes...] //  Array<UInt8>(repeating: 0, count: remainingLength)
-//            self.read(buffer, maxLength: length - readBytes)
+            let buffer = bytesPointer.advanced(by: readBytes)
             let readLength = read(buffer, maxLength: length - readBytes)
             guard readLength > 0 else {
                 if let streamError = streamError {
-                    // FIXME Throw an error, don't crash
-                    print("streamError", streamError)
                     throw streamError
+
                 } else {
-//                    fatalError("Couldn't read before close")
                     throw StreamDisconnectedError()
                 }
             }
@@ -175,38 +169,28 @@ public final class DiscoveryHandshake {
     }
 
     func perform(for viewer: LogViewer) throws -> Application {
-//        return async {
-//            try await(timeout: .now() + 3, connection.outputStream.status(equalTo: .open))
-
             print("INFO: Sending logger info:", viewer)
             try stream.output.write(encodable: viewer)
             print("INFO: Sent logger info.")
 
-//            try await(timeout: .now() + 3, connection.inputStream.status(equalTo: .open))
             print("INFO: Receiving app info.")
             let application = try stream.input.readDecodable(Application.self)
             print("INFO: Receiving app info:", application)
 
             return application
-//        }
     }
 
 
     func perform(for application: Application) throws -> LogViewer {
-//        return async {
-//            try await(timeout: .now() + 3, connection.inputStream.status(equalTo: .open))
-
             print("INFO: Receiving logger info.")
             let logViewer = try stream.input.readDecodable(LogViewer.self)
             print("INFO: Receiving logger info:", logViewer)
 
-//            try await(timeout: .now() + 3, connection.outputStream.status(equalTo: .open))
             print("INFO: Sending app info:", application)
             try stream.output.write(encodable: application)
             print("INFO: Sent app info.")
 
             return logViewer
-//        }
     }
 }
 
@@ -251,50 +235,17 @@ public enum LastLogItemId: Codable {
     }
 }
 
-//public protocol DiscoveryConnection {
-//    var side: DiscoveryConnectionSide { get }
-//    var service: NetService { get }
-//    var inputStream: InputStream { get }
-//    var outputStream: OutputStream { get }
-//
-//    func reconnected(inputStream: InputStream, outputStream: OutputStream)
-//}
-
-//public extension DiscoveryConnection {
-//
-//}
-
 public final class LoggerConnection {
     public let service: NetService
-    public let stream: TwoWayStream
     public let application: DiscoveryHandshake.Application
+
+    public private(set) var stream: TwoWayStream
 
     init(service: NetService, stream: TwoWayStream, application: DiscoveryHandshake.Application) {
         self.service = service
         self.stream = stream
         self.application = application
-
-//        var inputStream: InputStream?
-//        var outputStream: OutputStream?
-//
-//        precondition(service.getInputStream(&inputStream, outputStream: &outputStream), "Couldn't get streams!")
-//
-//        self.inputStream = inputStream!
-//        self.outputStream = outputStream!
-//
-//        scheduleStreams()
     }
-
-//    public func reconnected(newStream: TwoWayStream) {
-//        print("Old stream", self.stream, ", new stream", newStream)
-//
-//        self.stream = newStream
-//    }
-
-//    private func scheduleStreams() {
-//        inputStream.schedule(in: .current, forMode: .default)
-//        outputStream.schedule(in: .current, forMode: .default)
-//    }
 
     func close() {
         print("INFO: Closing connection for logger service:", service)
@@ -330,7 +281,7 @@ final class DiscoveryServerConnector {
 
     func connect(stream: TwoWayStream) -> Single<LogViewerConnection> {
         return async {
-            try await(stream.open())
+            try await(stream.open().debug("server connect"))
 
             let logViewer = try DiscoveryHandshake(stream: stream).perform(for: self.application)
 
@@ -339,24 +290,6 @@ final class DiscoveryServerConnector {
             return LogViewerConnection(stream: stream, logViewer: logViewer, lastReceivedItemId: lastItemId)
         }
     }
-
-//    func accept(service: NetService, inputStream: InputStream, outputStream: OutputStream) -> Promise<ServerConnection> {
-//        return async {
-//            self.prepareStreams(inputStream: inputStream, outputStream: outputStream)
-//
-//            let id = try inputStream.readDecodable(DiscoveryConnectionId.self)
-//
-//            switch id {
-//            case .assigned(let identifier):
-//                let existingConnection = self.pastConnections[identifier]
-//
-//            case .unassigned:
-//                break
-//            }
-//
-//            return ServerConnection(id: "", service: service, inputStream: inputStream, outputStream: outputStream)
-//        }
-//    }
 }
 
 final class DiscoveryClientConnector {
@@ -366,7 +299,7 @@ final class DiscoveryClientConnector {
         self.logViewer = logViewer
     }
 
-    func connect(service: NetService, lastLogItemId: LastLogItemId) -> Single<LoggerConnection> {
+    func connect(service: NetService, lastLogItemId: @escaping (DiscoveryHandshake.Application) -> LastLogItemId) -> Single<LoggerConnection> {
         return async {
             let resolvedService = try await(service.resolved(withTimeout: 30))
 
@@ -381,7 +314,7 @@ final class DiscoveryClientConnector {
 
             let application = try DiscoveryHandshake(stream: stream).perform(for: self.logViewer)
 
-            try stream.output.write(encodable: lastLogItemId)
+            try stream.output.write(encodable: lastLogItemId(application))
 
             return LoggerConnection(service: resolvedService, stream: stream, application: application)
         }
@@ -584,6 +517,14 @@ final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
             unresolvedServicesSubject.onNext(services)
         }
     }
+
+    func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
+        print(#function, browser)
+    }
+
+    func netServiceBrowserDidStopSearch(_ browser: NetServiceBrowser) {
+        print(#function, browser)
+    }
 }
 
 struct Constants {
@@ -641,17 +582,28 @@ public struct TwoWayStream {
     public let input: InputStream
     public let output: OutputStream
 
+    enum OpenError: Error {
+        case cantOpenInput(Error?)
+        case cantOpenOutput(Error?)
+    }
+
     public func open(schedulingIn runLoop: RunLoop = .current, forMode runLoopMode: RunLoop.Mode = .default) -> Single<Void> {
         return async {
             self.input.schedule(in: runLoop, forMode: runLoopMode)
-            self.output.schedule(in: runLoop, forMode: runLoopMode)
-
             self.input.open()
-            self.output.open()
+            // Wait for input stream to open
+            let inputStatus = try await(self.input.status(isOneOf: .open, .error)) ?? .error
+            if inputStatus == .error {
+                throw OpenError.cantOpenInput(self.input.streamError)
+            }
 
-            // Wait for streams to open
-            _ = try await(self.input.status(equalTo: .open))
-            _ = try await(self.output.status(equalTo: .open))
+            self.output.schedule(in: runLoop, forMode: runLoopMode)
+            self.output.open()
+            // Wait for output stream to open
+            let outputStatus = try await(self.output.status(isOneOf: .open, .error)) ?? .error
+            if outputStatus == .error {
+                throw OpenError.cantOpenOutput(self.output.streamError)
+            }
         }
     }
 }

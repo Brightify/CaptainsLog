@@ -24,6 +24,8 @@ import Nimble
 
 class DiscoverySpec: QuickSpec {
     override func spec() {
+        Hooks.recordCallStackOnError = true
+
         describe("the 'Discovery' workflow") {
             beforeSuite {
                 AsyncDefaults.Timeout = 20
@@ -33,6 +35,36 @@ class DiscoverySpec: QuickSpec {
                 AsyncDefaults.Timeout = 1
                 AsyncDefaults.PollInterval = 0.01
             }
+
+            let mockApplication = DiscoveryHandshake.Application(
+                id: UUID().uuidString,
+                name: "An application",
+                identifier: "org.brightify.CaptainsLogTests",
+                version: "0.1",
+                date: Date())
+            let mockLogViewer = DiscoveryHandshake.LogViewer(
+                id: UUID().uuidString,
+                name: "A logger")
+
+            let mockLogItem1 = LogItem(
+                id: UUID().uuidString,
+                kind: LogItem.Kind.request(Request(
+                    method: HTTPMethod.get,
+                    url: URL(fileURLWithPath: "/Test1"),
+                    headers: ["HeaderName1": "HeaderValue1"],
+                    time: Date(),
+                    body: Data(),
+                    response: nil)))
+
+            let mockLogItem2 = LogItem(
+                id: UUID().uuidString,
+                kind: LogItem.Kind.request(Request(
+                    method: HTTPMethod.get,
+                    url: URL(fileURLWithPath: "/Test2"),
+                    headers: ["HeaderName2": "HeaderValue2"],
+                    time: Date(),
+                    body: Data(),
+                    response: nil)))
 
             it("finds device") {
                 /*
@@ -50,32 +82,11 @@ class DiscoverySpec: QuickSpec {
                 let browser = DiscoveryServiceBrowser()
                 browser.search()
                 expect(browser.unresolvedServices.map { $0.first }).first.toNot(beNil())
-//                browser.didResolveServices = { services in
-//                    for service in services {
-//                        netService = service
-//                        service.stop()
-//                    }
-//                }
-
-//                async {
-//                }
-
-//                expect(netService).toEventuallyNot(beNil())
             }
 
             it("connects to device") {
-                let originalApplication = DiscoveryHandshake.Application(
-                    id: UUID().uuidString,
-                    name: "An application",
-                    identifier: "org.brightify.CaptainsLogTests",
-                    version: "0.1",
-                    date: Date())
-                let originalLogViewer = DiscoveryHandshake.LogViewer(
-                    id: UUID().uuidString,
-                    name: "A logger")
-
-                let serverConnector = DiscoveryServerConnector(application: originalApplication)
-                let clientConnector = DiscoveryClientConnector(logViewer: originalLogViewer)
+                let serverConnector = DiscoveryServerConnector(application: mockApplication)
+                let clientConnector = DiscoveryClientConnector(logViewer: mockLogViewer)
 
                 let deviceService = NetService.loggerService(named: "device-name", port: 11111)
 
@@ -89,7 +100,7 @@ class DiscoverySpec: QuickSpec {
 
                     let services = try await(browser.unresolvedServices.skip(1).take(1).asSingle())
                     let connections = try services.map {
-                        try await(clientConnector.connect(service: $0, lastLogItemId: .unassigned))
+                        try await(clientConnector.connect(service: $0, lastLogItemId: { _ in .unassigned }))
                     }
                     loggerConnection = connections.first
                     loggerConnection?.close()
@@ -104,37 +115,17 @@ class DiscoverySpec: QuickSpec {
                 expect(loggerConnection).toEventuallyNot(beNil())
                 expect(logViewerConnection).toEventuallyNot(beNil())
 
-                expect(loggerConnection?.application).toEventually(equal(originalApplication))
-                expect(logViewerConnection?.logViewer).toEventually(equal(originalLogViewer))
+                expect(loggerConnection?.application).toEventually(equal(mockApplication))
+                expect(logViewerConnection?.logViewer).toEventually(equal(mockLogViewer))
             }
 
             it("sends logged items") {
-                let originalApplication = DiscoveryHandshake.Application(
-                    id: UUID().uuidString,
-                    name: "An application",
-                    identifier: "org.brightify.CaptainsLogTests",
-                    version: "0.1",
-                    date: Date())
-                let originalLogViewer = DiscoveryHandshake.LogViewer(
-                    id: UUID().uuidString,
-                    name: "A logger")
-
-                let originalLogItem = LogItem(
-                    id: UUID().uuidString,
-                    kind: LogItem.Kind.request(Request(
-                        method: HTTPMethod.get,
-                        url: URL(fileURLWithPath: "/Test"),
-                        headers: ["HeaderName": "HeaderValue"],
-                        time: Date(),
-                        body: Data(),
-                        response: nil)))
-
                 var logItem: LogItem?
                 var loggerConnection: LoggerConnection?
 
-                let clientConnector = DiscoveryClientConnector(logViewer: originalLogViewer)
+                let clientConnector = DiscoveryClientConnector(logViewer: mockLogViewer)
 
-                let log = CaptainsLog(info: originalApplication)
+                let log = CaptainsLog(info: mockApplication)
                 let browser = DiscoveryServiceBrowser()
 
                 _ = async {
@@ -142,7 +133,7 @@ class DiscoverySpec: QuickSpec {
 
                     let services = try await(browser.unresolvedServices.skip(1).take(1).asSingle())
                     let connections = try services.map {
-                        try await(clientConnector.connect(service: $0, lastLogItemId: .unassigned))
+                        try await(clientConnector.connect(service: $0, lastLogItemId: { _ in .unassigned }))
                     }
                     loggerConnection = connections.first
 
@@ -152,14 +143,79 @@ class DiscoverySpec: QuickSpec {
                     }.subscribe()
 
                 _ = async {
-                    log.log(item: originalLogItem)
+                    log.log(item: mockLogItem1)
                 }.subscribe()
 
                 expect(loggerConnection).toEventuallyNot(beNil())
                 expect(logItem).toEventuallyNot(beNil())
 
-                expect(loggerConnection?.application).toEventually(equal(originalApplication))
-                expect(logItem).toEventually(equal(originalLogItem))
+                expect(loggerConnection?.application).toEventually(equal(mockApplication))
+                expect(logItem).toEventually(equal(mockLogItem1))
+            }
+
+            it("reconnects on connection closed") {
+                var logItem1: LogItem?
+                var logItem2: LogItem?
+
+                let server = CaptainsLogServer(logViewer: mockLogViewer)
+                let log = CaptainsLog(info: mockApplication)
+
+                _ = async(on: DispatchQueue(label: "LogViewer")) {
+                    server.startSearching()
+
+                    logItem1 = try server.itemReceived.toBlocking().first()?.item
+                    logItem2 = try server.itemReceived.toBlocking().first()?.item
+                }.subscribe()
+
+                _ = async(on: DispatchQueue(label: "Logger")) {
+                    Thread.sleep(forTimeInterval: 2)
+
+                    log.log(item: mockLogItem1)
+
+                    Thread.sleep(forTimeInterval: 0.1)
+
+                    log.disconnectAll()
+
+                    Thread.sleep(forTimeInterval: 0.1)
+
+                    log.log(item: mockLogItem2)
+                }.subscribe()
+
+                expect(logItem1).toEventuallyNot(beNil())
+                expect(logItem2).toEventuallyNot(beNil())
+
+                expect(logItem1).toEventually(equal(mockLogItem1))
+                expect(logItem2).toEventually(equal(mockLogItem2))
+            }
+
+            it("reconnects on connection closed and republish") {
+                var logItem1: LogItem?
+                var logItem2: LogItem?
+
+                let server = CaptainsLogServer(logViewer: mockLogViewer)
+                let log = CaptainsLog(info: mockApplication)
+
+                _ = async(on: DispatchQueue(label: "LogViewer")) {
+                    server.startSearching()
+
+                    logItem1 = try server.itemReceived.debug("item1 received").toBlocking().first()?.item
+                    logItem2 = try server.itemReceived.debug("item2 received").toBlocking().first()?.item
+
+                }.subscribe()
+
+                _ = async(on: DispatchQueue(label: "Logger")) {
+                    log.log(item: mockLogItem1)
+
+                    log.simulateDisconnect(timeBetweenReconnect: 2)
+
+                    log.log(item: mockLogItem2)
+                }.subscribe()
+
+                expect(logItem1).toEventuallyNot(beNil())
+                expect(logItem2).toEventuallyNot(beNil())
+
+                expect(logItem1).toEventually(equal(mockLogItem1))
+                expect(logItem2).toEventually(equal(mockLogItem2))
             }
         }
     }
