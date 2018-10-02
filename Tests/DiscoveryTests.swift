@@ -77,27 +77,9 @@ class DiscoverySpec: QuickSpec {
                 let serverConnector = DiscoveryServerConnector(application: originalApplication)
                 let clientConnector = DiscoveryClientConnector(logViewer: originalLogViewer)
 
-                var application: DiscoveryHandshake.Application?
-                var logViewer: DiscoveryHandshake.LogViewer?
-
-//                connectionEstablished: { newConnection in
-//                    connection = newConnection
-//                    newConnection.close()
-//                })
-
                 let deviceService = NetService.loggerService(named: "device-name", port: 11111)
 
                 let browser = DiscoveryServiceBrowser()
-
-//                resolvedService: { service in
-//                    connector.connect(service: service)
-//                })
-
-//                browser.search()
-
-//                let connection = try!
-
-//                expect(connection).toNot(beNil())
 
                 var loggerConnection: LoggerConnection?
                 var logViewerConnection: LogViewerConnection?
@@ -124,85 +106,61 @@ class DiscoverySpec: QuickSpec {
 
                 expect(loggerConnection?.application).toEventually(equal(originalApplication))
                 expect(logViewerConnection?.logViewer).toEventually(equal(originalLogViewer))
-
-//                browser.didResolveServices = { services in
-//                    for service in services {
-//                        async {
-//                            connection = try await(connector.connect(service: service))
-//                            connection?.close()
-//                        }
-//                    }
-//                }
-
-//                async {
-//
-//                }.debug("connect")
-
-//                expect(connector).toEventuallyNot(beNil())
-//                expect(connection?.inputStream).toEventuallyNot(beNil())
-//                expect(connection?.outputStream).toEventuallyNot(beNil())
             }
 
-//            it("sends logged items") {
-//                let originalApplication = DiscoveryHandshake.Application(
-//                    id: UUID().uuidString,
-//                    name: "An application",
-//                    identifier: "org.brightify.CaptainsLogTests",
-//                    version: "0.1",
-//                    date: Date())
-//                let originalLogger = DiscoveryHandshake.Logger(
-//                    id: UUID().uuidString,
-//                    name: "A logger")
-//
-//                let originalLogItem = LogItem(
-//                    id: UUID().uuidString,
-//                    kind: LogItem.Kind.request(Request(
-//                        method: HTTPMethod.get,
-//                        url: URL(fileURLWithPath: "/Test"),
-//                        headers: ["HeaderName": "HeaderValue"],
-//                        time: Date(),
-//                        body: Data(),
-//                        response: nil)))
-//
-//                var application: DiscoveryHandshake.Application?
-//                var logItem: LogItem?
-//
-//                let connector = DiscoveryServiceConnector()
-//
-//                let log = CaptainsLog(info: originalApplication)
-//                let browser = DiscoveryServiceBrowser()
-//                browser.didResolveServices = { services in
-//                    for service in services {
-//                        print("xxx:", service)
-//                        async {
-//                            let connection = try await(connector.connect(service: service))
-//                            print("Connection:", connection)
-//                            connection.open()
-//
-//                            application = try await(DiscoveryHandshake().perform(on: connection, for: originalLogger))
-//                            print("Application:", application)
-//                            logItem = try connection.inputStream.decode(LogItem.self)
-//
-//                            print("LogItem:", logItem)
-//                            connection.close()
-//                        }
-//                    }
-//
-//                }
-//
-//                async {
-//                    log.log(item: originalLogItem)
-//
-//                    browser.search()
-//                }
-//
-//                expect(connector).toEventuallyNot(beNil())
-//                expect(application).toEventuallyNot(beNil())
-//                expect(logItem).toEventuallyNot(beNil())
-//
-//                expect(application).toEventually(equal(originalApplication))
-//                expect(logItem).toEventually(equal(originalLogItem))
-//            }
+            it("sends logged items") {
+                let originalApplication = DiscoveryHandshake.Application(
+                    id: UUID().uuidString,
+                    name: "An application",
+                    identifier: "org.brightify.CaptainsLogTests",
+                    version: "0.1",
+                    date: Date())
+                let originalLogViewer = DiscoveryHandshake.LogViewer(
+                    id: UUID().uuidString,
+                    name: "A logger")
+
+                let originalLogItem = LogItem(
+                    id: UUID().uuidString,
+                    kind: LogItem.Kind.request(Request(
+                        method: HTTPMethod.get,
+                        url: URL(fileURLWithPath: "/Test"),
+                        headers: ["HeaderName": "HeaderValue"],
+                        time: Date(),
+                        body: Data(),
+                        response: nil)))
+
+                var logItem: LogItem?
+                var loggerConnection: LoggerConnection?
+
+                let clientConnector = DiscoveryClientConnector(logViewer: originalLogViewer)
+
+                let log = CaptainsLog(info: originalApplication)
+                let browser = DiscoveryServiceBrowser()
+
+                _ = async {
+                    browser.search()
+
+                    let services = try await(browser.unresolvedServices.skip(1).take(1).asSingle())
+                    let connections = try services.map {
+                        try await(clientConnector.connect(service: $0, lastLogItemId: .unassigned))
+                    }
+                    loggerConnection = connections.first
+
+                    logItem = try loggerConnection?.stream.input.readDecodable(LogItem.self)
+
+                    loggerConnection?.close()
+                    }.subscribe()
+
+                _ = async {
+                    log.log(item: originalLogItem)
+                }.subscribe()
+
+                expect(loggerConnection).toEventuallyNot(beNil())
+                expect(logItem).toEventuallyNot(beNil())
+
+                expect(loggerConnection?.application).toEventually(equal(originalApplication))
+                expect(logItem).toEventually(equal(originalLogItem))
+            }
         }
     }
 }
