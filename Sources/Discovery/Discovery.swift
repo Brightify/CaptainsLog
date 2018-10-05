@@ -153,6 +153,11 @@ public final class DiscoveryHandshake {
     public struct LogViewer: Codable, Equatable {
         public let id: String
         public let name: String
+
+        public init(id: String, name: String) {
+            self.id = id
+            self.name = name
+        }
     }
     public struct Application: Codable, Equatable {
         public let id: String
@@ -160,6 +165,14 @@ public final class DiscoveryHandshake {
         public let identifier: String
         public let version: String
         public let date: Date
+
+        public init(id: String, name: String, identifier: String, version: String, date: Date) {
+            self.id = id
+            self.name = name
+            self.identifier = identifier
+            self.version = version
+            self.date = date
+        }
     }
 
     private let stream: TwoWayStream

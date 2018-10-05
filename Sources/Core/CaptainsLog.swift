@@ -11,6 +11,45 @@ import Foundation
 import RxSwift
 #endif
 
+struct RetryBehavior {
+    private let nextDelay: (TimeInterval) -> TimeInterval
+    private var remaining: Int
+    let delay: TimeInterval
+
+    var canRetry: Bool {
+        return remaining > 0
+    }
+
+    init(retries: Int, initialDelay: TimeInterval, nextDelay: @escaping (TimeInterval) -> TimeInterval) {
+        self.remaining = retries
+        self.delay = initialDelay
+        self.nextDelay = nextDelay
+    }
+
+    func next() -> RetryBehavior {
+        return RetryBehavior(
+            retries: remaining - 1,
+            initialDelay: nextDelay(delay),
+            nextDelay: nextDelay)
+    }
+
+    static let `default` = RetryBehavior(retries: 10, initialDelay: 0.1, nextDelay: { $0 * 2 })
+
+    static let short = RetryBehavior(retries: 5, initialDelay: 0.1, nextDelay: { $0 * 2 })
+
+    func retry<RESULT>(work: () throws -> RESULT) throws -> RESULT {
+        do {
+            return try work()
+        } catch where canRetry {
+            Thread.sleep(forTimeInterval: delay)
+
+            return try next().retry(work: work)
+        } catch {
+            throw error
+        }
+    }
+}
+
 public final class LogReceiver {
     public let itemReceived: Observable<LogItem>
 
@@ -68,31 +107,6 @@ public final class CaptainsLogServer {
         let connector = DiscoveryClientConnector(logViewer: logViewer)
         self.connector = connector
 
-        struct RetryBehavior {
-            private let nextDelay: (TimeInterval) -> TimeInterval
-            private var remaining: Int
-            let delay: TimeInterval
-
-            var canRetry: Bool {
-                return remaining > 0
-            }
-
-            init(retries: Int, initialDelay: TimeInterval, nextDelay: @escaping (TimeInterval) -> TimeInterval) {
-                self.remaining = retries
-                self.delay = initialDelay
-                self.nextDelay = nextDelay
-            }
-
-            func next() -> RetryBehavior {
-                return RetryBehavior(
-                    retries: remaining - 1,
-                    initialDelay: nextDelay(delay),
-                    nextDelay: nextDelay)
-            }
-
-            static let `default`: RetryBehavior = RetryBehavior(retries: 10, initialDelay: 0.1, nextDelay: { $0 * 2 })
-        }
-
         let lastItemIdForApplication: (DiscoveryHandshake.Application) -> LastLogItemId = { [unowned self] application in
             self.lastReceivedItemIds[application.id, default: .unassigned]
         }
@@ -101,11 +115,6 @@ public final class CaptainsLogServer {
             return connector.connect(service: service, lastLogItemId: lastItemIdForApplication)
                 .asObservable()
                 .catchError { error in
-                    guard error is TwoWayStream.OpenError else {
-                        assertionFailure("An unknown error happened: \(error)")
-                        return .empty()
-                    }
-
                     guard retry.canRetry else {
                         return .error(error)
                     }
@@ -165,6 +174,12 @@ public final class CaptainsLogServer {
 }
 
 final class LogSender {
+
+    private let disconnectedSubject = PublishSubject<Void>()
+    var disconnected: Observable<Void> {
+        return disconnectedSubject
+    }
+
     private let flushLock = DispatchQueue(label: "org.brightify.CaptainsLog.flushlock")
     private let queueLock = DispatchQueue(label: "org.brightify.CaptainsLog.queuelock")
 
@@ -192,7 +207,7 @@ final class LogSender {
         }
     }
 
-    func flush() {
+    private func flush() {
         flushLock.async {
             guard !self.isFlushing else { return }
 
@@ -213,7 +228,13 @@ final class LogSender {
             }
 
             for item in logQueueCopy {
-                try! self.connection.stream.output.write(encodable: item)
+                do {
+                    try RetryBehavior.short.retry {
+                        try self.connection.stream.output.write(encodable: item)
+                    }
+                } catch {
+                    self.disconnectedSubject.onNext(())
+                }
             }
 
             self.isFlushing = false
@@ -230,9 +251,9 @@ final class CaptainsLog {
     private static var appInfo: DiscoveryHandshake.Application {
         return DiscoveryHandshake.Application(
             id: UUID().uuidString,
-            name: "An application",
-            identifier: "org.brightify.CaptainsLogTests",
-            version: "0.1",
+            name: Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String,
+            identifier: Bundle.main.infoDictionary![kCFBundleIdentifierKey as String] as! String,
+            version: Bundle.main.infoDictionary![kCFBundleVersionKey as String] as! String,
             date: Date())
     }
     static let instance = CaptainsLog(info: appInfo)
