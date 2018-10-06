@@ -70,3 +70,38 @@ extension LogItem.Kind: Codable {
         case value
     }
 }
+
+public enum LogLevel: Int, Codable, Equatable {
+    case verbose = 0
+    case debug = 1
+    case info = 2
+    case warning = 3
+    case error = 4
+}
+
+public struct Log: Codable, Equatable {
+    public var time: Date
+    public var level: LogLevel
+    public var message: String
+    public var thread: String?
+    public var file: String?
+    public var function: String?
+    public var line: Int?
+
+    public init(time: Date,
+                level: LogLevel,
+                message: String,
+                thread: String?,
+                file: String?,
+                function: String?,
+                line: Int?) {
+
+        self.time = time
+        self.level = level
+        self.message = message
+        self.thread = thread
+        self.file = file
+        self.function = function
+        self.line = line
+    }
+}
