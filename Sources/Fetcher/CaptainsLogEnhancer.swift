@@ -21,14 +21,14 @@ internal struct NetInspectorTimestamp: RequestModifier {
 public final class CaptainsLogEnhancer: RequestEnhancer {
     private let log: CaptainsLog
 
-    public init() {
+    public init(log: CaptainsLog = CaptainsLog.instance) {
 //        self.captainsLogBaseURL = components.url!
 //        self.applicationId = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
 //        self.uuid = UUID().uuidString
 
 //        try! register()
 
-        log = CaptainsLog.instance
+        self.log = log
     }
 
     public func enhance(request: inout Fetcher.Request) {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Log: Codable {
+public struct Log: Codable, Equatable {
     public var time: Date
     public var level: LogLevel
     public var message: String

@@ -247,7 +247,7 @@ final class LogSender {
     }
 }
 
-final class CaptainsLog {
+public final class CaptainsLog {
     private static var appInfo: DiscoveryHandshake.Application {
         return DiscoveryHandshake.Application(
             id: UUID().uuidString,
@@ -256,7 +256,7 @@ final class CaptainsLog {
             version: Bundle.main.infoDictionary![kCFBundleVersionKey as String] as! String,
             date: Date())
     }
-    static let instance = CaptainsLog(info: appInfo)
+    public static let instance = CaptainsLog(info: appInfo)
 
     private let senderLock = DispatchQueue(label: "org.brightify.CaptainsLog.senderlock")
 

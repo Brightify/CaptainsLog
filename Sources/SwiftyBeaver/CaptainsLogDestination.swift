@@ -9,20 +9,12 @@
 import SwiftyBeaver
 
 public class CaptainsLogDestination: BaseDestination {
-    private let captainsLogBaseURL: URL
-    private let port = 1111
-    private let applicationId: String
+    private let log: CaptainsLog
 
-    public init(captainsLogBaseURL: String) {
-        var components = URLComponents(string: captainsLogBaseURL)!
-        components.port = 1111
-
-        self.captainsLogBaseURL = components.url!
-        self.applicationId = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
+    public init(log: CaptainsLog = CaptainsLog.instance) {
+        self.log = log
 
         super.init()
-
-        try! register()
     }
     
     public override func send(_ level: SwiftyBeaver.Level, msg: String, thread: String,
@@ -36,32 +28,8 @@ public class CaptainsLogDestination: BaseDestination {
                                              function: function,
                                              line: line)))
 
-        try? post(to: "api/runs/\(CaptainsLog.instance.uuid)/logItems", value: logItem)
-        
+        log.log(item: logItem)
+
         return msg
-    }
-
-    private func register() throws {
-        let appRun = ApplicationRun(
-            id: CaptainsLog.instance.uuid,
-            name: Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String,
-            identifier: Bundle.main.bundleIdentifier!,
-            version: Bundle.main.infoDictionary![kCFBundleVersionKey as String] as! String,
-            date: Date()
-        )
-
-        try post(to: "api/runs", value: appRun)
-    }
-
-    private func post<T: Encodable>(to endpoint: String, value: T) throws {
-        let url = captainsLogBaseURL.appendingPathComponent(endpoint)
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(value)
-
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            // TODO Handle the response
-        }.resume()
     }
 }
