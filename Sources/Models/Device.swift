@@ -12,6 +12,7 @@ public struct Device: Codable, Hashable {
     public enum Kind: String, Codable {
         case iPhone = "iphone"
         case iPhoneSimulator = "iphonesimulator"
+        case iPad = "ipad"
         case android = "android"
     }
 

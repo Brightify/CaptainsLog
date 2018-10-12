@@ -10,16 +10,12 @@ import Foundation
 
 public struct ApplicationRun: Codable, Hashable {
     public var id: String
-    public var name: String
-    public var identifier: String
-    public var version: String
+    public var applicationVersion: String
     public var date: Date
 
-    public init(id: String, name: String, identifier: String, version: String, date: Date) {
+    public init(id: String, applicationVersion: String, date: Date) {
         self.id = id
-        self.name = name
-        self.identifier = identifier
-        self.version = version
+        self.applicationVersion = applicationVersion
         self.date = date
     }
 }
