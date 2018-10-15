@@ -52,6 +52,7 @@
 		18CC16E3215CCC4800BA7B96 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC16E0215CCC4800BA7B96 /* Async.swift */; };
 		2C17BD14BF021DAF71C28900 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5DA03AF819AF7D4B082E49 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework */; };
 		3F3C978EBA0CD87C82260D7B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252E2324FE387B686D80423B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework */; };
+		71721B6A2174E177001B0606 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71721B692174E177001B0606 /* Application.swift */; };
 		71EE7CA6215BC5DD00958149 /* CaptainsLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CA5215BC5DD00958149 /* CaptainsLogDestination.swift */; };
 		71EE7CA8215BC8AC00958149 /* CaptainsLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CA5215BC5DD00958149 /* CaptainsLogDestination.swift */; };
 		71EE7CA9215BC8AC00958149 /* CaptainsLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CA5215BC5DD00958149 /* CaptainsLogDestination.swift */; };
@@ -117,6 +118,7 @@
 		7120C42F21528E170084BD38 /* ChallengeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeResult.swift; sourceTree = "<group>"; };
 		7120C4312152901B0084BD38 /* CaptainsLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptainsLog.swift; sourceTree = "<group>"; };
 		7120C433215290910084BD38 /* CaptainsLogEnhancer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptainsLogEnhancer.swift; sourceTree = "<group>"; };
+		71721B692174E177001B0606 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		71EE7CA5215BC5DD00958149 /* CaptainsLogDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptainsLogDestination.swift; sourceTree = "<group>"; };
 		71EE7CAA215BCA8D00958149 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		71EE7CAC215BCADC00958149 /* LogLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogLevel.swift; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 		7120C42021527FBF0084BD38 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				71721B692174E177001B0606 /* Application.swift */,
 				7120C41E21527D6B0084BD38 /* LogItem.swift */,
 				7120C42721528B3C0084BD38 /* Request.swift */,
 				71EE7CAA215BCA8D00958149 /* Log.swift */,
@@ -741,6 +744,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71721B6A2174E177001B0606 /* Application.swift in Sources */,
 				18CB4EAB2155CCC900D1A93C /* ApplicationRun.swift in Sources */,
 				18CB4E992155CCC100D1A93C /* CaptainsLogEnhancer.swift in Sources */,
 				18CC16E1215CCC4800BA7B96 /* Async.swift in Sources */,
