@@ -8,10 +8,25 @@
 
 import Foundation
 
-public enum LogLevel: Int, Codable {
+public enum LogLevel: Int, CaseIterable, Codable {
     case verbose = 0
     case debug = 1
     case info = 2
     case warning = 3
     case error = 4
+
+    var description: String {
+        switch self {
+        case .verbose:
+            return "Verbose"
+        case .debug:
+            return "Debug"
+        case .info:
+            return "Info"
+        case .warning:
+            return "Warning"
+        case .error:
+            return "Error"
+        }
+    }
 }
