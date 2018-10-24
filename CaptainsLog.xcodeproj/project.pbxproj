@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		1240063E25E12F78DCFDEE86 /* Pods_CaptainsLog_CaptainsLog_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A4A8E004A84310DBF7F42FB /* Pods_CaptainsLog_CaptainsLog_iOS.framework */; };
+		1883EB3D217FDFE600724BE4 /* CaptainsLogTestPrivateKey.p12 in Resources */ = {isa = PBXBuildFile; fileRef = 1883EB3B217FDFE600724BE4 /* CaptainsLogTestPrivateKey.p12 */; };
+		1883EB3E217FDFE600724BE4 /* CaptainsLogTestPrivateKey.p12 in Resources */ = {isa = PBXBuildFile; fileRef = 1883EB3B217FDFE600724BE4 /* CaptainsLogTestPrivateKey.p12 */; };
+		1883EB3F217FDFE600724BE4 /* CaptainsLogTestPrivateKey.p12 in Resources */ = {isa = PBXBuildFile; fileRef = 1883EB3B217FDFE600724BE4 /* CaptainsLogTestPrivateKey.p12 */; };
+		1883EB40217FDFE600724BE4 /* CaptainsLogTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1883EB3C217FDFE600724BE4 /* CaptainsLogTestCertificate.cer */; };
+		1883EB41217FDFE600724BE4 /* CaptainsLogTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1883EB3C217FDFE600724BE4 /* CaptainsLogTestCertificate.cer */; };
+		1883EB42217FDFE600724BE4 /* CaptainsLogTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1883EB3C217FDFE600724BE4 /* CaptainsLogTestCertificate.cer */; };
 		18CB4E4B2155C80A00D1A93C /* CaptainsLog_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18CB4E422155C80A00D1A93C /* CaptainsLog_macOS.framework */; };
 		18CB4E522155C80A00D1A93C /* CaptainsLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CB4E442155C80A00D1A93C /* CaptainsLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18CB4E672155C82C00D1A93C /* CaptainsLog_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18CB4E5E2155C82C00D1A93C /* CaptainsLog_iOS.framework */; };
@@ -87,6 +93,8 @@
 
 /* Begin PBXFileReference section */
 		055EDB3FA82AD1E321BBD18E /* Pods_CaptainsLog_CaptainsLog_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog_CaptainsLog_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1883EB3B217FDFE600724BE4 /* CaptainsLogTestPrivateKey.p12 */ = {isa = PBXFileReference; lastKnownFileType = file; path = CaptainsLogTestPrivateKey.p12; sourceTree = "<group>"; };
+		1883EB3C217FDFE600724BE4 /* CaptainsLogTestCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = CaptainsLogTestCertificate.cer; sourceTree = "<group>"; };
 		18CB4E422155C80A00D1A93C /* CaptainsLog_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CaptainsLog_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		18CB4E442155C80A00D1A93C /* CaptainsLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CaptainsLog.h; sourceTree = "<group>"; };
 		18CB4E452155C80A00D1A93C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -188,6 +196,8 @@
 		18CB4E6A2155C82C00D1A93C /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				1883EB3C217FDFE600724BE4 /* CaptainsLogTestCertificate.cer */,
+				1883EB3B217FDFE600724BE4 /* CaptainsLogTestPrivateKey.p12 */,
 				18CB4E6B2155C82C00D1A93C /* DiscoveryTests.swift */,
 				18CB4E6D2155C82C00D1A93C /* Info.plist */,
 			);
@@ -539,6 +549,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1883EB40217FDFE600724BE4 /* CaptainsLogTestCertificate.cer in Resources */,
+				1883EB3D217FDFE600724BE4 /* CaptainsLogTestPrivateKey.p12 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -553,6 +565,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1883EB41217FDFE600724BE4 /* CaptainsLogTestCertificate.cer in Resources */,
+				1883EB3E217FDFE600724BE4 /* CaptainsLogTestPrivateKey.p12 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -567,6 +581,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1883EB42217FDFE600724BE4 /* CaptainsLogTestCertificate.cer in Resources */,
+				1883EB3F217FDFE600724BE4 /* CaptainsLogTestPrivateKey.p12 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

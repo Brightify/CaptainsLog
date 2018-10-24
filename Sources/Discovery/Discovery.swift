@@ -602,6 +602,12 @@ public struct TwoWayStream {
 
     public func open(schedulingIn runLoop: RunLoop = .current, forMode runLoopMode: RunLoop.Mode = .default) -> Single<Void> {
         return async {
+            self.input.setProperty(StreamSocketSecurityLevel.tlSv1, forKey: Stream.PropertyKey.socketSecurityLevelKey)
+
+            CFReadStreamSetProperty(
+                self.input,
+                CFStreamPropertyKey(kCFStreamPropertySSLSettings),
+                [kCFStreamSSLIsServer: true] as CFDictionary)
             self.input.schedule(in: runLoop, forMode: runLoopMode)
             self.input.open()
             // Wait for input stream to open
@@ -610,6 +616,7 @@ public struct TwoWayStream {
                 throw OpenError.cantOpenInput(self.input.streamError)
             }
 
+            self.output.setProperty(StreamSocketSecurityLevel.tlSv1, forKey: Stream.PropertyKey.socketSecurityLevelKey)
             self.output.schedule(in: runLoop, forMode: runLoopMode)
             self.output.open()
             // Wait for output stream to open
