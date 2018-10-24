@@ -14,6 +14,60 @@
 		1883EB40217FDFE600724BE4 /* CaptainsLogTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1883EB3C217FDFE600724BE4 /* CaptainsLogTestCertificate.cer */; };
 		1883EB41217FDFE600724BE4 /* CaptainsLogTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1883EB3C217FDFE600724BE4 /* CaptainsLogTestCertificate.cer */; };
 		1883EB42217FDFE600724BE4 /* CaptainsLogTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 1883EB3C217FDFE600724BE4 /* CaptainsLogTestCertificate.cer */; };
+		18C476542180549100964FD4 /* DiscoveryLoggerConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476532180549100964FD4 /* DiscoveryLoggerConnector.swift */; };
+		18C476552180549100964FD4 /* DiscoveryLoggerConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476532180549100964FD4 /* DiscoveryLoggerConnector.swift */; };
+		18C476562180549100964FD4 /* DiscoveryLoggerConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476532180549100964FD4 /* DiscoveryLoggerConnector.swift */; };
+		18C47658218054A700964FD4 /* DiscoveryLogViewerConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C47657218054A700964FD4 /* DiscoveryLogViewerConnector.swift */; };
+		18C47659218054A700964FD4 /* DiscoveryLogViewerConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C47657218054A700964FD4 /* DiscoveryLogViewerConnector.swift */; };
+		18C4765A218054A700964FD4 /* DiscoveryLogViewerConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C47657218054A700964FD4 /* DiscoveryLogViewerConnector.swift */; };
+		18C4765C218054C000964FD4 /* DiscoveryServiceBrowserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4765B218054C000964FD4 /* DiscoveryServiceBrowserDelegate.swift */; };
+		18C4765D218054C000964FD4 /* DiscoveryServiceBrowserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4765B218054C000964FD4 /* DiscoveryServiceBrowserDelegate.swift */; };
+		18C4765E218054C000964FD4 /* DiscoveryServiceBrowserDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4765B218054C000964FD4 /* DiscoveryServiceBrowserDelegate.swift */; };
+		18C47660218054E300964FD4 /* DiscoveryServiceBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4765F218054E300964FD4 /* DiscoveryServiceBrowser.swift */; };
+		18C47661218054E300964FD4 /* DiscoveryServiceBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4765F218054E300964FD4 /* DiscoveryServiceBrowser.swift */; };
+		18C47662218054E300964FD4 /* DiscoveryServiceBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4765F218054E300964FD4 /* DiscoveryServiceBrowser.swift */; };
+		18C476642180550400964FD4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476632180550400964FD4 /* Constants.swift */; };
+		18C476652180550400964FD4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476632180550400964FD4 /* Constants.swift */; };
+		18C476662180550400964FD4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476632180550400964FD4 /* Constants.swift */; };
+		18C476682180551600964FD4 /* TwoWayStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476672180551600964FD4 /* TwoWayStream.swift */; };
+		18C476692180551600964FD4 /* TwoWayStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476672180551600964FD4 /* TwoWayStream.swift */; };
+		18C4766A2180551600964FD4 /* TwoWayStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476672180551600964FD4 /* TwoWayStream.swift */; };
+		18C4766C2180554600964FD4 /* NetService+loggerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4766B2180554600964FD4 /* NetService+loggerService.swift */; };
+		18C4766D2180554600964FD4 /* NetService+loggerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4766B2180554600964FD4 /* NetService+loggerService.swift */; };
+		18C4766E2180554600964FD4 /* NetService+loggerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4766B2180554600964FD4 /* NetService+loggerService.swift */; };
+		18C47670218055BE00964FD4 /* LogViewerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4766F218055BE00964FD4 /* LogViewerConnection.swift */; };
+		18C47671218055BE00964FD4 /* LogViewerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4766F218055BE00964FD4 /* LogViewerConnection.swift */; };
+		18C47672218055BE00964FD4 /* LogViewerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4766F218055BE00964FD4 /* LogViewerConnection.swift */; };
+		18C47674218055CF00964FD4 /* LoggerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C47673218055CF00964FD4 /* LoggerConnection.swift */; };
+		18C47675218055CF00964FD4 /* LoggerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C47673218055CF00964FD4 /* LoggerConnection.swift */; };
+		18C47676218055CF00964FD4 /* LoggerConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C47673218055CF00964FD4 /* LoggerConnection.swift */; };
+		18C476782180567800964FD4 /* DiscoveryHandshake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476772180567800964FD4 /* DiscoveryHandshake.swift */; };
+		18C476792180567800964FD4 /* DiscoveryHandshake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476772180567800964FD4 /* DiscoveryHandshake.swift */; };
+		18C4767A2180567800964FD4 /* DiscoveryHandshake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476772180567800964FD4 /* DiscoveryHandshake.swift */; };
+		18C4767D2180573400964FD4 /* InputStream+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4767C2180573400964FD4 /* InputStream+Helpers.swift */; };
+		18C4767E2180573400964FD4 /* InputStream+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4767C2180573400964FD4 /* InputStream+Helpers.swift */; };
+		18C4767F2180573400964FD4 /* InputStream+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4767C2180573400964FD4 /* InputStream+Helpers.swift */; };
+		18C476822180578B00964FD4 /* OutputStream+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476812180578B00964FD4 /* OutputStream+Helpers.swift */; };
+		18C476832180578B00964FD4 /* OutputStream+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476812180578B00964FD4 /* OutputStream+Helpers.swift */; };
+		18C476842180578B00964FD4 /* OutputStream+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476812180578B00964FD4 /* OutputStream+Helpers.swift */; };
+		18C476862180583300964FD4 /* Stream+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476852180583300964FD4 /* Stream+Rx.swift */; };
+		18C476872180583300964FD4 /* Stream+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476852180583300964FD4 /* Stream+Rx.swift */; };
+		18C476882180583300964FD4 /* Stream+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476852180583300964FD4 /* Stream+Rx.swift */; };
+		18C4768A2180585100964FD4 /* Stream.Status+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476892180585100964FD4 /* Stream.Status+CustomStringConvertible.swift */; };
+		18C4768B2180585100964FD4 /* Stream.Status+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476892180585100964FD4 /* Stream.Status+CustomStringConvertible.swift */; };
+		18C4768C2180585100964FD4 /* Stream.Status+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476892180585100964FD4 /* Stream.Status+CustomStringConvertible.swift */; };
+		18C4768E2180586700964FD4 /* StreamDisconnectedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4768D2180586700964FD4 /* StreamDisconnectedError.swift */; };
+		18C4768F2180586700964FD4 /* StreamDisconnectedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4768D2180586700964FD4 /* StreamDisconnectedError.swift */; };
+		18C476902180586700964FD4 /* StreamDisconnectedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4768D2180586700964FD4 /* StreamDisconnectedError.swift */; };
+		18C47693218058B600964FD4 /* NetService+resolving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C47692218058B600964FD4 /* NetService+resolving.swift */; };
+		18C47694218058B600964FD4 /* NetService+resolving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C47692218058B600964FD4 /* NetService+resolving.swift */; };
+		18C47695218058B600964FD4 /* NetService+resolving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C47692218058B600964FD4 /* NetService+resolving.swift */; };
+		18C47697218058D700964FD4 /* LastLogItemId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C47696218058D700964FD4 /* LastLogItemId.swift */; };
+		18C47698218058D700964FD4 /* LastLogItemId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C47696218058D700964FD4 /* LastLogItemId.swift */; };
+		18C47699218058D700964FD4 /* LastLogItemId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C47696218058D700964FD4 /* LastLogItemId.swift */; };
+		18C4769B218058F100964FD4 /* DiscoveryConnectionSide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4769A218058F100964FD4 /* DiscoveryConnectionSide.swift */; };
+		18C4769C218058F100964FD4 /* DiscoveryConnectionSide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4769A218058F100964FD4 /* DiscoveryConnectionSide.swift */; };
+		18C4769D218058F100964FD4 /* DiscoveryConnectionSide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4769A218058F100964FD4 /* DiscoveryConnectionSide.swift */; };
 		18CB4E4B2155C80A00D1A93C /* CaptainsLog_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18CB4E422155C80A00D1A93C /* CaptainsLog_macOS.framework */; };
 		18CB4E522155C80A00D1A93C /* CaptainsLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CB4E442155C80A00D1A93C /* CaptainsLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18CB4E672155C82C00D1A93C /* CaptainsLog_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18CB4E5E2155C82C00D1A93C /* CaptainsLog_iOS.framework */; };
@@ -50,9 +104,6 @@
 		18CB4EB02155CCCC00D1A93C /* CaptainsLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C4312152901B0084BD38 /* CaptainsLog.swift */; };
 		18CB4EB12155CCCC00D1A93C /* CaptainsLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C4312152901B0084BD38 /* CaptainsLog.swift */; };
 		18CB4EB22155CCCD00D1A93C /* CaptainsLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7120C4312152901B0084BD38 /* CaptainsLog.swift */; };
-		18CB4EB42155CD3C00D1A93C /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CB4EB32155CD3C00D1A93C /* Discovery.swift */; };
-		18CB4EB52155CD3C00D1A93C /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CB4EB32155CD3C00D1A93C /* Discovery.swift */; };
-		18CB4EB62155CD3C00D1A93C /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CB4EB32155CD3C00D1A93C /* Discovery.swift */; };
 		18CC16E1215CCC4800BA7B96 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC16E0215CCC4800BA7B96 /* Async.swift */; };
 		18CC16E2215CCC4800BA7B96 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC16E0215CCC4800BA7B96 /* Async.swift */; };
 		18CC16E3215CCC4800BA7B96 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC16E0215CCC4800BA7B96 /* Async.swift */; };
@@ -95,6 +146,24 @@
 		055EDB3FA82AD1E321BBD18E /* Pods_CaptainsLog_CaptainsLog_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog_CaptainsLog_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1883EB3B217FDFE600724BE4 /* CaptainsLogTestPrivateKey.p12 */ = {isa = PBXFileReference; lastKnownFileType = file; path = CaptainsLogTestPrivateKey.p12; sourceTree = "<group>"; };
 		1883EB3C217FDFE600724BE4 /* CaptainsLogTestCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = CaptainsLogTestCertificate.cer; sourceTree = "<group>"; };
+		18C476532180549100964FD4 /* DiscoveryLoggerConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryLoggerConnector.swift; sourceTree = "<group>"; };
+		18C47657218054A700964FD4 /* DiscoveryLogViewerConnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryLogViewerConnector.swift; sourceTree = "<group>"; };
+		18C4765B218054C000964FD4 /* DiscoveryServiceBrowserDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryServiceBrowserDelegate.swift; sourceTree = "<group>"; };
+		18C4765F218054E300964FD4 /* DiscoveryServiceBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryServiceBrowser.swift; sourceTree = "<group>"; };
+		18C476632180550400964FD4 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		18C476672180551600964FD4 /* TwoWayStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoWayStream.swift; sourceTree = "<group>"; };
+		18C4766B2180554600964FD4 /* NetService+loggerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetService+loggerService.swift"; sourceTree = "<group>"; };
+		18C4766F218055BE00964FD4 /* LogViewerConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewerConnection.swift; sourceTree = "<group>"; };
+		18C47673218055CF00964FD4 /* LoggerConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerConnection.swift; sourceTree = "<group>"; };
+		18C476772180567800964FD4 /* DiscoveryHandshake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryHandshake.swift; sourceTree = "<group>"; };
+		18C4767C2180573400964FD4 /* InputStream+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InputStream+Helpers.swift"; sourceTree = "<group>"; };
+		18C476812180578B00964FD4 /* OutputStream+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OutputStream+Helpers.swift"; sourceTree = "<group>"; };
+		18C476852180583300964FD4 /* Stream+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Stream+Rx.swift"; sourceTree = "<group>"; };
+		18C476892180585100964FD4 /* Stream.Status+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Stream.Status+CustomStringConvertible.swift"; sourceTree = "<group>"; };
+		18C4768D2180586700964FD4 /* StreamDisconnectedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamDisconnectedError.swift; sourceTree = "<group>"; };
+		18C47692218058B600964FD4 /* NetService+resolving.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetService+resolving.swift"; sourceTree = "<group>"; };
+		18C47696218058D700964FD4 /* LastLogItemId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastLogItemId.swift; sourceTree = "<group>"; };
+		18C4769A218058F100964FD4 /* DiscoveryConnectionSide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryConnectionSide.swift; sourceTree = "<group>"; };
 		18CB4E422155C80A00D1A93C /* CaptainsLog_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CaptainsLog_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		18CB4E442155C80A00D1A93C /* CaptainsLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CaptainsLog.h; sourceTree = "<group>"; };
 		18CB4E452155C80A00D1A93C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -105,7 +174,6 @@
 		18CB4E6D2155C82C00D1A93C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		18CB4E7A2155C86B00D1A93C /* CaptainsLog_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CaptainsLog_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		18CB4E822155C86B00D1A93C /* CaptainsLog-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CaptainsLog-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		18CB4EB32155CD3C00D1A93C /* Discovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Discovery.swift; sourceTree = "<group>"; };
 		18CC16E0215CCC4800BA7B96 /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 		1A4A8E004A84310DBF7F42FB /* Pods_CaptainsLog_CaptainsLog_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog_CaptainsLog_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		252E2324FE387B686D80423B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -193,6 +261,58 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		18C4767B2180571100964FD4 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				18C476912180589D00964FD4 /* NetService */,
+				18C476802180574000964FD4 /* Stream */,
+				18CC16E0215CCC4800BA7B96 /* Async.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		18C476802180574000964FD4 /* Stream */ = {
+			isa = PBXGroup;
+			children = (
+				18C4767C2180573400964FD4 /* InputStream+Helpers.swift */,
+				18C476812180578B00964FD4 /* OutputStream+Helpers.swift */,
+				18C476852180583300964FD4 /* Stream+Rx.swift */,
+				18C476892180585100964FD4 /* Stream.Status+CustomStringConvertible.swift */,
+				18C4768D2180586700964FD4 /* StreamDisconnectedError.swift */,
+			);
+			path = Stream;
+			sourceTree = "<group>";
+		};
+		18C476912180589D00964FD4 /* NetService */ = {
+			isa = PBXGroup;
+			children = (
+				18C476632180550400964FD4 /* Constants.swift */,
+				18C4766B2180554600964FD4 /* NetService+loggerService.swift */,
+				18C47692218058B600964FD4 /* NetService+resolving.swift */,
+			);
+			path = NetService;
+			sourceTree = "<group>";
+		};
+		18C4769E2180594D00964FD4 /* LogViewer */ = {
+			isa = PBXGroup;
+			children = (
+				18C47673218055CF00964FD4 /* LoggerConnection.swift */,
+				18C4765B218054C000964FD4 /* DiscoveryServiceBrowserDelegate.swift */,
+				18C4765F218054E300964FD4 /* DiscoveryServiceBrowser.swift */,
+				18C47657218054A700964FD4 /* DiscoveryLogViewerConnector.swift */,
+			);
+			path = LogViewer;
+			sourceTree = "<group>";
+		};
+		18C4769F2180595500964FD4 /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				18C476532180549100964FD4 /* DiscoveryLoggerConnector.swift */,
+				18C4766F218055BE00964FD4 /* LogViewerConnection.swift */,
+			);
+			path = Logger;
+			sourceTree = "<group>";
+		};
 		18CB4E6A2155C82C00D1A93C /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -304,6 +424,7 @@
 				7120C42F21528E170084BD38 /* ChallengeResult.swift */,
 				7120C42521528AD70084BD38 /* HTTPMethod.swift */,
 				71EE7CAC215BCADC00958149 /* LogLevel.swift */,
+				18C47696218058D700964FD4 /* LastLogItemId.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -311,8 +432,12 @@
 		7120C421215284440084BD38 /* Discovery */ = {
 			isa = PBXGroup;
 			children = (
-				18CB4EB32155CD3C00D1A93C /* Discovery.swift */,
-				18CC16E0215CCC4800BA7B96 /* Async.swift */,
+				18C4769F2180595500964FD4 /* Logger */,
+				18C4769E2180594D00964FD4 /* LogViewer */,
+				18C4767B2180571100964FD4 /* Utils */,
+				18C476672180551600964FD4 /* TwoWayStream.swift */,
+				18C476772180567800964FD4 /* DiscoveryHandshake.swift */,
+				18C4769A218058F100964FD4 /* DiscoveryConnectionSide.swift */,
 			);
 			path = Discovery;
 			sourceTree = "<group>";
@@ -760,21 +885,38 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18C47697218058D700964FD4 /* LastLogItemId.swift in Sources */,
 				71721B6A2174E177001B0606 /* Application.swift in Sources */,
 				18CB4EAB2155CCC900D1A93C /* ApplicationRun.swift in Sources */,
 				18CB4E992155CCC100D1A93C /* CaptainsLogEnhancer.swift in Sources */,
+				18C47693218058B600964FD4 /* NetService+resolving.swift in Sources */,
+				18C476542180549100964FD4 /* DiscoveryLoggerConnector.swift in Sources */,
+				18C4769B218058F100964FD4 /* DiscoveryConnectionSide.swift in Sources */,
 				18CC16E1215CCC4800BA7B96 /* Async.swift in Sources */,
+				18C47670218055BE00964FD4 /* LogViewerConnection.swift in Sources */,
 				71EE7CAB215BCA8D00958149 /* Log.swift in Sources */,
 				18CB4EB22155CCCD00D1A93C /* CaptainsLog.swift in Sources */,
+				18C47660218054E300964FD4 /* DiscoveryServiceBrowser.swift in Sources */,
+				18C4768E2180586700964FD4 /* StreamDisconnectedError.swift in Sources */,
 				18CB4EAA2155CCC900D1A93C /* Request.swift in Sources */,
+				18C4767D2180573400964FD4 /* InputStream+Helpers.swift in Sources */,
+				18C4766C2180554600964FD4 /* NetService+loggerService.swift in Sources */,
 				18CB4EAE2155CCC900D1A93C /* ChallengeResult.swift in Sources */,
 				71EE7CAD215BCADC00958149 /* LogLevel.swift in Sources */,
+				18C4768A2180585100964FD4 /* Stream.Status+CustomStringConvertible.swift in Sources */,
 				18CB4EAF2155CCC900D1A93C /* HTTPMethod.swift in Sources */,
-				18CB4EB42155CD3C00D1A93C /* Discovery.swift in Sources */,
+				18C476862180583300964FD4 /* Stream+Rx.swift in Sources */,
+				18C47658218054A700964FD4 /* DiscoveryLogViewerConnector.swift in Sources */,
 				18CB4EAD2155CCC900D1A93C /* Token.swift in Sources */,
+				18C476782180567800964FD4 /* DiscoveryHandshake.swift in Sources */,
+				18C47674218055CF00964FD4 /* LoggerConnection.swift in Sources */,
+				18C476642180550400964FD4 /* Constants.swift in Sources */,
+				18C4765C218054C000964FD4 /* DiscoveryServiceBrowserDelegate.swift in Sources */,
 				18CB4EA92155CCC900D1A93C /* LogItem.swift in Sources */,
 				71EE7CA6215BC5DD00958149 /* CaptainsLogDestination.swift in Sources */,
 				18CB4EAC2155CCC900D1A93C /* Device.swift in Sources */,
+				18C476822180578B00964FD4 /* OutputStream+Helpers.swift in Sources */,
+				18C476682180551600964FD4 /* TwoWayStream.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -791,17 +933,34 @@
 			buildActionMask = 2147483647;
 			files = (
 				18CB4EA42155CCC800D1A93C /* ApplicationRun.swift in Sources */,
+				18C47694218058B600964FD4 /* NetService+resolving.swift in Sources */,
+				18C476652180550400964FD4 /* Constants.swift in Sources */,
 				18CB4E9A2155CCC100D1A93C /* CaptainsLogEnhancer.swift in Sources */,
+				18C47698218058D700964FD4 /* LastLogItemId.swift in Sources */,
 				18CC16E2215CCC4800BA7B96 /* Async.swift in Sources */,
+				18C476552180549100964FD4 /* DiscoveryLoggerConnector.swift in Sources */,
+				18C47675218055CF00964FD4 /* LoggerConnection.swift in Sources */,
+				18C476792180567800964FD4 /* DiscoveryHandshake.swift in Sources */,
 				18CB4EB12155CCCC00D1A93C /* CaptainsLog.swift in Sources */,
+				18C47661218054E300964FD4 /* DiscoveryServiceBrowser.swift in Sources */,
 				18CB4EA32155CCC800D1A93C /* Request.swift in Sources */,
+				18C47671218055BE00964FD4 /* LogViewerConnection.swift in Sources */,
 				18CB4EA72155CCC800D1A93C /* ChallengeResult.swift in Sources */,
+				18C47659218054A700964FD4 /* DiscoveryLogViewerConnector.swift in Sources */,
 				18CB4EA82155CCC800D1A93C /* HTTPMethod.swift in Sources */,
-				18CB4EB52155CD3C00D1A93C /* Discovery.swift in Sources */,
+				18C4768F2180586700964FD4 /* StreamDisconnectedError.swift in Sources */,
 				18CB4EA62155CCC800D1A93C /* Token.swift in Sources */,
+				18C476832180578B00964FD4 /* OutputStream+Helpers.swift in Sources */,
+				18C4767E2180573400964FD4 /* InputStream+Helpers.swift in Sources */,
 				18CB4EA22155CCC800D1A93C /* LogItem.swift in Sources */,
+				18C4766D2180554600964FD4 /* NetService+loggerService.swift in Sources */,
+				18C476692180551600964FD4 /* TwoWayStream.swift in Sources */,
 				71EE7CA8215BC8AC00958149 /* CaptainsLogDestination.swift in Sources */,
+				18C4768B2180585100964FD4 /* Stream.Status+CustomStringConvertible.swift in Sources */,
 				18CB4EA52155CCC800D1A93C /* Device.swift in Sources */,
+				18C4769C218058F100964FD4 /* DiscoveryConnectionSide.swift in Sources */,
+				18C476872180583300964FD4 /* Stream+Rx.swift in Sources */,
+				18C4765D218054C000964FD4 /* DiscoveryServiceBrowserDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -818,17 +977,34 @@
 			buildActionMask = 2147483647;
 			files = (
 				18CB4E9D2155CCC800D1A93C /* ApplicationRun.swift in Sources */,
+				18C47695218058B600964FD4 /* NetService+resolving.swift in Sources */,
+				18C476662180550400964FD4 /* Constants.swift in Sources */,
 				18CB4E972155CCBF00D1A93C /* CaptainsLogEnhancer.swift in Sources */,
+				18C47699218058D700964FD4 /* LastLogItemId.swift in Sources */,
 				18CC16E3215CCC4800BA7B96 /* Async.swift in Sources */,
+				18C476562180549100964FD4 /* DiscoveryLoggerConnector.swift in Sources */,
+				18C47676218055CF00964FD4 /* LoggerConnection.swift in Sources */,
+				18C4767A2180567800964FD4 /* DiscoveryHandshake.swift in Sources */,
 				18CB4EB02155CCCC00D1A93C /* CaptainsLog.swift in Sources */,
+				18C47662218054E300964FD4 /* DiscoveryServiceBrowser.swift in Sources */,
 				18CB4E9C2155CCC800D1A93C /* Request.swift in Sources */,
+				18C47672218055BE00964FD4 /* LogViewerConnection.swift in Sources */,
 				18CB4EA02155CCC800D1A93C /* ChallengeResult.swift in Sources */,
+				18C4765A218054A700964FD4 /* DiscoveryLogViewerConnector.swift in Sources */,
 				18CB4EA12155CCC800D1A93C /* HTTPMethod.swift in Sources */,
-				18CB4EB62155CD3C00D1A93C /* Discovery.swift in Sources */,
+				18C476902180586700964FD4 /* StreamDisconnectedError.swift in Sources */,
 				18CB4E9F2155CCC800D1A93C /* Token.swift in Sources */,
+				18C476842180578B00964FD4 /* OutputStream+Helpers.swift in Sources */,
+				18C4767F2180573400964FD4 /* InputStream+Helpers.swift in Sources */,
 				18CB4E9B2155CCC800D1A93C /* LogItem.swift in Sources */,
+				18C4766E2180554600964FD4 /* NetService+loggerService.swift in Sources */,
+				18C4766A2180551600964FD4 /* TwoWayStream.swift in Sources */,
 				71EE7CA9215BC8AC00958149 /* CaptainsLogDestination.swift in Sources */,
+				18C4768C2180585100964FD4 /* Stream.Status+CustomStringConvertible.swift in Sources */,
 				18CB4E9E2155CCC800D1A93C /* Device.swift in Sources */,
+				18C4769D218058F100964FD4 /* DiscoveryConnectionSide.swift in Sources */,
+				18C476882180583300964FD4 /* Stream+Rx.swift in Sources */,
+				18C4765E218054C000964FD4 /* DiscoveryServiceBrowserDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

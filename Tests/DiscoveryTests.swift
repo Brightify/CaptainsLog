@@ -26,6 +26,12 @@ class DiscoverySpec: QuickSpec {
     override func spec() {
         Hooks.recordCallStackOnError = true
 
+        let publicCertificatePath = Bundle(for: DiscoverySpec.self).url(forResource: "CaptainsLogTestCertificate", withExtension: "cer")!
+        let publicCertificate = try! Data(contentsOf: publicCertificatePath)
+
+        let privateKeyPath = Bundle(for: DiscoverySpec.self).url(forResource: "CaptainsLogTestPrivateKey", withExtension: "p12")!
+        let privateKey = try! Data(contentsOf: privateKeyPath)
+
         describe("the 'Discovery' workflow") {
             beforeSuite {
                 AsyncDefaults.Timeout = 20
@@ -85,8 +91,8 @@ class DiscoverySpec: QuickSpec {
             }
 
             it("connects to device") {
-                let serverConnector = DiscoveryServerConnector(application: mockApplication)
-                let clientConnector = DiscoveryClientConnector(logViewer: mockLogViewer)
+                let serverConnector = DiscoveryLoggerConnector(application: mockApplication)
+                let clientConnector = DiscoveryLogViewerConnector(logViewer: mockLogViewer)
 
                 let deviceService = NetService.loggerService(named: "device-name", port: 11111)
 
@@ -123,7 +129,7 @@ class DiscoverySpec: QuickSpec {
                 var logItem: LogItem?
                 var loggerConnection: LoggerConnection?
 
-                let clientConnector = DiscoveryClientConnector(logViewer: mockLogViewer)
+                let clientConnector = DiscoveryLogViewerConnector(logViewer: mockLogViewer)
 
                 let log = CaptainsLog(info: mockApplication)
                 let browser = DiscoveryServiceBrowser()

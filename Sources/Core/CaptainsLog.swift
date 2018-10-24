@@ -77,7 +77,7 @@ public final class LogReceiver {
 public final class CaptainsLogServer {
     private let browser: DiscoveryServiceBrowser
     private let logViewer: DiscoveryHandshake.LogViewer
-    private let connector: DiscoveryClientConnector
+    private let connector: DiscoveryLogViewerConnector
 
     private let lastReceivedItemIdsSubject = BehaviorSubject<[String: LastLogItemId]>(value: [:])
     private var lastReceivedItemIds: [String: LastLogItemId] = [:] {
@@ -104,7 +104,7 @@ public final class CaptainsLogServer {
         browser = DiscoveryServiceBrowser()
         self.logViewer = logViewer
 
-        let connector = DiscoveryClientConnector(logViewer: logViewer)
+        let connector = DiscoveryLogViewerConnector(logViewer: logViewer)
         self.connector = connector
 
         let lastItemIdForApplication: (DiscoveryHandshake.Application) -> LastLogItemId = { [unowned self] application in
@@ -264,11 +264,11 @@ public final class CaptainsLog {
     private var senders: [LogSender] = []
 
     private let loggerService: NetService
-    private let connector: DiscoveryServerConnector
+    private let connector: DiscoveryLoggerConnector
     private let disposeBag = DisposeBag()
 
     init(info: DiscoveryHandshake.Application) {
-        connector = DiscoveryServerConnector(application: info)
+        connector = DiscoveryLoggerConnector(application: info)
 
         loggerService = NetService.loggerService(named: "device-name", port: 11111)
 
