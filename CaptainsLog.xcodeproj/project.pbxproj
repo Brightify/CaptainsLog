@@ -68,6 +68,18 @@
 		18C4769B218058F100964FD4 /* DiscoveryConnectionSide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4769A218058F100964FD4 /* DiscoveryConnectionSide.swift */; };
 		18C4769C218058F100964FD4 /* DiscoveryConnectionSide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4769A218058F100964FD4 /* DiscoveryConnectionSide.swift */; };
 		18C4769D218058F100964FD4 /* DiscoveryConnectionSide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C4769A218058F100964FD4 /* DiscoveryConnectionSide.swift */; };
+		18C476A12180631400964FD4 /* CaptainsLogServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476A02180631400964FD4 /* CaptainsLogServer.swift */; };
+		18C476A22180631400964FD4 /* CaptainsLogServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476A02180631400964FD4 /* CaptainsLogServer.swift */; };
+		18C476A32180631400964FD4 /* CaptainsLogServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476A02180631400964FD4 /* CaptainsLogServer.swift */; };
+		18C476A52180633500964FD4 /* LogSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476A42180633500964FD4 /* LogSender.swift */; };
+		18C476A62180633500964FD4 /* LogSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476A42180633500964FD4 /* LogSender.swift */; };
+		18C476A72180633500964FD4 /* LogSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476A42180633500964FD4 /* LogSender.swift */; };
+		18C476A92180634C00964FD4 /* LogReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476A82180634C00964FD4 /* LogReceiver.swift */; };
+		18C476AA2180634C00964FD4 /* LogReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476A82180634C00964FD4 /* LogReceiver.swift */; };
+		18C476AB2180634C00964FD4 /* LogReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476A82180634C00964FD4 /* LogReceiver.swift */; };
+		18C476AD2180636600964FD4 /* RetryBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476AC2180636600964FD4 /* RetryBehavior.swift */; };
+		18C476AE2180636600964FD4 /* RetryBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476AC2180636600964FD4 /* RetryBehavior.swift */; };
+		18C476AF2180636600964FD4 /* RetryBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C476AC2180636600964FD4 /* RetryBehavior.swift */; };
 		18CB4E4B2155C80A00D1A93C /* CaptainsLog_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18CB4E422155C80A00D1A93C /* CaptainsLog_macOS.framework */; };
 		18CB4E522155C80A00D1A93C /* CaptainsLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CB4E442155C80A00D1A93C /* CaptainsLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18CB4E672155C82C00D1A93C /* CaptainsLog_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18CB4E5E2155C82C00D1A93C /* CaptainsLog_iOS.framework */; };
@@ -164,6 +176,10 @@
 		18C47692218058B600964FD4 /* NetService+resolving.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetService+resolving.swift"; sourceTree = "<group>"; };
 		18C47696218058D700964FD4 /* LastLogItemId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastLogItemId.swift; sourceTree = "<group>"; };
 		18C4769A218058F100964FD4 /* DiscoveryConnectionSide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryConnectionSide.swift; sourceTree = "<group>"; };
+		18C476A02180631400964FD4 /* CaptainsLogServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptainsLogServer.swift; sourceTree = "<group>"; };
+		18C476A42180633500964FD4 /* LogSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogSender.swift; sourceTree = "<group>"; };
+		18C476A82180634C00964FD4 /* LogReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogReceiver.swift; sourceTree = "<group>"; };
+		18C476AC2180636600964FD4 /* RetryBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryBehavior.swift; sourceTree = "<group>"; };
 		18CB4E422155C80A00D1A93C /* CaptainsLog_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CaptainsLog_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		18CB4E442155C80A00D1A93C /* CaptainsLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CaptainsLog.h; sourceTree = "<group>"; };
 		18CB4E452155C80A00D1A93C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -446,6 +462,10 @@
 			isa = PBXGroup;
 			children = (
 				7120C4312152901B0084BD38 /* CaptainsLog.swift */,
+				18C476A02180631400964FD4 /* CaptainsLogServer.swift */,
+				18C476A42180633500964FD4 /* LogSender.swift */,
+				18C476A82180634C00964FD4 /* LogReceiver.swift */,
+				18C476AC2180636600964FD4 /* RetryBehavior.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -891,6 +911,7 @@
 				18CB4E992155CCC100D1A93C /* CaptainsLogEnhancer.swift in Sources */,
 				18C47693218058B600964FD4 /* NetService+resolving.swift in Sources */,
 				18C476542180549100964FD4 /* DiscoveryLoggerConnector.swift in Sources */,
+				18C476A92180634C00964FD4 /* LogReceiver.swift in Sources */,
 				18C4769B218058F100964FD4 /* DiscoveryConnectionSide.swift in Sources */,
 				18CC16E1215CCC4800BA7B96 /* Async.swift in Sources */,
 				18C47670218055BE00964FD4 /* LogViewerConnection.swift in Sources */,
@@ -904,15 +925,18 @@
 				18CB4EAE2155CCC900D1A93C /* ChallengeResult.swift in Sources */,
 				71EE7CAD215BCADC00958149 /* LogLevel.swift in Sources */,
 				18C4768A2180585100964FD4 /* Stream.Status+CustomStringConvertible.swift in Sources */,
+				18C476AD2180636600964FD4 /* RetryBehavior.swift in Sources */,
 				18CB4EAF2155CCC900D1A93C /* HTTPMethod.swift in Sources */,
 				18C476862180583300964FD4 /* Stream+Rx.swift in Sources */,
 				18C47658218054A700964FD4 /* DiscoveryLogViewerConnector.swift in Sources */,
 				18CB4EAD2155CCC900D1A93C /* Token.swift in Sources */,
+				18C476A52180633500964FD4 /* LogSender.swift in Sources */,
 				18C476782180567800964FD4 /* DiscoveryHandshake.swift in Sources */,
 				18C47674218055CF00964FD4 /* LoggerConnection.swift in Sources */,
 				18C476642180550400964FD4 /* Constants.swift in Sources */,
 				18C4765C218054C000964FD4 /* DiscoveryServiceBrowserDelegate.swift in Sources */,
 				18CB4EA92155CCC900D1A93C /* LogItem.swift in Sources */,
+				18C476A12180631400964FD4 /* CaptainsLogServer.swift in Sources */,
 				71EE7CA6215BC5DD00958149 /* CaptainsLogDestination.swift in Sources */,
 				18CB4EAC2155CCC900D1A93C /* Device.swift in Sources */,
 				18C476822180578B00964FD4 /* OutputStream+Helpers.swift in Sources */,
@@ -935,6 +959,7 @@
 				18CB4EA42155CCC800D1A93C /* ApplicationRun.swift in Sources */,
 				18C47694218058B600964FD4 /* NetService+resolving.swift in Sources */,
 				18C476652180550400964FD4 /* Constants.swift in Sources */,
+				18C476AA2180634C00964FD4 /* LogReceiver.swift in Sources */,
 				18CB4E9A2155CCC100D1A93C /* CaptainsLogEnhancer.swift in Sources */,
 				18C47698218058D700964FD4 /* LastLogItemId.swift in Sources */,
 				18CC16E2215CCC4800BA7B96 /* Async.swift in Sources */,
@@ -951,9 +976,12 @@
 				18C4768F2180586700964FD4 /* StreamDisconnectedError.swift in Sources */,
 				18CB4EA62155CCC800D1A93C /* Token.swift in Sources */,
 				18C476832180578B00964FD4 /* OutputStream+Helpers.swift in Sources */,
+				18C476AE2180636600964FD4 /* RetryBehavior.swift in Sources */,
 				18C4767E2180573400964FD4 /* InputStream+Helpers.swift in Sources */,
 				18CB4EA22155CCC800D1A93C /* LogItem.swift in Sources */,
 				18C4766D2180554600964FD4 /* NetService+loggerService.swift in Sources */,
+				18C476A62180633500964FD4 /* LogSender.swift in Sources */,
+				18C476A22180631400964FD4 /* CaptainsLogServer.swift in Sources */,
 				18C476692180551600964FD4 /* TwoWayStream.swift in Sources */,
 				71EE7CA8215BC8AC00958149 /* CaptainsLogDestination.swift in Sources */,
 				18C4768B2180585100964FD4 /* Stream.Status+CustomStringConvertible.swift in Sources */,
@@ -979,6 +1007,7 @@
 				18CB4E9D2155CCC800D1A93C /* ApplicationRun.swift in Sources */,
 				18C47695218058B600964FD4 /* NetService+resolving.swift in Sources */,
 				18C476662180550400964FD4 /* Constants.swift in Sources */,
+				18C476AB2180634C00964FD4 /* LogReceiver.swift in Sources */,
 				18CB4E972155CCBF00D1A93C /* CaptainsLogEnhancer.swift in Sources */,
 				18C47699218058D700964FD4 /* LastLogItemId.swift in Sources */,
 				18CC16E3215CCC4800BA7B96 /* Async.swift in Sources */,
@@ -995,9 +1024,12 @@
 				18C476902180586700964FD4 /* StreamDisconnectedError.swift in Sources */,
 				18CB4E9F2155CCC800D1A93C /* Token.swift in Sources */,
 				18C476842180578B00964FD4 /* OutputStream+Helpers.swift in Sources */,
+				18C476AF2180636600964FD4 /* RetryBehavior.swift in Sources */,
 				18C4767F2180573400964FD4 /* InputStream+Helpers.swift in Sources */,
 				18CB4E9B2155CCC800D1A93C /* LogItem.swift in Sources */,
 				18C4766E2180554600964FD4 /* NetService+loggerService.swift in Sources */,
+				18C476A72180633500964FD4 /* LogSender.swift in Sources */,
+				18C476A32180631400964FD4 /* CaptainsLogServer.swift in Sources */,
 				18C4766A2180551600964FD4 /* TwoWayStream.swift in Sources */,
 				71EE7CA9215BC8AC00958149 /* CaptainsLogDestination.swift in Sources */,
 				18C4768C2180585100964FD4 /* Stream.Status+CustomStringConvertible.swift in Sources */,
