@@ -26,7 +26,7 @@ Pod::Spec.new do |spec|
   spec.swift_version = "4.2"
   spec.ios.deployment_target = "10.0"
   spec.osx.deployment_target = "10.13"
-  spec.default_subspec = 'Models', 'Discovery', 'Core', 'Fetcher', 'SwiftyBeaver'
+  spec.default_subspec = 'Models', 'Discovery', 'Core', 'Fetcher', 'SwiftyBeaver', 'NSURLSession'
 
   spec.subspec 'Models' do |subspec|
     subspec.source_files = [
@@ -63,6 +63,13 @@ Pod::Spec.new do |spec|
     subspec.dependency 'SwiftyBeaver'
     subspec.source_files = [
       'Sources/SwiftyBeaver/**/*.swift'
+    ]
+  end
+
+  spec.subspec 'NSURLSession' do |subspec|
+    subspec.dependency 'CaptainsLog/Core'
+    subspec.source_files = [
+      'Sources/NSURLSession/**/*.swift'
     ]
   end
 end

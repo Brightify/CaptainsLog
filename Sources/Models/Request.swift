@@ -13,7 +13,7 @@ public struct Request: Codable, Equatable {
     public var url: URL
     public var headers: [String: String]
     public var time: Date
-    public var body: Data
+    public var body: Data?
 
     public var response: Response?
 
@@ -21,7 +21,7 @@ public struct Request: Codable, Equatable {
                 url: URL,
                 headers: [String: String],
                 time: Date,
-                body: Data,
+                body: Data?,
                 response: Response?) {
 
         self.method = method
@@ -38,9 +38,9 @@ public extension Request {
         public var time: Date
         public var code: Int
         public var headers: [String: String]
-        public var body: Data
+        public var body: Data?
 
-        public init(time: Date, code: Int, headers: [String: String], body: Data) {
+        public init(time: Date, code: Int, headers: [String: String], body: Data?) {
             self.time = time
             self.code = code
             self.headers = headers

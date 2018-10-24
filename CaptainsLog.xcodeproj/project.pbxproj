@@ -121,6 +121,7 @@
 		18CC16E3215CCC4800BA7B96 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC16E0215CCC4800BA7B96 /* Async.swift */; };
 		2C17BD14BF021DAF71C28900 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5DA03AF819AF7D4B082E49 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework */; };
 		3F3C978EBA0CD87C82260D7B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252E2324FE387B686D80423B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework */; };
+		7100D58E2180815E00E52697 /* CaptainsLogHTTPProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7100D58D2180815E00E52697 /* CaptainsLogHTTPProtocol.swift */; };
 		71721B6A2174E177001B0606 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71721B692174E177001B0606 /* Application.swift */; };
 		71EE7CA6215BC5DD00958149 /* CaptainsLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CA5215BC5DD00958149 /* CaptainsLogDestination.swift */; };
 		71EE7CA8215BC8AC00958149 /* CaptainsLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CA5215BC5DD00958149 /* CaptainsLogDestination.swift */; };
@@ -197,6 +198,7 @@
 		41F140158E4746BA57CDDB8F /* Pods-CaptainsLog-Tests-CaptainsLog-macOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog-Tests-CaptainsLog-macOSTests.release.xcconfig"; path = "Target Support Files/Pods-CaptainsLog-Tests-CaptainsLog-macOSTests/Pods-CaptainsLog-Tests-CaptainsLog-macOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		49ADAA82FCD0FE4BD9C7D23F /* Pods-CaptainsLog-CaptainsLog-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog-CaptainsLog-iOS.release.xcconfig"; path = "Target Support Files/Pods-CaptainsLog-CaptainsLog-iOS/Pods-CaptainsLog-CaptainsLog-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		675333309AA91474E5C73C24 /* Pods_CaptainsLog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7100D58D2180815E00E52697 /* CaptainsLogHTTPProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptainsLogHTTPProtocol.swift; sourceTree = "<group>"; };
 		7120C414215277AA0084BD38 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		7120C415215277AA0084BD38 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		7120C416215277AA0084BD38 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -389,6 +391,14 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		7100D58F2180816900E52697 /* NSURLSession */ = {
+			isa = PBXGroup;
+			children = (
+				7100D58D2180815E00E52697 /* CaptainsLogHTTPProtocol.swift */,
+			);
+			path = NSURLSession;
+			sourceTree = "<group>";
+		};
 		7120C3FF215276B40084BD38 = {
 			isa = PBXGroup;
 			children = (
@@ -423,6 +433,7 @@
 				7120C4222152844C0084BD38 /* Core */,
 				7120C4232152845D0084BD38 /* Fetcher */,
 				71EE7CA7215BC5E500958149 /* SwiftyBeaver */,
+				7100D58F2180816900E52697 /* NSURLSession */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -931,6 +942,7 @@
 				18C47658218054A700964FD4 /* DiscoveryLogViewerConnector.swift in Sources */,
 				18CB4EAD2155CCC900D1A93C /* Token.swift in Sources */,
 				18C476A52180633500964FD4 /* LogSender.swift in Sources */,
+				7100D58E2180815E00E52697 /* CaptainsLogHTTPProtocol.swift in Sources */,
 				18C476782180567800964FD4 /* DiscoveryHandshake.swift in Sources */,
 				18C47674218055CF00964FD4 /* LoggerConnection.swift in Sources */,
 				18C476642180550400964FD4 /* Constants.swift in Sources */,
