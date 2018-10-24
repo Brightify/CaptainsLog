@@ -9,14 +9,27 @@
 import Foundation
 import RxSwift
 
+struct LoggerTXT: Codable {
+    let identifier: String
+}
+
 extension NetService {
+    private static let encoder = JSONEncoder()
+
     static func loggerService(
         named name: String,
-        domain: String = Constants.domain,
-        type: String = Constants.type,
-        port: Int32 = Constants.port) -> NetService {
+        identifier: String,
+        domain: String,
+        type: String,
+        port: Int) -> NetService {
 
-        return NetService(domain: domain, type: type, name: name, port: port)
+        let txt = LoggerTXT(identifier: identifier)
+        let txtData = try! encoder.encode(txt)
+        let txtRecordData = NetService.data(fromTXTRecord: ["OK": txtData])
+
+        let service = NetService(domain: domain, type: type, name: name, port: Int32(port))
+        assert(service.setTXTRecord(txtRecordData), "Couldn't set TXT record")
+        return service
     }
 }
 
@@ -29,7 +42,21 @@ extension NetService {
         }
 
         func netService(_ sender: NetService, didAcceptConnectionWith inputStream: InputStream, outputStream: OutputStream) {
+            print(#function, sender)
             didAcceptConnection(TwoWayStream(input: inputStream, output: outputStream))
+        }
+
+        func netServiceWillPublish(_ sender: NetService) {
+            print(#function, sender)
+        }
+
+        func netServiceDidPublish(_ sender: NetService) {
+            print(#function, sender)
+            sender.setTXTRecord(sender.txtRecordData())
+        }
+
+        func netService(_ sender: NetService, didNotPublish errorDict: [String : NSNumber]) {
+            print(#function, sender, errorDict)
         }
     }
 

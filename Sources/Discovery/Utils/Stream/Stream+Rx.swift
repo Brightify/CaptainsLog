@@ -11,7 +11,7 @@ import RxSwift
 
 public extension Stream {
     func observeStatus() -> Observable<Status> {
-        return Observable<Int>.timer(0.1, scheduler: MainScheduler.instance)
+        return Observable<Int>.interval(0.1, scheduler: MainScheduler.instance)
             .map { _ in self.streamStatus }
             .startWith(streamStatus)
             .distinctUntilChanged()

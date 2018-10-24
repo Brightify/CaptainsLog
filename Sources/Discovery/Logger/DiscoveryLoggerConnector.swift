@@ -18,7 +18,21 @@ final class DiscoveryLoggerConnector {
 
     func connect(stream: TwoWayStream) -> Single<LogViewerConnection> {
         return async {
+            let settings = [
+                kCFStreamSSLLevel: StreamSocketSecurityLevel.tlSv1,
+                kCFStreamSSLValidatesCertificateChain: false,
+                kCFStreamSSLPeerName: "whoknows",
+                Stream.PropertyKey.socketSecurityLevelKey: StreamSocketSecurityLevel.tlSv1,
+            ] as CFDictionary
+
+            CFReadStreamSetProperty(stream.input, CFStreamPropertyKey(kCFStreamPropertySSLSettings), settings)
+            CFWriteStreamSetProperty(stream.output, CFStreamPropertyKey(kCFStreamPropertySSLSettings), settings)
+
             try await(stream.open().debug("server connect"))
+
+            let policy = SecPolicyCreateSSL(false, "whoknows" as CFString)
+            let streamCertificates = stream.input.property(forKey: Stream.PropertyKey(kCFStreamSSLCertificates as String))
+
 
             let logViewer = try DiscoveryHandshake(stream: stream).perform(for: self.application)
 

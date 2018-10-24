@@ -12,6 +12,25 @@ import RxSwift
 #endif
 
 public final class CaptainsLog {
+    public struct Configuration {
+        public var application: DiscoveryHandshake.Application
+        public var serviceDomain: String
+        public var serviceType: String
+        public var servicePort: Int
+
+        public init(
+            application: DiscoveryHandshake.Application,
+            serviceDomain: String,
+            serviceType: String,
+            servicePort: Int) {
+
+            self.application = application
+            self.serviceDomain = serviceDomain
+            self.serviceType = serviceType
+            self.servicePort = servicePort
+        }
+    }
+
     private static var appInfo: DiscoveryHandshake.Application {
         return DiscoveryHandshake.Application(
             id: UUID().uuidString,
@@ -20,21 +39,33 @@ public final class CaptainsLog {
             version: Bundle.main.infoDictionary![kCFBundleVersionKey as String] as! String,
             date: Date())
     }
-    public static let instance = CaptainsLog(info: appInfo)
+    public static let instance = CaptainsLog(configuration:
+        CaptainsLog.Configuration(
+            application: appInfo,
+            serviceDomain: Constants.domain,
+            serviceType: Constants.type,
+            servicePort: Constants.port))
 
     private let senderLock = DispatchQueue(label: "org.brightify.CaptainsLog.senderlock")
 
     private var logItems: [LogItem] = []
     private var senders: [LogSender] = []
 
+    private let configuration: Configuration
     private let loggerService: NetService
     private let connector: DiscoveryLoggerConnector
     private let disposeBag = DisposeBag()
 
-    init(info: DiscoveryHandshake.Application) {
-        connector = DiscoveryLoggerConnector(application: info)
+    init(configuration: Configuration) {
+        self.configuration = configuration
+        connector = DiscoveryLoggerConnector(application: configuration.application)
 
-        loggerService = NetService.loggerService(named: "device-name", port: 11111)
+        loggerService = NetService.loggerService(
+            named: "device-name",
+            identifier: "mock-...",
+            domain: configuration.serviceDomain,
+            type: configuration.serviceType,
+            port: configuration.servicePort)
 
         loggerService.publish()
             .flatMap(connector.connect)

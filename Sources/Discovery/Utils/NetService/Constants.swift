@@ -11,5 +11,5 @@ import Foundation
 struct Constants {
     static let domain = "local."
     static let type = "_captainslog-transmitter._tcp."
-    static let port = 0 as Int32
+    static let port = 0
 }

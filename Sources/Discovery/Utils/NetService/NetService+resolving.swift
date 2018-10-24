@@ -55,5 +55,49 @@ extension NetService {
             }
         }
     }
+}
 
+extension NetService {
+    private final class TxtChangedDelegate: NSObject, NetServiceDelegate {
+        let txtRecordUpdated: (Data) -> Void
+
+        init(txtRecordUpdated: @escaping (Data) -> Void) {
+            self.txtRecordUpdated = txtRecordUpdated
+        }
+
+        func netService(_ sender: NetService, didUpdateTXTRecord data: Data) {
+            print(#function, sender, data)
+            txtRecordUpdated(data)
+        }
+    }
+
+    func txtData(containsKey key: String, timeout: TimeInterval = 0) -> Single<[String: Data]> {
+        let updatedTxtRecord = Observable<Data?>.create { observer in
+            let delegate = TxtChangedDelegate(txtRecordUpdated: observer.onNext)
+            self.delegate = delegate
+
+            self.startMonitoring()
+
+            return Disposables.create {
+                withExtendedLifetime(delegate) { }
+                self.stopMonitoring()
+                self.delegate = nil
+            }
+        }
+
+        let result = updatedTxtRecord.startWith(txtRecordData())
+            .flatMap { recordData -> Observable<[String: Data]> in
+                guard let records = recordData.map(NetService.dictionary(fromTXTRecord:)) else { return .empty() }
+                print("records:", records)
+                return records.keys.contains(key) ? .just(records) : .empty()
+            }
+            .take(1)
+            .asSingle()
+
+        if timeout > 0 {
+            return result.timeout(timeout, scheduler: MainScheduler.instance)
+        } else {
+            return result
+        }
+    }
 }

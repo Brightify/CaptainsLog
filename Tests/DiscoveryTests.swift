@@ -26,12 +26,6 @@ class DiscoverySpec: QuickSpec {
     override func spec() {
         Hooks.recordCallStackOnError = true
 
-        let publicCertificatePath = Bundle(for: DiscoverySpec.self).url(forResource: "CaptainsLogTestCertificate", withExtension: "cer")!
-        let publicCertificate = try! Data(contentsOf: publicCertificatePath)
-
-        let privateKeyPath = Bundle(for: DiscoverySpec.self).url(forResource: "CaptainsLogTestPrivateKey", withExtension: "p12")!
-        let privateKey = try! Data(contentsOf: privateKeyPath)
-
         describe("the 'Discovery' workflow") {
             beforeSuite {
                 AsyncDefaults.Timeout = 20
@@ -42,6 +36,11 @@ class DiscoverySpec: QuickSpec {
                 AsyncDefaults.PollInterval = 0.01
             }
 
+            // This let's us disambiguate between multiple running tests
+            let testIdentifier = UUID().uuidString.prefix(8)
+            let serviceType = "_captainslog-transmitter-tests-\(testIdentifier)._tcp."
+            let serviceDomain = Constants.domain
+            let servicePort = 11123
             let mockApplication = DiscoveryHandshake.Application(
                 id: UUID().uuidString,
                 name: "An application",
@@ -72,6 +71,13 @@ class DiscoverySpec: QuickSpec {
                     body: Data(),
                     response: nil)))
 
+            let publicCertificatePath = Bundle(for: DiscoverySpec.self).url(forResource: "CaptainsLogTestCertificate", withExtension: "cer")!
+            let publicCertificate = try! Data(contentsOf: publicCertificatePath)
+
+            let privateKeyURL = Bundle(for: DiscoverySpec.self).url(forResource: "CaptainsLogTestPrivateKey", withExtension: "p12")!
+            let certificateManager = CertificateManager()
+            try! certificateManager.load(url: privateKeyURL, password: "capitan")
+
             it("finds device") {
                 /*
                  Test decription:
@@ -82,21 +88,31 @@ class DiscoverySpec: QuickSpec {
                  4. Receive logger url from search
                  */
 
-                let deviceService = NetService.loggerService(named: "device-name", port: 11111)
+                let deviceService = NetService.loggerService(
+                    named: "finds device",
+                    identifier: "ec3f282e-de95-4cdf-a692-66608dc92c05",
+                    domain: serviceDomain,
+                    type: serviceType,
+                    port: servicePort)
 
                 var netService: NetService?
-                let browser = DiscoveryServiceBrowser()
+                let browser = DiscoveryServiceBrowser(serviceType: serviceType, serviceDomain: serviceDomain)
                 browser.search()
                 expect(browser.unresolvedServices.map { $0.first }).first.toNot(beNil())
             }
 
             it("connects to device") {
                 let serverConnector = DiscoveryLoggerConnector(application: mockApplication)
-                let clientConnector = DiscoveryLogViewerConnector(logViewer: mockLogViewer)
+                let clientConnector = DiscoveryLogViewerConnector(logViewer: mockLogViewer, certificateManager: certificateManager)
 
-                let deviceService = NetService.loggerService(named: "device-name", port: 11111)
+                let deviceService = NetService.loggerService(
+                    named: "connects to device",
+                    identifier: "ec3f282e-de95-4cdf-a692-66608dc92c05",
+                    domain: serviceDomain,
+                    type: serviceType,
+                    port: servicePort)
 
-                let browser = DiscoveryServiceBrowser()
+                let browser = DiscoveryServiceBrowser(serviceType: serviceType, serviceDomain: serviceDomain)
 
                 var loggerConnection: LoggerConnection?
                 var logViewerConnection: LogViewerConnection?
@@ -129,10 +145,15 @@ class DiscoverySpec: QuickSpec {
                 var logItem: LogItem?
                 var loggerConnection: LoggerConnection?
 
-                let clientConnector = DiscoveryLogViewerConnector(logViewer: mockLogViewer)
+                let clientConnector = DiscoveryLogViewerConnector(logViewer: mockLogViewer, certificateManager: certificateManager)
 
-                let log = CaptainsLog(info: mockApplication)
-                let browser = DiscoveryServiceBrowser()
+                let logConfiguration = CaptainsLog.Configuration(
+                    application: mockApplication,
+                    serviceDomain: serviceDomain,
+                    serviceType: serviceType,
+                    servicePort: servicePort)
+                let log = CaptainsLog(configuration: logConfiguration)
+                let browser = DiscoveryServiceBrowser(serviceType: serviceType, serviceDomain: serviceDomain)
 
                 _ = async {
                     browser.search()
@@ -163,8 +184,18 @@ class DiscoverySpec: QuickSpec {
                 var logItem1: LogItem?
                 var logItem2: LogItem?
 
-                let server = CaptainsLogServer(logViewer: mockLogViewer)
-                let log = CaptainsLog(info: mockApplication)
+                let serverConfiguration = CaptainsLogServer.Configuration(
+                    logViewer: mockLogViewer,
+                    serviceDomain: serviceDomain,
+                    serviceType: serviceType)
+                let server = CaptainsLogServer(configuration: serverConfiguration, certificateManager: certificateManager)
+
+                let logConfiguration = CaptainsLog.Configuration(
+                    application: mockApplication,
+                    serviceDomain: serviceDomain,
+                    serviceType: serviceType,
+                    servicePort: servicePort)
+                let log = CaptainsLog(configuration: logConfiguration)
 
                 _ = async(on: DispatchQueue(label: "LogViewer")) {
                     server.startSearching()
@@ -198,8 +229,18 @@ class DiscoverySpec: QuickSpec {
                 var logItem1: LogItem?
                 var logItem2: LogItem?
 
-                let server = CaptainsLogServer(logViewer: mockLogViewer)
-                let log = CaptainsLog(info: mockApplication)
+                let serverConfiguration = CaptainsLogServer.Configuration(
+                    logViewer: mockLogViewer,
+                    serviceDomain: serviceDomain,
+                    serviceType: serviceType)
+                let server = CaptainsLogServer(configuration: serverConfiguration, certificateManager: certificateManager)
+
+                let logConfiguration = CaptainsLog.Configuration(
+                    application: mockApplication,
+                    serviceDomain: serviceDomain,
+                    serviceType: serviceType,
+                    servicePort: servicePort)
+                let log = CaptainsLog(configuration: logConfiguration)
 
                 _ = async(on: DispatchQueue(label: "LogViewer")) {
                     server.startSearching()

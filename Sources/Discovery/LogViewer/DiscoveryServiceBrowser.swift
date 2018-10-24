@@ -36,6 +36,8 @@ final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
 
     //    var didResolveServices: (([NetService]) -> Void)?
 
+    private let serviceType: String
+    private let serviceDomain: String
     private let browser = NetServiceBrowser()
     private var services: [NetService] = []
 
@@ -46,7 +48,10 @@ final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
         return unresolvedServicesSubject
     }
 
-    override init() {
+    init(serviceType: String, serviceDomain: String) {
+        self.serviceType = serviceType
+        self.serviceDomain = serviceDomain
+
         super.init()
 
         browser.delegate = self
@@ -54,7 +59,7 @@ final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
 
     func search() {
         browser.schedule(in: .current, forMode: .default)
-        browser.searchForServices(ofType: "_captainslog-transmitter._tcp.", inDomain: "local.")
+        browser.searchForServices(ofType: serviceType, inDomain: serviceDomain)
     }
 
     deinit {

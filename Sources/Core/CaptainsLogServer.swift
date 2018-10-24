@@ -10,8 +10,20 @@ import Foundation
 import RxSwift
 
 public final class CaptainsLogServer {
+    public struct Configuration {
+        public var logViewer: DiscoveryHandshake.LogViewer
+        public var serviceDomain: String
+        public var serviceType: String
+
+        init(logViewer: DiscoveryHandshake.LogViewer, serviceDomain: String = Constants.domain, serviceType: String = Constants.type) {
+            self.logViewer = logViewer
+            self.serviceDomain = serviceDomain
+            self.serviceType = serviceType
+        }
+    }
+
+    private let configuration: Configuration
     private let browser: DiscoveryServiceBrowser
-    private let logViewer: DiscoveryHandshake.LogViewer
     private let connector: DiscoveryLogViewerConnector
 
     private let lastReceivedItemIdsSubject = BehaviorSubject<[String: LastLogItemId]>(value: [:])
@@ -35,11 +47,11 @@ public final class CaptainsLogServer {
 
     private let disposeBag = DisposeBag()
 
-    public init(logViewer: DiscoveryHandshake.LogViewer) {
-        browser = DiscoveryServiceBrowser()
-        self.logViewer = logViewer
+    public init(configuration: Configuration, certificateManager: CertificateManager) {
+        browser = DiscoveryServiceBrowser(serviceType: configuration.serviceType, serviceDomain: configuration.serviceDomain)
+        self.configuration = configuration
 
-        let connector = DiscoveryLogViewerConnector(logViewer: logViewer)
+        let connector = DiscoveryLogViewerConnector(logViewer: configuration.logViewer, certificateManager: certificateManager)
         self.connector = connector
 
         let lastItemIdForApplication: (DiscoveryHandshake.Application) -> LastLogItemId = { [unowned self] application in

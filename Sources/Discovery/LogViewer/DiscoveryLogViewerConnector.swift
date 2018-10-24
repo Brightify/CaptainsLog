@@ -9,16 +9,78 @@
 import Foundation
 import RxSwift
 
-final class DiscoveryLogViewerConnector {
-    private let logViewer: DiscoveryHandshake.LogViewer
+public final class CertificateManager {
+    public struct Certificate {
+        let id: String
+        let privateKey: SecKey
+        let identity: SecIdentity
+        let certificate: SecCertificate
+    }
 
-    init(logViewer: DiscoveryHandshake.LogViewer) {
+    public var keys: [String: Certificate] = [:]
+
+    public func identity(forId identifier: String) -> SecIdentity? {
+        guard let certificate = keys[identifier] else { return nil }
+        return certificate.identity
+//        SecIdentity
+
+
+    }
+
+    func load(data: Data, password: String) {
+        let options = [kSecImportExportPassphrase: password] as CFDictionary
+
+        var items: CFArray?
+        let importError = SecPKCS12Import(data as CFData, options, &items)
+        assert(importError == noErr)
+
+        let identityDictionary = unsafeBitCast(CFArrayGetValueAtIndex(items, 0), to: CFDictionary.self) as! [String: Any]
+        let keyId = identityDictionary[kSecImportItemLabel as String] as! String
+        let identity = identityDictionary[kSecImportItemIdentity as String] as! SecIdentity
+
+        var privateKey: SecKey?
+        SecIdentityCopyPrivateKey(identity, &privateKey)
+
+        var certificate: SecCertificate?
+        SecIdentityCopyCertificate(identity, &certificate)
+
+//        var publicKey: SecKey?
+
+        let c = Certificate(
+            id: keyId,
+            privateKey: privateKey!,
+            identity: identity,
+            certificate: certificate!)
+
+        keys[keyId] = c
+    }
+
+    func load(url: URL, password: String) throws {
+        try load(data: Data(contentsOf: url), password: password)
+    }
+}
+
+final class DiscoveryLogViewerConnector {
+    private static let decoder = JSONDecoder()
+
+    private let logViewer: DiscoveryHandshake.LogViewer
+    private let certificateManager: CertificateManager
+
+    init(logViewer: DiscoveryHandshake.LogViewer, certificateManager: CertificateManager) {
         self.logViewer = logViewer
+        self.certificateManager = certificateManager
     }
 
     func connect(service: NetService, lastLogItemId: @escaping (DiscoveryHandshake.Application) -> LastLogItemId) -> Single<LoggerConnection> {
         return async {
             let resolvedService = try await(service.resolved(withTimeout: 30))
+
+            let txtRecords = try await(resolvedService.txtData(containsKey: "OK", timeout: 10))
+
+            guard let okData = txtRecords["OK"] else {
+                fatalError("Error in txtData resolution! We should always have the key available if we got a response from the `txtData` method!")
+            }
+            let txt = try DiscoveryLogViewerConnector.decoder.decode(LoggerTXT.self, from: okData)
 
             var inputStream: InputStream?
             var outputStream: OutputStream?
@@ -26,6 +88,22 @@ final class DiscoveryLogViewerConnector {
             precondition(resolvedService.getInputStream(&inputStream, outputStream: &outputStream), "Couldn't get streams!")
 
             let stream = TwoWayStream(input: inputStream!, output: outputStream!)
+
+            if let identity = self.certificateManager.identity(forId: txt.identifier) {
+                stream.input.setProperty(StreamSocketSecurityLevel.tlSv1, forKey: Stream.PropertyKey.socketSecurityLevelKey)
+
+                let success = CFReadStreamSetProperty(
+                    stream.input,
+                    CFStreamPropertyKey(kCFStreamPropertySSLSettings),
+                    [
+                        kCFStreamSSLIsServer: true,
+                        kCFStreamSSLCertificates: [identity],
+                        kCFStreamSSLValidatesCertificateChain: false,
+                    ] as CFDictionary)
+                assert(success)
+
+                stream.output.setProperty(StreamSocketSecurityLevel.tlSv1, forKey: Stream.PropertyKey.socketSecurityLevelKey)
+            }
 
             try await(stream.open())
 
@@ -36,4 +114,5 @@ final class DiscoveryLogViewerConnector {
             return LoggerConnection(service: resolvedService, stream: stream, application: application)
         }
     }
+
 }
