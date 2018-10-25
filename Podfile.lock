@@ -1,4 +1,7 @@
 PODS:
+  - CocoaLumberjack/Default (3.4.2)
+  - CocoaLumberjack/Swift (3.4.2):
+    - CocoaLumberjack/Default
   - DataMapper (0.2.0):
     - DataMapper/Core (= 0.2.0)
     - DataMapper/JsonSerializer (= 0.2.0)
@@ -21,6 +24,7 @@ PODS:
   - SwiftyBeaver (1.6.1)
 
 DEPENDENCIES:
+  - CocoaLumberjack/Swift
   - Fetcher/Core (from `https://github.com/Brightify/Fetcher.git`, branch `fix/xcode10`)
   - Nimble
   - Quick
@@ -31,6 +35,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - CocoaLumberjack
     - DataMapper
     - Nimble
     - Quick
@@ -51,6 +56,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/Brightify/Fetcher.git
 
 SPEC CHECKSUMS:
+  CocoaLumberjack: db7cc9e464771f12054c22ff6947c5a58d43a0fd
   DataMapper: f33d650f587a3241216763ee6377e3c3f1041c47
   Fetcher: 887fc2c44d860d7881591954a3b09a7abdee4125
   Nimble: c8d6a1f463701921c46de965c673e13cafa09196
@@ -61,6 +67,6 @@ SPEC CHECKSUMS:
   RxSwift: fe0fd770a43acdb7d0a53da411c9b892e69bb6e4
   SwiftyBeaver: ccfcdf85a04d429f1633f668650b0ce8020bda3a
 
-PODFILE CHECKSUM: f86203bb8a94a8174831a261d548885fe9f4224a
+PODFILE CHECKSUM: 9616539b1bd1e8e8916731e6b8293021a5471296
 
 COCOAPODS: 1.6.0.beta.1

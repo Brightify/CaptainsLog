@@ -21,7 +21,7 @@ public class CaptainsLogDestination: BaseDestination {
                               file: String, function: String, line: Int, context: Any?) -> String? {
         let logItem = LogItem(id: UUID().uuidString,
                               kind: .log(Log(time: Date(),
-                                             level: LogLevel(rawValue: level.rawValue) ?? .verbose,
+                                             level: LogLevel(rawValue: level.rawValue) ?? .unknown,
                                              message: msg,
                                              thread: thread,
                                              file: file,

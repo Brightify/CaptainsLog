@@ -14,6 +14,7 @@ public enum LogLevel: Int, CaseIterable, Codable {
     case info = 2
     case warning = 3
     case error = 4
+    case unknown = 5
 
     var description: String {
         switch self {
@@ -27,6 +28,8 @@ public enum LogLevel: Int, CaseIterable, Codable {
             return "Warning"
         case .error:
             return "Error"
+        case .unknown:
+            return "Unknown"
         }
     }
 }
