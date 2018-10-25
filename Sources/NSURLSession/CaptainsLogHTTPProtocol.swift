@@ -8,12 +8,12 @@
 
 import Foundation
 
-public final class CaptainsLogHTTPProtocol: URLProtocol {
+final class CaptainsLogHTTPProtocol: URLProtocol {
     struct Constants {
         static let RequestHandledKey = "URLProtocolRequestHandled"
     }
 
-    private let log: CaptainsLog
+    private static var isActivated = false
 
     private var session: URLSession?
     private var sessionTask: URLSessionDataTask?
@@ -22,8 +22,7 @@ public final class CaptainsLogHTTPProtocol: URLProtocol {
     private var responseBody: Data?
     private var response: Request.Response?
 
-    public override init(request: URLRequest, cachedResponse: CachedURLResponse?, client: URLProtocolClient?) {
-        self.log = CaptainsLog.instance // FIXME: Add this to initializer in some way
+    override init(request: URLRequest, cachedResponse: CachedURLResponse?, client: URLProtocolClient?) {
         super.init(request: request, cachedResponse: cachedResponse, client: client)
 
         if session == nil {
@@ -31,33 +30,35 @@ public final class CaptainsLogHTTPProtocol: URLProtocol {
         }
     }
 
-    public static func activate() {
+    static func activate() {
         swizzleDefaultSessionConfiguration()
+        CaptainsLogHTTPProtocol.isActivated = true
     }
 
-    public static func deactivate() {
+    static func deactivate() {
+        CaptainsLogHTTPProtocol.isActivated = false
     }
 
-    override public class func canInit(with request: URLRequest) -> Bool {
-        if CaptainsLogHTTPProtocol.property(forKey: Constants.RequestHandledKey, in: request) != nil {
+    override class func canInit(with request: URLRequest) -> Bool {
+        if CaptainsLogHTTPProtocol.property(forKey: Constants.RequestHandledKey, in: request) != nil || !isActivated {
             return false
         }
 
         return true
     }
 
-    override public class func canonicalRequest(for request: URLRequest) -> URLRequest {
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
         return request
     }
 
-    override public func startLoading() {
+    override func startLoading() {
         let newRequest = ((request as NSURLRequest).mutableCopy() as? NSMutableURLRequest)!
         CaptainsLogHTTPProtocol.setProperty(true, forKey: Constants.RequestHandledKey, in: newRequest)
         sessionTask = session?.dataTask(with: newRequest as URLRequest)
         sessionTask?.resume()
     }
 
-    override public func stopLoading() {
+    override func stopLoading() {
         sessionTask?.cancel()
 
         guard
@@ -75,7 +76,7 @@ public final class CaptainsLogHTTPProtocol: URLProtocol {
                                  body: body(from: request),
                                  response: response)
 
-        log.log(item: LogItem(id: UUID().uuidString, kind: .request(currentRequest!)))
+        CaptainsLogHTTPRequestWatcher.instance.log?.log(item: LogItem(id: UUID().uuidString, kind: .request(currentRequest!)))
     }
 
     private func body(from request: URLRequest) -> Data? {
@@ -104,7 +105,7 @@ public final class CaptainsLogHTTPProtocol: URLProtocol {
 }
 
 extension CaptainsLogHTTPProtocol: URLSessionDataDelegate {
-    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         client?.urlProtocol(self, didLoad: data)
         if response?.body == nil {
             response?.body = data
@@ -113,7 +114,7 @@ extension CaptainsLogHTTPProtocol: URLSessionDataDelegate {
         }
     }
 
-    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         let policy = URLCache.StoragePolicy(rawValue: request.cachePolicy.rawValue) ?? .notAllowed
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: policy)
         completionHandler(.allow)
@@ -124,7 +125,7 @@ extension CaptainsLogHTTPProtocol: URLSessionDataDelegate {
 
     }
 
-    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         if let error = error {
             client?.urlProtocol(self, didFailWithError: error)
         } else {
@@ -132,7 +133,7 @@ extension CaptainsLogHTTPProtocol: URLSessionDataDelegate {
         }
     }
 
-    public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
+    func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
         guard let error = error else { return }
         client?.urlProtocol(self, didFailWithError: error)
     }

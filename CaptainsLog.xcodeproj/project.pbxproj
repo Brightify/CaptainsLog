@@ -122,6 +122,7 @@
 		2C17BD14BF021DAF71C28900 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5DA03AF819AF7D4B082E49 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework */; };
 		3F3C978EBA0CD87C82260D7B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252E2324FE387B686D80423B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework */; };
 		7100D58E2180815E00E52697 /* CaptainsLogHTTPProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7100D58D2180815E00E52697 /* CaptainsLogHTTPProtocol.swift */; };
+		7100D5942181EC6500E52697 /* CaptainsLogHTTPRequestWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7100D5932181EC6500E52697 /* CaptainsLogHTTPRequestWatcher.swift */; };
 		71721B6A2174E177001B0606 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71721B692174E177001B0606 /* Application.swift */; };
 		71EE7CA6215BC5DD00958149 /* CaptainsLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CA5215BC5DD00958149 /* CaptainsLogDestination.swift */; };
 		71EE7CA8215BC8AC00958149 /* CaptainsLogDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CA5215BC5DD00958149 /* CaptainsLogDestination.swift */; };
@@ -199,6 +200,7 @@
 		49ADAA82FCD0FE4BD9C7D23F /* Pods-CaptainsLog-CaptainsLog-iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog-CaptainsLog-iOS.release.xcconfig"; path = "Target Support Files/Pods-CaptainsLog-CaptainsLog-iOS/Pods-CaptainsLog-CaptainsLog-iOS.release.xcconfig"; sourceTree = "<group>"; };
 		675333309AA91474E5C73C24 /* Pods_CaptainsLog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7100D58D2180815E00E52697 /* CaptainsLogHTTPProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptainsLogHTTPProtocol.swift; sourceTree = "<group>"; };
+		7100D5932181EC6500E52697 /* CaptainsLogHTTPRequestWatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptainsLogHTTPRequestWatcher.swift; sourceTree = SOURCE_ROOT; };
 		7120C414215277AA0084BD38 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		7120C415215277AA0084BD38 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		7120C416215277AA0084BD38 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -395,6 +397,7 @@
 			isa = PBXGroup;
 			children = (
 				7100D58D2180815E00E52697 /* CaptainsLogHTTPProtocol.swift */,
+				7100D5932181EC6500E52697 /* CaptainsLogHTTPRequestWatcher.swift */,
 			);
 			path = NSURLSession;
 			sourceTree = "<group>";
@@ -932,6 +935,7 @@
 				18C4768E2180586700964FD4 /* StreamDisconnectedError.swift in Sources */,
 				18CB4EAA2155CCC900D1A93C /* Request.swift in Sources */,
 				18C4767D2180573400964FD4 /* InputStream+Helpers.swift in Sources */,
+				7100D5942181EC6500E52697 /* CaptainsLogHTTPRequestWatcher.swift in Sources */,
 				18C4766C2180554600964FD4 /* NetService+loggerService.swift in Sources */,
 				18CB4EAE2155CCC900D1A93C /* ChallengeResult.swift in Sources */,
 				71EE7CAD215BCADC00958149 /* LogLevel.swift in Sources */,
