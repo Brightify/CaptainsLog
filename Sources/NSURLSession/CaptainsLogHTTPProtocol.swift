@@ -40,11 +40,7 @@ final class CaptainsLogHTTPProtocol: URLProtocol {
     }
 
     override class func canInit(with request: URLRequest) -> Bool {
-        if CaptainsLogHTTPProtocol.property(forKey: Constants.RequestHandledKey, in: request) != nil || !isActivated {
-            return false
-        }
-
-        return true
+        return CaptainsLogHTTPProtocol.property(forKey: Constants.RequestHandledKey, in: request) == nil && isActivated
     }
 
     override class func canonicalRequest(for request: URLRequest) -> URLRequest {
@@ -94,12 +90,22 @@ final class CaptainsLogHTTPProtocol: URLProtocol {
     }
 
     private static func swizzleDefaultSessionConfiguration() {
-        let defaultSessionConfiguration = class_getClassMethod(URLSessionConfiguration.self, #selector(getter: URLSessionConfiguration.default))
-        let captainsLogDefaultSessionConfiguration = class_getClassMethod(URLSessionConfiguration.self, #selector(URLSessionConfiguration.captainsLogDefaultSessionConfiguration))
+        let defaultSessionConfiguration = class_getClassMethod(
+            URLSessionConfiguration.self,
+            #selector(getter: URLSessionConfiguration.default))
+        let captainsLogDefaultSessionConfiguration = class_getClassMethod(
+            URLSessionConfiguration.self,
+            #selector(URLSessionConfiguration.captainsLogDefaultSessionConfiguration))
+
         method_exchangeImplementations(defaultSessionConfiguration!, captainsLogDefaultSessionConfiguration!)
 
-        let ephemeralSessionConfiguration = class_getClassMethod(URLSessionConfiguration.self, #selector(getter: URLSessionConfiguration.ephemeral))
-        let captainsLogEphemeralSessionConfiguration = class_getClassMethod(URLSessionConfiguration.self, #selector(URLSessionConfiguration.captainsLogEphemeralSessionConfiguration))
+        let ephemeralSessionConfiguration = class_getClassMethod(
+            URLSessionConfiguration.self,
+            #selector(getter: URLSessionConfiguration.ephemeral))
+        let captainsLogEphemeralSessionConfiguration = class_getClassMethod(
+            URLSessionConfiguration.self,
+            #selector(URLSessionConfiguration.captainsLogEphemeralSessionConfiguration))
+
         method_exchangeImplementations(ephemeralSessionConfiguration!, captainsLogEphemeralSessionConfiguration!)
     }
 }
@@ -107,19 +113,23 @@ final class CaptainsLogHTTPProtocol: URLProtocol {
 extension CaptainsLogHTTPProtocol: URLSessionDataDelegate {
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         client?.urlProtocol(self, didLoad: data)
-        if response?.body == nil {
-            response?.body = data
-        } else {
-            response?.body?.append(data)
-        }
+        response?.body == nil ? response?.body = data : response?.body?.append(data)
     }
 
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+    func urlSession(_ session: URLSession,
+                    dataTask: URLSessionDataTask,
+                    didReceive response: URLResponse,
+                    completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+
         let policy = URLCache.StoragePolicy(rawValue: request.cachePolicy.rawValue) ?? .notAllowed
         client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: policy)
         completionHandler(.allow)
 
-        guard let response = response as? HTTPURLResponse, let headers = response.allHeaderFields as? [String: String] else { return }
+        guard
+            let response = response as? HTTPURLResponse,
+            let headers = response.allHeaderFields as? [String: String] else {
+                return
+        }
 
         self.response = Request.Response(time: Date(), code: response.statusCode, headers: headers, body: nil)
 
