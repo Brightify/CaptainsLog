@@ -16,7 +16,7 @@ public enum LogLevel: Int, CaseIterable, Codable {
     case error = 4
     case unknown = 5
 
-    var description: String {
+    public var description: String {
         switch self {
         case .verbose:
             return "Verbose"
