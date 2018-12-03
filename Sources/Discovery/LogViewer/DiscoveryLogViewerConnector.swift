@@ -9,54 +9,110 @@
 import Foundation
 import RxSwift
 
-public final class CertificateManager {
-    public struct Certificate {
-        let id: String
-        let privateKey: SecKey
-        let identity: SecIdentity
-        let certificate: SecCertificate
-    }
+public protocol IdentityProvider: AnyObject {
+    func identity(forId identifier: String) -> SecIdentity?
+}
 
-    public var keys: [String: Certificate] = [:]
+public struct ImportedIdentity {
+    public let id: String
+    public let privateKey: SecKey
+    public let identity: SecIdentity
+    public let certificate: SecCertificate
 
-    public func identity(forId identifier: String) -> SecIdentity? {
-        guard let certificate = keys[identifier] else { return nil }
-        return certificate.identity
-//        SecIdentity
-
-
-    }
-
-    func load(data: Data, password: String) {
+    public static func identities(inP12 data: Data, password: String) throws -> [ImportedIdentity] {
         let options = [kSecImportExportPassphrase: password] as CFDictionary
 
-        var items: CFArray?
-        let importError = SecPKCS12Import(data as CFData, options, &items)
-        assert(importError == noErr)
+        let items = try SecPKCS12Import(data, options)
 
-        let identityDictionary = unsafeBitCast(CFArrayGetValueAtIndex(items, 0), to: CFDictionary.self) as! [String: Any]
-        let keyId = identityDictionary[kSecImportItemLabel as String] as! String
-        let identity = identityDictionary[kSecImportItemIdentity as String] as! SecIdentity
+        return items.compactMap { item in
+            guard let identityDictionary = safeBitCast(item, to: CFDictionary.self) as? [String: Any] else {
+                LOG.error("Can't cast \(item) to identity dictionary [String: Any]")
+                return nil
+            }
+            guard let keyId = identityDictionary[kSecImportItemLabel as String] as? String else {
+                LOG.error("Identity dictionary doesn't contain label.", identityDictionary)
+                return nil
+            }
+            guard let identity = safeBitCast(identityDictionary[kSecImportItemIdentity as String], to: SecIdentity.self) else {
+                LOG.error("Identity not found in identity dictionary.", identityDictionary)
+                return nil
+            }
+            guard let privateKey = identity.privateKey else {
+                LOG.error("Private key not in identity.", identity)
+                return nil
+            }
+            guard let certificate = identity.certificate else {
+                LOG.error("Certificate not in identity.", identity)
+                return nil
+            }
+            return ImportedIdentity(
+                id: keyId,
+                privateKey: privateKey,
+                identity: identity,
+                certificate: certificate)
+        }
+    }
+}
 
+public protocol SafeBitCastable {
+    static var cfTypeId: CFTypeID { get }
+}
+
+extension CFDictionary: SafeBitCastable {
+    public static let cfTypeId: CFTypeID = CFDictionaryGetTypeID()
+}
+
+extension SecIdentity: SafeBitCastable {
+    public static let cfTypeId: CFTypeID = SecIdentityGetTypeID()
+}
+
+extension SecTrust: SafeBitCastable {
+    public static let cfTypeId: CFTypeID = SecTrustGetTypeID()
+}
+
+extension SecKey: SafeBitCastable {
+    public static let cfTypeId: CFTypeID = SecKeyGetTypeID()
+}
+
+public func safeBitCast<T, U: SafeBitCastable>(_ x: T, to type: U.Type) -> U? {
+    let typeId = CFGetTypeID(x as CFTypeRef)
+    guard typeId == type.cfTypeId else { return nil }
+
+    return withUnsafePointer(to: x) {
+        $0.withMemoryRebound(to: type, capacity: 1) {
+            return $0.pointee
+        }
+    }
+}
+
+extension SecIdentity {
+    var privateKey: SecKey? {
         var privateKey: SecKey?
-        SecIdentityCopyPrivateKey(identity, &privateKey)
-
-        var certificate: SecCertificate?
-        SecIdentityCopyCertificate(identity, &certificate)
-
-//        var publicKey: SecKey?
-
-        let c = Certificate(
-            id: keyId,
-            privateKey: privateKey!,
-            identity: identity,
-            certificate: certificate!)
-
-        keys[keyId] = c
+        let status = SecIdentityCopyPrivateKey(self, &privateKey)
+        LOG.warning("Identity \(self) doesn't contain private key. Error: \(status)")
+        return privateKey
     }
 
-    func load(url: URL, password: String) throws {
-        try load(data: Data(contentsOf: url), password: password)
+    var certificate: SecCertificate? {
+        var certificate: SecCertificate?
+        let status = SecIdentityCopyCertificate(self, &certificate)
+        LOG.warning("Identity \(self) doesn't contain certificate. Error: \(status)")
+        return certificate
+    }
+}
+
+struct OSError: Error {
+    let status: OSStatus
+}
+
+func SecPKCS12Import(_ pkcs12_data: Data, _ options: CFDictionary) throws ->  [AnyObject] {
+    var items: CFArray?
+    let importError = SecPKCS12Import(pkcs12_data as CFData, options, &items)
+
+    if importError == errSecSuccess {
+        return items as [AnyObject]? ?? []
+    } else {
+        throw OSError(status: importError)
     }
 }
 
@@ -64,22 +120,19 @@ final class DiscoveryLogViewerConnector {
     private static let decoder = JSONDecoder()
 
     private let logViewer: DiscoveryHandshake.LogViewer
-    private let certificateManager: CertificateManager
+    private let identityProvider: IdentityProvider
 
-    init(logViewer: DiscoveryHandshake.LogViewer, certificateManager: CertificateManager) {
+    init(logViewer: DiscoveryHandshake.LogViewer, identityProvider: IdentityProvider) {
         self.logViewer = logViewer
-        self.certificateManager = certificateManager
+        self.identityProvider = identityProvider
     }
 
     func connect(service: NetService, lastLogItemId: @escaping (DiscoveryHandshake.Application) -> LastLogItemId) -> Single<LoggerConnection> {
         return async {
             let resolvedService = try await(service.resolved(withTimeout: 30))
 
-            let txtRecords = try await(resolvedService.txtData(containsKey: "OK", timeout: 10))
+            let okData = try await(resolvedService.txtData(containsKey: "OK", timeout: 10))
 
-            guard let okData = txtRecords["OK"] else {
-                fatalError("Error in txtData resolution! We should always have the key available if we got a response from the `txtData` method!")
-            }
             let txt = try DiscoveryLogViewerConnector.decoder.decode(LoggerTXT.self, from: okData)
 
             var inputStream: InputStream?
@@ -89,20 +142,33 @@ final class DiscoveryLogViewerConnector {
 
             let stream = TwoWayStream(input: inputStream!, output: outputStream!)
 
-            if let identity = self.certificateManager.identity(forId: txt.identifier) {
+            guard let identity = self.identityProvider.identity(forId: txt.identifier) else {
+                fatalError("...")
+            }
+
+            let sslSettings = [
+                kCFStreamSSLIsServer: true,
+                kCFStreamSSLCertificates: [identity],
+                kCFStreamSSLValidatesCertificateChain: false,
+            ] as CFDictionary
+            do {
                 stream.input.setProperty(StreamSocketSecurityLevel.tlSv1, forKey: Stream.PropertyKey.socketSecurityLevelKey)
 
                 let success = CFReadStreamSetProperty(
                     stream.input,
                     CFStreamPropertyKey(kCFStreamPropertySSLSettings),
-                    [
-                        kCFStreamSSLIsServer: true,
-                        kCFStreamSSLCertificates: [identity],
-                        kCFStreamSSLValidatesCertificateChain: false,
-                    ] as CFDictionary)
+                    sslSettings)
                 assert(success)
+            }
 
+            do {
                 stream.output.setProperty(StreamSocketSecurityLevel.tlSv1, forKey: Stream.PropertyKey.socketSecurityLevelKey)
+
+                let success = CFWriteStreamSetProperty(
+                    stream.output,
+                    CFStreamPropertyKey(kCFStreamPropertySSLSettings),
+                    sslSettings)
+                assert(success)
             }
 
             try await(stream.open())

@@ -42,21 +42,21 @@ extension NetService {
         }
 
         func netService(_ sender: NetService, didAcceptConnectionWith inputStream: InputStream, outputStream: OutputStream) {
-            print(#function, sender)
+            LOG.verbose(#function, sender)
             didAcceptConnection(TwoWayStream(input: inputStream, output: outputStream))
         }
 
         func netServiceWillPublish(_ sender: NetService) {
-            print(#function, sender)
+            LOG.verbose(#function, sender)
         }
 
         func netServiceDidPublish(_ sender: NetService) {
-            print(#function, sender)
+            LOG.verbose(#function, sender)
             sender.setTXTRecord(sender.txtRecordData())
         }
 
         func netService(_ sender: NetService, didNotPublish errorDict: [String : NSNumber]) {
-            print(#function, sender, errorDict)
+            LOG.verbose(#function, sender, errorDict)
         }
     }
 

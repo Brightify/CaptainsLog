@@ -22,13 +22,13 @@ final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
         }
 
         func netServiceDidResolveAddress(_ sender: NetService) {
-            print(#function, sender)
+            LOG.verbose(#function, sender)
 
             serviceResolved(nil)
         }
 
         func netService(_ sender: NetService, didNotResolve errorDict: [String : NSNumber]) {
-            print(#function, sender, errorDict)
+            LOG.verbose(#function, sender, errorDict)
 
             serviceResolved(ResolutionError(info: errorDict))
         }
@@ -68,7 +68,7 @@ final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
-        print(#function, browser, service, moreComing)
+        LOG.verbose(#function, browser, service, moreComing)
 
         services.append(service)
 
@@ -99,7 +99,7 @@ final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
-        print(#function, browser, service, moreComing)
+        LOG.verbose(#function, browser, service, moreComing)
         // FIXME Implement removing properly
         services.removeAll(where: { $0 == service })
 
@@ -109,10 +109,10 @@ final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
     }
 
     func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
-        print(#function, browser)
+        LOG.verbose(#function, browser)
     }
 
     func netServiceBrowserDidStopSearch(_ browser: NetServiceBrowser) {
-        print(#function, browser)
+        LOG.verbose(#function, browser)
     }
 }

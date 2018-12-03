@@ -22,13 +22,13 @@ extension NetService {
         }
 
         func netServiceDidResolveAddress(_ sender: NetService) {
-            print(#function, sender)
+            LOG.verbose(#function, sender)
 
             serviceResolved(nil)
         }
 
         func netService(_ sender: NetService, didNotResolve errorDict: [String : NSNumber]) {
-            print(#function, sender, errorDict)
+            LOG.verbose(#function, sender, errorDict)
 
             serviceResolved(ResolutionError(info: errorDict))
         }
@@ -66,12 +66,12 @@ extension NetService {
         }
 
         func netService(_ sender: NetService, didUpdateTXTRecord data: Data) {
-            print(#function, sender, data)
+            LOG.verbose(#function, sender, data)
             txtRecordUpdated(data)
         }
     }
 
-    func txtData(containsKey key: String, timeout: TimeInterval = 0) -> Single<[String: Data]> {
+    func txtData(containsKey key: String, timeout: TimeInterval = 0) -> Single<Data> {
         let updatedTxtRecord = Observable<Data?>.create { observer in
             let delegate = TxtChangedDelegate(txtRecordUpdated: observer.onNext)
             self.delegate = delegate
@@ -86,10 +86,14 @@ extension NetService {
         }
 
         let result = updatedTxtRecord.startWith(txtRecordData())
-            .flatMap { recordData -> Observable<[String: Data]> in
-                guard let records = recordData.map(NetService.dictionary(fromTXTRecord:)) else { return .empty() }
-                print("records:", records)
-                return records.keys.contains(key) ? .just(records) : .empty()
+            .flatMap { recordData -> Observable<Data> in
+                guard
+                    let records = recordData.map(NetService.dictionary(fromTXTRecord:)),
+                    let record = records[key] else {
+                        return .empty()
+                }
+
+                return .just(record)
             }
             .take(1)
             .asSingle()

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-// TODO Handshake should encorporate encryption and signature verification
+
 public final class DiscoveryHandshake {
     public struct LogViewer: Codable, Equatable {
         public let id: String
@@ -41,26 +41,26 @@ public final class DiscoveryHandshake {
     }
 
     func perform(for viewer: LogViewer) throws -> Application {
-        print("INFO: Sending logger info:", viewer)
+        LOG.info("Sending logger info:", viewer)
         try stream.output.write(encodable: viewer)
-        print("INFO: Sent logger info.")
+        LOG.info("Sent logger info.")
 
-        print("INFO: Receiving app info.")
+        LOG.info("Receiving app info.")
         let application = try stream.input.readDecodable(Application.self)
-        print("INFO: Receiving app info:", application)
+        LOG.info("Receiving app info:", application)
 
         return application
     }
 
 
     func perform(for application: Application) throws -> LogViewer {
-        print("INFO: Receiving logger info.")
+        LOG.info("Receiving logger info.")
         let logViewer = try stream.input.readDecodable(LogViewer.self)
-        print("INFO: Receiving logger info:", logViewer)
+        LOG.info("Receiving logger info:", logViewer)
 
-        print("INFO: Sending app info:", application)
+        LOG.info("Sending app info:", application)
         try stream.output.write(encodable: application)
-        print("INFO: Sent app info.")
+        LOG.info("Sent app info.")
 
         return logViewer
     }

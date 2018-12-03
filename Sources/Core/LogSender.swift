@@ -37,7 +37,7 @@ final class LogSender {
     }
 
     func push(item: LogItem) {
-        print("Sender sending item:", item)
+        LOG.debug("Sender sending item:", item)
         queueLock.sync {
             queue.append(item)
         }

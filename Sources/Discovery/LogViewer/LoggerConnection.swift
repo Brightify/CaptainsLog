@@ -21,7 +21,7 @@ public final class LoggerConnection {
     }
 
     func close() {
-        print("INFO: Closing connection for logger service:", service)
+        LOG.info("Closing connection for logger service:", service)
         service.stop()
         stream.input.close()
         stream.output.close()

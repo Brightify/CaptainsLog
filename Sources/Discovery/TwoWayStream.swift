@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 
-public struct TwoWayStream {
+public final class TwoWayStream {
     private let inputDelegate = DefaultStreamDelegate()
     private let outputDelegate = DefaultStreamDelegate()
 
@@ -21,7 +21,45 @@ public struct TwoWayStream {
         case cantOpenOutput(Error?)
     }
 
-    public func open(schedulingIn runLoop: RunLoop = .current, forMode runLoopMode: RunLoop.Mode = .default) -> Single<Void> {
+    public let hasBytesAvailable: Observable<Bool>
+    public let hasSpaceAvailable: Observable<Bool>
+
+    private let disposeBag = DisposeBag()
+
+    init(input: InputStream, output: OutputStream) {
+        self.input = input
+        self.output = output
+
+        hasBytesAvailable = inputDelegate.event
+            .map { event in
+                switch event {
+                case Stream.Event.hasBytesAvailable:
+                    return true
+                default:
+                    return false
+                }
+            }
+            .distinctUntilChanged()
+            .share(replay: 1, scope: .forever)
+
+        hasSpaceAvailable = outputDelegate.event
+            .map { event in
+                switch event {
+                case .hasSpaceAvailable:
+                    return true
+                default:
+                    return false
+                }
+            }
+            .distinctUntilChanged()
+            .share(replay: 1, scope: .forever)
+
+        // This assures we have the latest value available on the observable
+        hasBytesAvailable.subscribe().disposed(by: disposeBag)
+        hasSpaceAvailable.subscribe().disposed(by: disposeBag)
+    }
+
+    public func open(schedulingIn runLoop: RunLoop = .main, forMode runLoopMode: RunLoop.Mode = .default) -> Single<Void> {
         return async {
             self.input.delegate = self.inputDelegate
             self.input.schedule(in: runLoop, forMode: runLoopMode)
@@ -42,6 +80,11 @@ public struct TwoWayStream {
             }
         }
     }
+
+    public func close() {
+        self.input.close()
+        self.output.close()
+    }
 }
 
 private extension TwoWayStream {
@@ -52,7 +95,7 @@ private extension TwoWayStream {
         }
 
         func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-            print(#function, aStream, eventCode)
+            LOG.verbose(#function, aStream, eventCode)
             eventSubject.onNext(eventCode)
         }
     }

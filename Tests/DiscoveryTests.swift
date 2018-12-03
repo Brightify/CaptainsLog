@@ -22,6 +22,23 @@ import RxNimble
 import Quick
 import Nimble
 
+final class TestIdentityProvider: IdentityProvider {
+    private var identities: [String: ImportedIdentity] = [:]
+
+    func identity(forId identifier: String) -> SecIdentity? {
+        return identities[identifier]?.identity
+    }
+
+    func load(url: URL, password: String) throws {
+        let data = try Data(contentsOf: url)
+        let identities = try ImportedIdentity.identities(inP12: data, password: password)
+
+        for identity in identities {
+            self.identities[identity.id] = identity
+        }
+    }
+}
+
 class DiscoverySpec: QuickSpec {
     override func spec() {
         Hooks.recordCallStackOnError = true
@@ -72,11 +89,15 @@ class DiscoverySpec: QuickSpec {
                     response: nil)))
 
             let publicCertificatePath = Bundle(for: DiscoverySpec.self).url(forResource: "CaptainsLogTestCertificate", withExtension: "cer")!
-            let publicCertificate = try! Data(contentsOf: publicCertificatePath)
+            let publicCertificateData = try! Data(contentsOf: publicCertificatePath)
+            let publicCertificate = SecCertificateCreateWithData(nil, publicCertificateData as CFData)!
+
+            var commonName: CFString?
+            assert(SecCertificateCopyCommonName(publicCertificate, &commonName) == noErr)
 
             let privateKeyURL = Bundle(for: DiscoverySpec.self).url(forResource: "CaptainsLogTestPrivateKey", withExtension: "p12")!
-            let certificateManager = CertificateManager()
-            try! certificateManager.load(url: privateKeyURL, password: "capitan")
+            let identityProvider = TestIdentityProvider()
+            try! identityProvider.load(url: privateKeyURL, password: "capitan")
 
             it("finds device") {
                 /*
@@ -95,15 +116,14 @@ class DiscoverySpec: QuickSpec {
                     type: serviceType,
                     port: servicePort)
 
-                var netService: NetService?
                 let browser = DiscoveryServiceBrowser(serviceType: serviceType, serviceDomain: serviceDomain)
                 browser.search()
                 expect(browser.unresolvedServices.map { $0.first }).first.toNot(beNil())
             }
 
             it("connects to device") {
-                let serverConnector = DiscoveryLoggerConnector(application: mockApplication)
-                let clientConnector = DiscoveryLogViewerConnector(logViewer: mockLogViewer, certificateManager: certificateManager)
+                let serverConnector = DiscoveryLoggerConnector(application: mockApplication, certificate: publicCertificate)
+                let clientConnector = DiscoveryLogViewerConnector(logViewer: mockLogViewer, identityProvider: identityProvider)
 
                 let deviceService = NetService.loggerService(
                     named: "connects to device",
@@ -145,13 +165,17 @@ class DiscoverySpec: QuickSpec {
                 var logItem: LogItem?
                 var loggerConnection: LoggerConnection?
 
-                let clientConnector = DiscoveryLogViewerConnector(logViewer: mockLogViewer, certificateManager: certificateManager)
+                let clientConnector = DiscoveryLogViewerConnector(logViewer: mockLogViewer, identityProvider: identityProvider)
 
                 let logConfiguration = CaptainsLog.Configuration(
                     application: mockApplication,
-                    serviceDomain: serviceDomain,
-                    serviceType: serviceType,
-                    servicePort: servicePort)
+                    service: CaptainsLog.Configuration.Service(
+                        domain: serviceDomain,
+                        type: serviceType,
+                        port: servicePort),
+                    seed: CaptainsLog.Configuration.Seed(
+                        commonName: commonName! as String,
+                        certificate: publicCertificate))
                 let log = CaptainsLog(configuration: logConfiguration)
                 let browser = DiscoveryServiceBrowser(serviceType: serviceType, serviceDomain: serviceDomain)
 
@@ -188,13 +212,17 @@ class DiscoverySpec: QuickSpec {
                     logViewer: mockLogViewer,
                     serviceDomain: serviceDomain,
                     serviceType: serviceType)
-                let server = CaptainsLogServer(configuration: serverConfiguration, certificateManager: certificateManager)
+                let server = CaptainsLogServer(configuration: serverConfiguration, identityProvider: identityProvider)
 
                 let logConfiguration = CaptainsLog.Configuration(
                     application: mockApplication,
-                    serviceDomain: serviceDomain,
-                    serviceType: serviceType,
-                    servicePort: servicePort)
+                    service: CaptainsLog.Configuration.Service(
+                        domain: serviceDomain,
+                        type: serviceType,
+                        port: servicePort),
+                    seed: CaptainsLog.Configuration.Seed(
+                        commonName: commonName! as String,
+                        certificate: publicCertificate))
                 let log = CaptainsLog(configuration: logConfiguration)
 
                 _ = async(on: DispatchQueue(label: "LogViewer")) {
@@ -233,13 +261,17 @@ class DiscoverySpec: QuickSpec {
                     logViewer: mockLogViewer,
                     serviceDomain: serviceDomain,
                     serviceType: serviceType)
-                let server = CaptainsLogServer(configuration: serverConfiguration, certificateManager: certificateManager)
+                let server = CaptainsLogServer(configuration: serverConfiguration, identityProvider: identityProvider)
 
                 let logConfiguration = CaptainsLog.Configuration(
                     application: mockApplication,
-                    serviceDomain: serviceDomain,
-                    serviceType: serviceType,
-                    servicePort: servicePort)
+                    service: CaptainsLog.Configuration.Service(
+                        domain: serviceDomain,
+                        type: serviceType,
+                        port: servicePort),
+                    seed: CaptainsLog.Configuration.Seed(
+                        commonName: commonName! as String,
+                        certificate: publicCertificate))
                 let log = CaptainsLog(configuration: logConfiguration)
 
                 _ = async(on: DispatchQueue(label: "LogViewer")) {

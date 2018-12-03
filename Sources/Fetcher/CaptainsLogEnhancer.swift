@@ -22,12 +22,6 @@ public final class CaptainsLogEnhancer: RequestEnhancer {
     private let log: CaptainsLog
 
     public init(log: CaptainsLog = CaptainsLog.instance) {
-//        self.captainsLogBaseURL = components.url!
-//        self.applicationId = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
-//        self.uuid = UUID().uuidString
-
-//        try! register()
-
         self.log = log
     }
 
@@ -36,7 +30,7 @@ public final class CaptainsLogEnhancer: RequestEnhancer {
     }
 
     public func deenhance(response: inout Fetcher.Response<SupportedType>) {
-        print("Deenhancing log")
+        LOG.debug("Deenhancing log")
         guard let timestamp = response.request.modifiers.compactMap({ $0 as? NetInspectorTimestamp }).first else { return }
 
         let allRequestHeaders = response.request.allHTTPHeaderFields?.compactMap { key, value -> (key: String, value: String)? in

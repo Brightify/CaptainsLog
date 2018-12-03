@@ -14,37 +14,52 @@ import RxSwift
 public final class CaptainsLog {
     public struct Configuration {
         public var application: DiscoveryHandshake.Application
-        public var serviceDomain: String
-        public var serviceType: String
-        public var servicePort: Int
+        public var service: Service
+        public var seed: Seed
 
         public init(
             application: DiscoveryHandshake.Application,
-            serviceDomain: String,
-            serviceType: String,
-            servicePort: Int) {
+            service: Service,
+            seed: Seed) {
 
             self.application = application
-            self.serviceDomain = serviceDomain
-            self.serviceType = serviceType
-            self.servicePort = servicePort
+            self.service = service
+            self.seed = seed
+        }
+
+        public struct Service {
+            public var domain: String
+            public var type: String
+            public var port: Int
+
+            public init(domain: String, type: String, port: Int) {
+                self.domain = domain
+                self.type = type
+                self.port = port
+            }
+        }
+
+        public struct Seed {
+            public var commonName: String
+            public var certificate: SecCertificate
+
+            public init(commonName: String, certificate: SecCertificate) {
+                self.commonName = commonName
+                self.certificate = certificate
+            }
         }
     }
 
-    private static var appInfo: DiscoveryHandshake.Application {
-        return DiscoveryHandshake.Application(
-            id: UUID().uuidString,
-            name: Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String,
-            identifier: Bundle.main.infoDictionary![kCFBundleIdentifierKey as String] as! String,
-            version: Bundle.main.infoDictionary![kCFBundleVersionKey as String] as! String,
-            date: Date())
+    private static var initializedInstance: CaptainsLog?
+    public static var instance: CaptainsLog {
+        if let initializedInstance = initializedInstance {
+            return initializedInstance
+        } else {
+            let instance = CaptainsLog(configuration: defaultConfiguration())
+            initializedInstance = instance
+            return instance
+        }
     }
-    public static let instance = CaptainsLog(configuration:
-        CaptainsLog.Configuration(
-            application: appInfo,
-            serviceDomain: Constants.domain,
-            serviceType: Constants.type,
-            servicePort: Constants.port))
 
     private let senderLock = DispatchQueue(label: "org.brightify.CaptainsLog.senderlock")
 
@@ -58,14 +73,17 @@ public final class CaptainsLog {
 
     init(configuration: Configuration) {
         self.configuration = configuration
-        connector = DiscoveryLoggerConnector(application: configuration.application)
+
+        connector = DiscoveryLoggerConnector(
+            application: configuration.application,
+            certificate: configuration.seed.certificate)
 
         loggerService = NetService.loggerService(
             named: "device-name",
-            identifier: "mock-...",
-            domain: configuration.serviceDomain,
-            type: configuration.serviceType,
-            port: configuration.servicePort)
+            identifier: configuration.seed.commonName,
+            domain: configuration.service.domain,
+            type: configuration.service.type,
+            port: configuration.service.port)
 
         loggerService.publish()
             .flatMap(connector.connect)
@@ -90,7 +108,7 @@ public final class CaptainsLog {
     }
 
     func log(item: LogItem) {
-        print("Sending item:", item)
+        LOG.verbose("Sending item:", item)
         senderLock.async {
             self.logItems.append(item)
 
@@ -98,6 +116,40 @@ public final class CaptainsLog {
                 sender.push(item: item)
             }
         }
+    }
+
+    private static func defaultConfiguration() -> CaptainsLog.Configuration {
+        guard let seedFileURL = Bundle.main.url(forResource: "CaptainsLogSeed", withExtension: "cer") else {
+            fatalError("Captain's Log cannot be initialized without a seed file!")
+        }
+        guard let certificateData = try? Data(contentsOf: seedFileURL),
+            let certificate = SecCertificateCreateWithData(nil, certificateData as CFData) else {
+                fatalError("Couldn't load seed file from `\(seedFileURL)`")
+        }
+
+        var optionalCommonName: CFString?
+        let status = SecCertificateCopyCommonName(certificate, &optionalCommonName)
+
+        guard status == errSecSuccess, let commonName = optionalCommonName as String? else {
+            fatalError("Couldn't extract common name from certificate \(certificate).")
+        }
+
+        let appInfo = DiscoveryHandshake.Application(
+            id: UUID().uuidString,
+            name: (Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String) ?? "<Unknown>",
+            identifier: (Bundle.main.infoDictionary?[kCFBundleIdentifierKey as String] as? String) ?? "com.unknown",
+            version: (Bundle.main.infoDictionary?[kCFBundleVersionKey as String] as? String) ?? "0.0",
+            date: Date())
+
+        return CaptainsLog.Configuration(
+            application: appInfo,
+            service: CaptainsLog.Configuration.Service(
+                domain: Constants.domain,
+                type: Constants.type,
+                port: Constants.port),
+            seed: CaptainsLog.Configuration.Seed(
+                commonName: commonName,
+                certificate: certificate))
     }
 }
 

@@ -119,6 +119,9 @@
 		18CC16E1215CCC4800BA7B96 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC16E0215CCC4800BA7B96 /* Async.swift */; };
 		18CC16E2215CCC4800BA7B96 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC16E0215CCC4800BA7B96 /* Async.swift */; };
 		18CC16E3215CCC4800BA7B96 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC16E0215CCC4800BA7B96 /* Async.swift */; };
+		18F3B7F9218653720092B925 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F3B7F8218653720092B925 /* Logging.swift */; };
+		18F3B7FA218653720092B925 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F3B7F8218653720092B925 /* Logging.swift */; };
+		18F3B7FB218653720092B925 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F3B7F8218653720092B925 /* Logging.swift */; };
 		2C17BD14BF021DAF71C28900 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B5DA03AF819AF7D4B082E49 /* Pods_CaptainsLog_Tests_CaptainsLog_macOSTests.framework */; };
 		3F3C978EBA0CD87C82260D7B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 252E2324FE387B686D80423B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework */; };
 		7100D58E2180815E00E52697 /* CaptainsLogHTTPProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7100D58D2180815E00E52697 /* CaptainsLogHTTPProtocol.swift */; };
@@ -194,6 +197,7 @@
 		18CB4E7A2155C86B00D1A93C /* CaptainsLog_tvOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CaptainsLog_tvOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		18CB4E822155C86B00D1A93C /* CaptainsLog-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CaptainsLog-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		18CC16E0215CCC4800BA7B96 /* Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
+		18F3B7F8218653720092B925 /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		1A4A8E004A84310DBF7F42FB /* Pods_CaptainsLog_CaptainsLog_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog_CaptainsLog_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		252E2324FE387B686D80423B /* Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CaptainsLog_Tests_CaptainsLog_iOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C754E16DC4F038D41D7D146 /* Pods-CaptainsLog-CaptainsLog-iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CaptainsLog-CaptainsLog-iOS.debug.xcconfig"; path = "Target Support Files/Pods-CaptainsLog-CaptainsLog-iOS/Pods-CaptainsLog-CaptainsLog-iOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -289,6 +293,7 @@
 				18C476912180589D00964FD4 /* NetService */,
 				18C476802180574000964FD4 /* Stream */,
 				18CC16E0215CCC4800BA7B96 /* Async.swift */,
+				18F3B7F8218653720092B925 /* Logging.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -965,6 +970,7 @@
 				18C476782180567800964FD4 /* DiscoveryHandshake.swift in Sources */,
 				7100D5992182080000E52697 /* CaptainsLogHTTPRequestWatcher.swift in Sources */,
 				18C47674218055CF00964FD4 /* LoggerConnection.swift in Sources */,
+				18F3B7F9218653720092B925 /* Logging.swift in Sources */,
 				18C476642180550400964FD4 /* Constants.swift in Sources */,
 				18C4765C218054C000964FD4 /* DiscoveryServiceBrowserDelegate.swift in Sources */,
 				18CB4EA92155CCC900D1A93C /* LogItem.swift in Sources */,
@@ -1009,6 +1015,7 @@
 				18CB4EA62155CCC800D1A93C /* Token.swift in Sources */,
 				18C476832180578B00964FD4 /* OutputStream+Helpers.swift in Sources */,
 				18C476AE2180636600964FD4 /* RetryBehavior.swift in Sources */,
+				18F3B7FA218653720092B925 /* Logging.swift in Sources */,
 				18C4767E2180573400964FD4 /* InputStream+Helpers.swift in Sources */,
 				18CB4EA22155CCC800D1A93C /* LogItem.swift in Sources */,
 				18C4766D2180554600964FD4 /* NetService+loggerService.swift in Sources */,
@@ -1057,6 +1064,7 @@
 				18CB4E9F2155CCC800D1A93C /* Token.swift in Sources */,
 				18C476842180578B00964FD4 /* OutputStream+Helpers.swift in Sources */,
 				18C476AF2180636600964FD4 /* RetryBehavior.swift in Sources */,
+				18F3B7FB218653720092B925 /* Logging.swift in Sources */,
 				18C4767F2180573400964FD4 /* InputStream+Helpers.swift in Sources */,
 				18CB4E9B2155CCC800D1A93C /* LogItem.swift in Sources */,
 				18C4766E2180554600964FD4 /* NetService+loggerService.swift in Sources */,
