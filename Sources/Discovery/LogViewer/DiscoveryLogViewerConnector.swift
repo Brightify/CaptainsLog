@@ -74,6 +74,14 @@ extension SecKey: SafeBitCastable {
     public static let cfTypeId: CFTypeID = SecKeyGetTypeID()
 }
 
+extension SecCertificate: SafeBitCastable {
+    public static var cfTypeId: CFTypeID = SecCertificateGetTypeID()
+}
+
+extension SecKeychainItem: SafeBitCastable {
+    public static var cfTypeId: CFTypeID = SecKeychainItemGetTypeID()
+}
+
 public func safeBitCast<T, U: SafeBitCastable>(_ x: T, to type: U.Type) -> U? {
     let typeId = CFGetTypeID(x as CFTypeRef)
     guard typeId == type.cfTypeId else { return nil }
@@ -127,7 +135,7 @@ final class DiscoveryLogViewerConnector {
         self.identityProvider = identityProvider
     }
 
-    func connect(service: NetService, lastLogItemId: @escaping (DiscoveryHandshake.Application) -> LastLogItemId) -> Single<LoggerConnection> {
+    func connect(service: NetService, lastLogItemId: @escaping (DiscoveryHandshake.ApplicationRun) -> LastLogItemId) -> Single<LoggerConnection> {
         return async {
             let resolvedService = try await(service.resolved(withTimeout: 30))
 
@@ -173,11 +181,11 @@ final class DiscoveryLogViewerConnector {
 
             try await(stream.open())
 
-            let application = try DiscoveryHandshake(stream: stream).perform(for: self.logViewer)
+            let applicationRun = try DiscoveryHandshake(stream: stream).perform(for: self.logViewer)
 
-            try stream.output.write(encodable: lastLogItemId(application))
+            try stream.output.write(encodable: lastLogItemId(applicationRun))
 
-            return LoggerConnection(service: resolvedService, stream: stream, application: application)
+            return LoggerConnection(service: resolvedService, stream: stream, applicationRun: applicationRun)
         }
     }
 

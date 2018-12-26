@@ -18,19 +18,37 @@ public final class DiscoveryHandshake {
             self.name = name
         }
     }
-    public struct Application: Codable, Equatable {
-        public let id: String
-        public let name: String
-        public let identifier: String
-        public let version: String
-        public let date: Date
+    public struct ApplicationRun: Codable, Equatable {
+        public struct Device: Codable, Equatable {
+            public enum OperatingSystem: String, Codable {
+                case iOS
+                case macOS
+                case unknown
+            }
+            public let id: String
+            public let name: String
+            public let operatingSystem: OperatingSystem
+            public let systemVersion: String
+        }
+        public struct Application: Codable, Equatable {
+            public let name: String
+            public let identifier: String
+        }
 
-        public init(id: String, name: String, identifier: String, version: String, date: Date) {
+        public let id: String
+        public let date: Date
+        public let applicationVersion: String
+        public let seedIdentifier: String
+        public let application: Application
+        public let device: Device
+
+        public init(id: String, date: Date, applicationVersion: String, seedIdentifier: String, application: Application, device: Device) {
             self.id = id
-            self.name = name
-            self.identifier = identifier
-            self.version = version
             self.date = date
+            self.applicationVersion = applicationVersion
+            self.seedIdentifier = seedIdentifier
+            self.application = application
+            self.device = device
         }
     }
 
@@ -40,26 +58,26 @@ public final class DiscoveryHandshake {
         self.stream = stream
     }
 
-    func perform(for viewer: LogViewer) throws -> Application {
+    func perform(for viewer: LogViewer) throws -> ApplicationRun {
         LOG.info("Sending logger info:", viewer)
         try stream.output.write(encodable: viewer)
         LOG.info("Sent logger info.")
 
         LOG.info("Receiving app info.")
-        let application = try stream.input.readDecodable(Application.self)
-        LOG.info("Receiving app info:", application)
+        let applicationRun = try stream.input.readDecodable(ApplicationRun.self)
+        LOG.info("Receiving app info:", applicationRun)
 
-        return application
+        return applicationRun
     }
 
 
-    func perform(for application: Application) throws -> LogViewer {
+    func perform(for applicationRun: ApplicationRun) throws -> LogViewer {
         LOG.info("Receiving logger info.")
         let logViewer = try stream.input.readDecodable(LogViewer.self)
         LOG.info("Receiving logger info:", logViewer)
 
-        LOG.info("Sending app info:", application)
-        try stream.output.write(encodable: application)
+        LOG.info("Sending app info:", applicationRun)
+        try stream.output.write(encodable: applicationRun)
         LOG.info("Sent app info.")
 
         return logViewer

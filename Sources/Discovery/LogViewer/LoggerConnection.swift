@@ -10,14 +10,14 @@ import Foundation
 
 public final class LoggerConnection {
     public let service: NetService
-    public let application: DiscoveryHandshake.Application
+    public let applicationRun: DiscoveryHandshake.ApplicationRun
 
     public private(set) var stream: TwoWayStream
 
-    init(service: NetService, stream: TwoWayStream, application: DiscoveryHandshake.Application) {
+    init(service: NetService, stream: TwoWayStream, applicationRun: DiscoveryHandshake.ApplicationRun) {
         self.service = service
         self.stream = stream
-        self.application = application
+        self.applicationRun = applicationRun
     }
 
     func close() {

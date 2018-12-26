@@ -62,7 +62,7 @@ public final class CaptainsLogServer {
         let connector = DiscoveryLogViewerConnector(logViewer: configuration.logViewer, identityProvider: identityProvider)
         self.connector = connector
 
-        let lastItemIdForApplication: (DiscoveryHandshake.Application) -> LastLogItemId = { [unowned self] application in
+        let lastItemIdForApplication: (DiscoveryHandshake.ApplicationRun) -> LastLogItemId = { [unowned self] application in
             self.lastReceivedItemIds[application.id, default: .unassigned]
         }
 
@@ -88,11 +88,11 @@ public final class CaptainsLogServer {
             .concat()
             .share()
 
-        // FIXME This function creates a retain cycle (usage of `self.lastReceivedItemIds`). This has to be corrected
+        #warning("FIXME: This function creates a retain cycle (usage of `self.lastReceivedItemIds`). This has to be corrected")
         func receive(connection: LoggerConnection, retry: RetryBehavior) -> Observable<(connection: LoggerConnection, item: LogItem)> {
             let receiver = LogReceiver(connection: connection)
 
-            logReceivers[connection.application.id] = receiver
+            logReceivers[connection.applicationRun.id] = receiver
 
             return receiver.itemReceived
                 .map { (connection: receiver.connection, item: $0) }
@@ -117,7 +117,7 @@ public final class CaptainsLogServer {
                 receive(connection: connection, retry: .default)
             }
             .do(onNext: { [unowned self] connection, item in
-                self.lastReceivedItemIds[connection.application.id] = .assigned(item.id)
+                self.lastReceivedItemIds[connection.applicationRun.id] = .assigned(item.id)
             })
             .subscribe(itemReceivedSubject)
             .disposed(by: disposeBag)

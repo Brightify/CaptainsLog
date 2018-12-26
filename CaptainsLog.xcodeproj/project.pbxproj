@@ -119,6 +119,12 @@
 		18CC16E1215CCC4800BA7B96 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC16E0215CCC4800BA7B96 /* Async.swift */; };
 		18CC16E2215CCC4800BA7B96 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC16E0215CCC4800BA7B96 /* Async.swift */; };
 		18CC16E3215CCC4800BA7B96 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CC16E0215CCC4800BA7B96 /* Async.swift */; };
+		18D39E1B21BD8F530062A9C3 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CAA215BCA8D00958149 /* Log.swift */; };
+		18D39E1C21BD8F540062A9C3 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CAA215BCA8D00958149 /* Log.swift */; };
+		18D39E1D21BD8F5D0062A9C3 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71721B692174E177001B0606 /* Application.swift */; };
+		18D39E1E21BD8F5E0062A9C3 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71721B692174E177001B0606 /* Application.swift */; };
+		18D39E1F21BD8F670062A9C3 /* LogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CAC215BCADC00958149 /* LogLevel.swift */; };
+		18D39E2021BD8F680062A9C3 /* LogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE7CAC215BCADC00958149 /* LogLevel.swift */; };
 		18F3B7F9218653720092B925 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F3B7F8218653720092B925 /* Logging.swift */; };
 		18F3B7FA218653720092B925 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F3B7F8218653720092B925 /* Logging.swift */; };
 		18F3B7FB218653720092B925 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F3B7F8218653720092B925 /* Logging.swift */; };
@@ -949,6 +955,7 @@
 				18C4769B218058F100964FD4 /* DiscoveryConnectionSide.swift in Sources */,
 				18CC16E1215CCC4800BA7B96 /* Async.swift in Sources */,
 				18C47670218055BE00964FD4 /* LogViewerConnection.swift in Sources */,
+				71EE7CAD215BCADC00958149 /* LogLevel.swift in Sources */,
 				71EE7CAB215BCA8D00958149 /* Log.swift in Sources */,
 				18CB4EB22155CCCD00D1A93C /* CaptainsLog.swift in Sources */,
 				18C47660218054E300964FD4 /* DiscoveryServiceBrowser.swift in Sources */,
@@ -958,7 +965,6 @@
 				18C4766C2180554600964FD4 /* NetService+loggerService.swift in Sources */,
 				7100D596218205E400E52697 /* CaptainsLogCLLogger.swift in Sources */,
 				18CB4EAE2155CCC900D1A93C /* ChallengeResult.swift in Sources */,
-				71EE7CAD215BCADC00958149 /* LogLevel.swift in Sources */,
 				18C4768A2180585100964FD4 /* Stream.Status+CustomStringConvertible.swift in Sources */,
 				18C476AD2180636600964FD4 /* RetryBehavior.swift in Sources */,
 				18CB4EAF2155CCC900D1A93C /* HTTPMethod.swift in Sources */,
@@ -994,6 +1000,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18D39E1D21BD8F5D0062A9C3 /* Application.swift in Sources */,
 				18CB4EA42155CCC800D1A93C /* ApplicationRun.swift in Sources */,
 				18C47694218058B600964FD4 /* NetService+resolving.swift in Sources */,
 				18C476652180550400964FD4 /* Constants.swift in Sources */,
@@ -1016,6 +1023,7 @@
 				18C476832180578B00964FD4 /* OutputStream+Helpers.swift in Sources */,
 				18C476AE2180636600964FD4 /* RetryBehavior.swift in Sources */,
 				18F3B7FA218653720092B925 /* Logging.swift in Sources */,
+				18D39E1B21BD8F530062A9C3 /* Log.swift in Sources */,
 				18C4767E2180573400964FD4 /* InputStream+Helpers.swift in Sources */,
 				18CB4EA22155CCC800D1A93C /* LogItem.swift in Sources */,
 				18C4766D2180554600964FD4 /* NetService+loggerService.swift in Sources */,
@@ -1027,6 +1035,7 @@
 				18CB4EA52155CCC800D1A93C /* Device.swift in Sources */,
 				18C4769C218058F100964FD4 /* DiscoveryConnectionSide.swift in Sources */,
 				18C476872180583300964FD4 /* Stream+Rx.swift in Sources */,
+				18D39E2021BD8F680062A9C3 /* LogLevel.swift in Sources */,
 				18C4765D218054C000964FD4 /* DiscoveryServiceBrowserDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1043,6 +1052,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18D39E1E21BD8F5E0062A9C3 /* Application.swift in Sources */,
 				18CB4E9D2155CCC800D1A93C /* ApplicationRun.swift in Sources */,
 				18C47695218058B600964FD4 /* NetService+resolving.swift in Sources */,
 				18C476662180550400964FD4 /* Constants.swift in Sources */,
@@ -1065,6 +1075,7 @@
 				18C476842180578B00964FD4 /* OutputStream+Helpers.swift in Sources */,
 				18C476AF2180636600964FD4 /* RetryBehavior.swift in Sources */,
 				18F3B7FB218653720092B925 /* Logging.swift in Sources */,
+				18D39E1C21BD8F540062A9C3 /* Log.swift in Sources */,
 				18C4767F2180573400964FD4 /* InputStream+Helpers.swift in Sources */,
 				18CB4E9B2155CCC800D1A93C /* LogItem.swift in Sources */,
 				18C4766E2180554600964FD4 /* NetService+loggerService.swift in Sources */,
@@ -1076,6 +1087,7 @@
 				18CB4E9E2155CCC800D1A93C /* Device.swift in Sources */,
 				18C4769D218058F100964FD4 /* DiscoveryConnectionSide.swift in Sources */,
 				18C476882180583300964FD4 /* Stream+Rx.swift in Sources */,
+				18D39E1F21BD8F670062A9C3 /* LogLevel.swift in Sources */,
 				18C4765E218054C000964FD4 /* DiscoveryServiceBrowserDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -10,11 +10,11 @@ import Foundation
 import RxSwift
 
 final class DiscoveryLoggerConnector {
-    private let application: DiscoveryHandshake.Application
+    private let applicationRun: DiscoveryHandshake.ApplicationRun
     private let certificate: SecCertificate
 
-    init(application: DiscoveryHandshake.Application, certificate: SecCertificate) {
-        self.application = application
+    init(applicationRun: DiscoveryHandshake.ApplicationRun, certificate: SecCertificate) {
+        self.applicationRun = applicationRun
         self.certificate = certificate
     }
 
@@ -76,7 +76,7 @@ final class DiscoveryLoggerConnector {
                 throw SecurityError.untrustedCertificate
             }
 
-            let logViewer = try DiscoveryHandshake(stream: stream).perform(for: self.application)
+            let logViewer = try DiscoveryHandshake(stream: stream).perform(for: self.applicationRun)
 
             let lastItemId = try stream.input.readDecodable(LastLogItemId.self)
 

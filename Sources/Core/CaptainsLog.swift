@@ -11,18 +11,50 @@ import Foundation
 import RxSwift
 #endif
 
+private func generatedDeviceId() -> String {
+    let key = "CaptainsLog.DeviceId"
+    if let existingIdentifier = UserDefaults.standard.string(forKey: key) {
+        return existingIdentifier
+    } else {
+        let newIdentifier = UUID().uuidString
+        UserDefaults.standard.setValue(newIdentifier, forKey: key)
+        return newIdentifier
+    }
+}
+
+#if os(iOS)
+private func deviceInfo() -> DiscoveryHandshake.ApplicationRun.Device {
+    return DiscoveryHandshake.ApplicationRun.Device(
+        id: UIDevice.current.identifierForVendor?.uuidString ?? generatedDeviceId(),
+        name: UIDevice.current.name,
+        operatingSystem: .iOS,
+        systemVersion: UIDevice.current.systemVersion)
+}
+#elseif os(macOS)
+private func deviceInfo() -> DiscoveryHandshake.ApplicationRun.Device {
+    #warning("We need a way to get an ID of the machine. Using name isn't unique enough.")
+    return DiscoveryHandshake.ApplicationRun.Device(
+        id: Host.current().name ?? generatedDeviceId(),
+        name: Host.current().name ?? "Unknown device",
+        operatingSystem: .macOS,
+        systemVersion: ProcessInfo.processInfo.operatingSystemVersionString)
+}
+#else
+#error("Device info is not implemented on this platform!")
+#endif
+
 public final class CaptainsLog {
     public struct Configuration {
-        public var application: DiscoveryHandshake.Application
+        public var applicationRun: DiscoveryHandshake.ApplicationRun
         public var service: Service
         public var seed: Seed
 
         public init(
-            application: DiscoveryHandshake.Application,
+            applicationRun: DiscoveryHandshake.ApplicationRun,
             service: Service,
             seed: Seed) {
 
-            self.application = application
+            self.applicationRun = applicationRun
             self.service = service
             self.seed = seed
         }
@@ -75,7 +107,7 @@ public final class CaptainsLog {
         self.configuration = configuration
 
         connector = DiscoveryLoggerConnector(
-            application: configuration.application,
+            applicationRun: configuration.applicationRun,
             certificate: configuration.seed.certificate)
 
         loggerService = NetService.loggerService(
@@ -134,15 +166,19 @@ public final class CaptainsLog {
             fatalError("Couldn't extract common name from certificate \(certificate).")
         }
 
-        let appInfo = DiscoveryHandshake.Application(
+        let applicationRun = DiscoveryHandshake.ApplicationRun(
             id: UUID().uuidString,
-            name: (Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String) ?? "<Unknown>",
-            identifier: (Bundle.main.infoDictionary?[kCFBundleIdentifierKey as String] as? String) ?? "com.unknown",
-            version: (Bundle.main.infoDictionary?[kCFBundleVersionKey as String] as? String) ?? "0.0",
-            date: Date())
+            date: Date(),
+            applicationVersion: (Bundle.main.infoDictionary?[kCFBundleVersionKey as String] as? String) ?? "0.0",
+            seedIdentifier: commonName,
+            application: DiscoveryHandshake.ApplicationRun.Application(
+                name: (Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String) ?? "<Unknown>",
+                identifier: (Bundle.main.infoDictionary?[kCFBundleIdentifierKey as String] as? String) ?? "com.unknown"
+            ),
+            device: deviceInfo())
 
         return CaptainsLog.Configuration(
-            application: appInfo,
+            applicationRun: applicationRun,
             service: CaptainsLog.Configuration.Service(
                 domain: Constants.domain,
                 type: Constants.type,
