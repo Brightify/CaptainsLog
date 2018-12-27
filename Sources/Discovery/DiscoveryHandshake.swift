@@ -24,15 +24,35 @@ public final class DiscoveryHandshake {
                 case iOS
                 case macOS
                 case unknown
+
+                public init(rawOrUnknown: String) {
+                    if let value = OperatingSystem(rawValue: rawOrUnknown) {
+                        self = value
+                    } else {
+                        self = .unknown
+                    }
+                }
             }
             public let id: String
             public let name: String
             public let operatingSystem: OperatingSystem
             public let systemVersion: String
+
+            public init(id: String, name: String, operatingSystem: OperatingSystem, systemVersion: String) {
+                self.id = id
+                self.name = name
+                self.operatingSystem = operatingSystem
+                self.systemVersion = systemVersion
+            }
         }
         public struct Application: Codable, Equatable {
             public let name: String
             public let identifier: String
+
+            public init(name: String, identifier: String) {
+                self.name = name
+                self.identifier = identifier
+            }
         }
 
         public let id: String
