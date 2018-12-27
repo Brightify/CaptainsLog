@@ -103,6 +103,12 @@ public final class CaptainsLogServer {
                     }
 
                     return connect(service: connection.service, retry: retry.next())
+                        .flatMap { newConnection -> Observable<LoggerConnection> in
+                            guard newConnection.applicationRun.id == connection.applicationRun.id else {
+                                return .empty()
+                            }
+                            return .just(newConnection)
+                        }
                         .delaySubscription(retry.delay, scheduler: MainScheduler.instance)
                         .flatMap { connection in
                             receive(connection: connection, retry: retry.next())
