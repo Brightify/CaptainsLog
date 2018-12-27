@@ -78,9 +78,11 @@ extension SecCertificate: SafeBitCastable {
     public static var cfTypeId: CFTypeID = SecCertificateGetTypeID()
 }
 
+#if os(macOS)
 extension SecKeychainItem: SafeBitCastable {
     public static var cfTypeId: CFTypeID = SecKeychainItemGetTypeID()
 }
+#endif
 
 public func safeBitCast<T, U: SafeBitCastable>(_ x: T, to type: U.Type) -> U? {
     let typeId = CFGetTypeID(x as CFTypeRef)

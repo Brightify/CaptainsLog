@@ -24,9 +24,9 @@ Pod::Spec.new do |spec|
     :tag => spec.version.to_s
    }
   spec.swift_version = "4.2"
-  spec.ios.deployment_target = "10.0"
+  spec.ios.deployment_target = "10.3"
   spec.osx.deployment_target = "10.13"
-  spec.default_subspec = 'Models', 'Discovery', 'Core', 'Fetcher', 'SwiftyBeaver', 'NSURLSession', 'CocoaLumberjack'
+  spec.default_subspec = 'Models', 'Discovery', 'Core', 'NSURLSession'
 
   spec.subspec 'Models' do |subspec|
     subspec.source_files = [
