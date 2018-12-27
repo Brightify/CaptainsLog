@@ -82,8 +82,16 @@ public final class TwoWayStream {
     }
 
     public func close() {
-        self.input.close()
-        self.output.close()
+        input.close()
+        output.close()
+    }
+
+    deinit {
+        close()
+
+        // We need to remove the delegate, otherwise it could get called later when it's deallocated.
+        input.delegate = nil
+        output.delegate = nil
     }
 }
 
