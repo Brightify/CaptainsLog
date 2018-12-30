@@ -65,7 +65,7 @@ public final class TwoWayStream {
             self.input.schedule(in: runLoop, forMode: runLoopMode)
             self.input.open()
             // Wait for input stream to open
-            let inputStatus = try await(self.input.status(isOneOf: .open, .error).debug("wtf is this")) ?? .error
+            let inputStatus = try await(self.input.status(isOneOf: .open, .error)) ?? .error
             if inputStatus == .error {
                 throw OpenError.cantOpenInput(self.input.streamError)
             }
@@ -107,5 +107,23 @@ private extension TwoWayStream {
             eventSubject.onNext(eventCode)
         }
     }
+}
 
+extension Stream.Event: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .openCompleted:
+            return "Stream.Event.openCompleted"
+        case .hasBytesAvailable:
+            return "Stream.Event.hasBytesAvailable"
+        case .hasSpaceAvailable:
+            return "Stream.Event.hasSpaceAvailable"
+        case .errorOccurred:
+            return "Stream.Event.errorOccurred"
+        case .endEncountered:
+            return "Stream.Event.endEncountered"
+        default:
+            return "Stream.Event(rawValue: \(rawValue))"
+        }
+    }
 }

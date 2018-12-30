@@ -138,23 +138,33 @@ final class DiscoveryLogViewerConnector {
     }
 
     func connect(service: NetService, lastLogItemId: @escaping (DiscoveryHandshake.ApplicationRun) -> LastLogItemId) -> Single<LoggerConnection> {
+        LOG.debug("Connect service", service)
         return async {
+            LOG.debug("Will resolve service", service)
             let resolvedService = try await(service.resolved(withTimeout: 30))
+            LOG.debug("Did resolve service", resolvedService)
 
+            LOG.debug("Will fetch txt data")
             let okData = try await(resolvedService.txtData(containsKey: "OK", timeout: 10))
+            LOG.debug("Did fetch txt data", okData)
 
+            LOG.debug("Will decode LoggerTXT")
             let txt = try DiscoveryLogViewerConnector.decoder.decode(LoggerTXT.self, from: okData)
+            LOG.debug("Did decode LoggerTXT", txt)
 
             var inputStream: InputStream?
             var outputStream: OutputStream?
 
+            LOG.debug("Will get streams")
             precondition(resolvedService.getInputStream(&inputStream, outputStream: &outputStream), "Couldn't get streams!")
+            LOG.debug("Did get streams", inputStream, outputStream)
 
             let stream = TwoWayStream(input: inputStream!, output: outputStream!)
 
             guard let identity = self.identityProvider.identity(forId: txt.identifier) else {
                 fatalError("...")
             }
+            LOG.debug("Did find identity", identity)
 
             let sslSettings = [
                 kCFStreamSSLIsServer: true,
@@ -181,12 +191,17 @@ final class DiscoveryLogViewerConnector {
                 assert(success)
             }
 
+            LOG.debug("Will open stream", stream)
             try await(stream.open())
+            LOG.debug("Did open stream", stream)
 
+            LOG.debug("Will perform handshake")
             let applicationRun = try DiscoveryHandshake(stream: stream).perform(for: self.logViewer)
+            LOG.debug("Did perform handshake", applicationRun)
 
             try stream.output.write(encodable: lastLogItemId(applicationRun))
 
+            LOG.debug("LoggerConnection created", resolvedService, stream, applicationRun)
             return LoggerConnection(service: resolvedService, stream: stream, applicationRun: applicationRun)
         }
     }

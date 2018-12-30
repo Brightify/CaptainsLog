@@ -8,28 +8,50 @@
 
 import Foundation
 
-internal var LOG: Logging = PrintLogging(limit: .error)
+private var logging: Logging = PrintLogging(limit: .error)
+
+internal enum LOG {
+    static func verbose(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+        logging.verbose(items, file: file, function: function, line: line)
+    }
+
+    static func debug(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+        logging.debug(items, file: file, function: function, line: line)
+    }
+
+    static func info(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+        logging.info(items, file: file, function: function, line: line)
+    }
+
+    static func warning(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+        logging.warning(items, file: file, function: function, line: line)
+    }
+
+    static func error(_ items: Any..., file: String = #file, function: String = #function, line: Int = #line) {
+        logging.error(items, file: file, function: function, line: line)
+    }
+}
 
 public protocol Logging {
-    func verbose(_ items: Any...)
+    func verbose(_ items: [Any], file: String, function: String, line: Int)
 
-    func debug(_ items: Any...)
+    func debug(_ items: [Any], file: String, function: String, line: Int)
 
-    func info(_ items: Any...)
+    func info(_ items: [Any], file: String, function: String, line: Int)
 
-    func warning(_ items: Any...)
+    func warning(_ items: [Any], file: String, function: String, line: Int)
 
-    func error(_ items: Any...)
+    func error(_ items: [Any], file: String, function: String, line: Int)
 }
 
 extension Logging {
     public func activate() {
-        LOG = self
+        logging = self
     }
 }
 
-final class PrintLogging: Logging {
-    enum Level: Int {
+public final class PrintLogging: Logging {
+    public enum Level: Int {
         case verbose = 0
         case debug = 1
         case info = 2
@@ -40,36 +62,40 @@ final class PrintLogging: Logging {
 
     private let limit: Level
 
-    init(limit: Level) {
+    public init(limit: Level) {
         self.limit = limit
     }
 
-    func verbose(_ items: Any...) {
+    public func verbose(_ items: [Any], file: String, function: String, line: Int) {
         guard canLog(level: .verbose) else { return }
-        print(["V: "] + items)
+        logPrint(items: ["💜 V: "] + items)
     }
 
-    func debug(_ items: Any...) {
+    public func debug(_ items: [Any], file: String, function: String, line: Int) {
         guard canLog(level: .debug) else { return }
-        print(["D: "] + items)
+        logPrint(items: ["💚 D: "] + items)
     }
 
-    func info(_ items: Any...) {
+    public func info(_ items: [Any], file: String, function: String, line: Int) {
         guard canLog(level: .info) else { return }
-        print(["I: "] + items)
+        logPrint(items: ["💙 I: "] + items)
     }
 
-    func warning(_ items: Any...) {
+    public func warning(_ items: [Any], file: String, function: String, line: Int) {
         guard canLog(level: .warning) else { return }
-        print(["W: "] + items)
+        logPrint(items: ["💛 W: "] + items)
     }
 
-    func error(_ items: Any...) {
+    public func error(_ items: [Any], file: String, function: String, line: Int) {
         guard canLog(level: .error) else { return }
-        print(["E: "] + items)
+        logPrint(items: ["💔 E: "] + items)
     }
 
-    func canLog(level: Level) -> Bool {
+    private func logPrint(items: [Any]) {
+        print(items.map { String(describing: $0) }.joined(separator: ", "))
+    }
+
+    private func canLog(level: Level) -> Bool {
         return level.rawValue >= limit.rawValue
     }
 }

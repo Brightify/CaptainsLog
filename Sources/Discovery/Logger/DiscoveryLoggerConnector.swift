@@ -19,6 +19,7 @@ final class DiscoveryLoggerConnector {
     }
 
     func connect(stream: TwoWayStream) -> Single<LogViewerConnection> {
+        LOG.debug("Connect stream", stream)
         return async {
             let settings = [
                 kCFStreamSSLIsServer: false,
@@ -51,10 +52,13 @@ final class DiscoveryLoggerConnector {
                 assert(success)
             }
 
+            LOG.debug("Will open stream", stream)
             try await(stream.open().debug("server connect"))
+            LOG.debug("Did open stream", stream)
 
+            LOG.debug("Will wait for available space", stream)
             _ = try await(stream.hasSpaceAvailable.filter { $0 }.take(1).asSingle())
-
+            LOG.debug("Did wait for available space", stream)
 
             guard let trust = safeBitCast(stream.input.property(forKey: Stream.PropertyKey(kCFStreamPropertySSLPeerTrust as String)), to: SecTrust.self) else {
 
@@ -64,7 +68,9 @@ final class DiscoveryLoggerConnector {
             assert(SecTrustSetAnchorCertificatesOnly(trust, true) == noErr)
 
             var trustResult: SecTrustResultType = .invalid
+            LOG.debug("Will evaluate trust", trust)
             let trustEvaluationError = SecTrustEvaluate(trust, &trustResult)
+            LOG.debug("Did evaluate trust", trustEvaluationError, trustResult)
 
             guard trustEvaluationError == errSecSuccess else {
                 stream.close()
@@ -76,10 +82,15 @@ final class DiscoveryLoggerConnector {
                 throw SecurityError.untrustedCertificate
             }
 
+            LOG.debug("Will perform handshake")
             let logViewer = try DiscoveryHandshake(stream: stream).perform(for: self.applicationRun)
+            LOG.debug("Did perform handshake", logViewer)
 
+            LOG.debug("Will read last item id")
             let lastItemId = try stream.input.readDecodable(LastLogItemId.self)
+            LOG.debug("Did read last item id", lastItemId)
 
+            LOG.debug("LogViewerConnection created", stream, logViewer, lastItemId)
             return LogViewerConnection(stream: stream, logViewer: logViewer, lastReceivedItemId: lastItemId)
         }
     }

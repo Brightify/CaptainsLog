@@ -34,16 +34,16 @@ public final class CaptainsLogCLLogger: DDAbstractLogger {
 
 private extension DDLogFlag {
     var logLevel: LogLevel {
-        switch self.rawValue {
-        case (1 << 0):
+        switch self {
+        case DDLogFlag.error:
             return .error
-        case (1 << 1):
+        case DDLogFlag.warning:
             return .warning
-        case (1 << 2):
+        case DDLogFlag.info:
             return .info
-        case (1 << 3):
+        case DDLogFlag.debug:
             return .debug
-        case (1 << 4):
+        case DDLogFlag.verbose:
             return .verbose
         default:
             return .unknown

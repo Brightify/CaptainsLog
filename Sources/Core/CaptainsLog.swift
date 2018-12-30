@@ -166,14 +166,20 @@ public final class CaptainsLog {
             fatalError("Couldn't extract common name from certificate \(certificate).")
         }
 
+        let bundle = Bundle.main
+
+        let version = bundle.infoDictionary?["CFBundleShortVersionString"] as? String
+        let buildNumber = (bundle.infoDictionary?[kCFBundleVersionKey as String] as? String).map { "(\($0))"}
+        let versionName = [version, buildNumber].compactMap { $0 }.joined(separator: " ")
+
         let applicationRun = DiscoveryHandshake.ApplicationRun(
             id: UUID().uuidString,
             date: Date(),
-            applicationVersion: (Bundle.main.infoDictionary?[kCFBundleVersionKey as String] as? String) ?? "0.0",
+            applicationVersion: versionName,
             seedIdentifier: commonName,
             application: DiscoveryHandshake.ApplicationRun.Application(
-                name: (Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String) ?? "<Unknown>",
-                identifier: (Bundle.main.infoDictionary?[kCFBundleIdentifierKey as String] as? String) ?? "com.unknown"
+                name: (bundle.infoDictionary?[kCFBundleNameKey as String] as? String) ?? "<Unknown>",
+                identifier: (bundle.infoDictionary?[kCFBundleIdentifierKey as String] as? String) ?? "com.unknown"
             ),
             device: deviceInfo())
 
