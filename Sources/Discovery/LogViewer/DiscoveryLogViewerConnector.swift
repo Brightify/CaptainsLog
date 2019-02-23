@@ -11,6 +11,8 @@ import RxSwift
 
 public protocol IdentityProvider: AnyObject {
     func identity(forId identifier: String) -> SecIdentity?
+
+    func enabledIdentities() -> [SecIdentity]
 }
 
 public struct ImportedIdentity {
@@ -129,46 +131,21 @@ func SecPKCS12Import(_ pkcs12_data: Data, _ options: CFDictionary) throws ->  [A
 final class DiscoveryLogViewerConnector {
     private static let decoder = JSONDecoder()
 
-    private let logViewer: DiscoveryHandshake.LogViewer
+    private let logViewer: DiscoveryHandshake.LogReceiver
     private let identityProvider: IdentityProvider
 
-    init(logViewer: DiscoveryHandshake.LogViewer, identityProvider: IdentityProvider) {
+    init(logViewer: DiscoveryHandshake.LogReceiver, identityProvider: IdentityProvider) {
         self.logViewer = logViewer
         self.identityProvider = identityProvider
     }
 
-    func connect(service: NetService, lastLogItemId: @escaping (DiscoveryHandshake.ApplicationRun) -> LastLogItemId) -> Single<LoggerConnection> {
-        LOG.debug("Connect service", service)
+    func connect(stream: TwoWayStream, lastLogItemId: @escaping (DiscoveryHandshake.ApplicationRun) -> LastLogItemId) -> Single<LoggerConnection> {
+        LOG.debug("Connect stream", stream)
         return async {
-            LOG.debug("Will resolve service", service)
-            let resolvedService = try await(service.resolved(withTimeout: 30))
-            LOG.debug("Did resolve service", resolvedService)
-
-            LOG.debug("Will fetch txt data")
-            let okData = try await(resolvedService.txtData(containsKey: "OK", timeout: 10))
-            LOG.debug("Did fetch txt data", okData)
-
-            LOG.debug("Will decode LoggerTXT")
-            let txt = try DiscoveryLogViewerConnector.decoder.decode(LoggerTXT.self, from: okData)
-            LOG.debug("Did decode LoggerTXT", txt)
-
-            var inputStream: InputStream?
-            var outputStream: OutputStream?
-
-            LOG.debug("Will get streams")
-            precondition(resolvedService.getInputStream(&inputStream, outputStream: &outputStream), "Couldn't get streams!")
-            LOG.debug("Did get streams", inputStream, outputStream)
-
-            let stream = TwoWayStream(input: inputStream!, output: outputStream!)
-
-            guard let identity = self.identityProvider.identity(forId: txt.identifier) else {
-                fatalError("...")
-            }
-            LOG.debug("Did find identity", identity)
-
+            let identities = self.identityProvider.enabledIdentities()
             let sslSettings = [
                 kCFStreamSSLIsServer: true,
-                kCFStreamSSLCertificates: [identity],
+                kCFStreamSSLCertificates: identities as CFArray,
                 kCFStreamSSLValidatesCertificateChain: false,
             ] as CFDictionary
             do {
@@ -201,8 +178,8 @@ final class DiscoveryLogViewerConnector {
 
             try stream.output.write(encodable: lastLogItemId(applicationRun))
 
-            LOG.debug("LoggerConnection created", resolvedService, stream, applicationRun)
-            return LoggerConnection(service: resolvedService, stream: stream, applicationRun: applicationRun)
+            LOG.debug("LoggerConnection created", stream, applicationRun)
+            return LoggerConnection(stream: stream, applicationRun: applicationRun)
         }
     }
 

@@ -43,19 +43,39 @@ private func deviceInfo() -> DiscoveryHandshake.ApplicationRun.Device {
 #error("Device info is not implemented on this platform!")
 #endif
 
+public protocol ReceiverDiscovery {
+    func discover(callback: @escaping (NetService) -> Void)
+}
+
+public final class NetServiceReceiverDiscovery: ReceiverDiscovery {
+    private let browser: DiscoveryServiceBrowser
+
+    init(type: String? = nil, domain: String? = nil) {
+        browser = DiscoveryServiceBrowser(serviceType: type ?? Constants.type, serviceDomain: domain ?? Constants.domain)
+
+    }
+
+    public func discover(callback: @escaping (NetService) -> Void) {
+        browser.unresolvedServices.subscribe(onNext: { services in
+            services.forEach(callback)
+        })
+        browser.search()
+    }
+}
+
 public final class CaptainsLog {
     public struct Configuration {
         public var applicationRun: DiscoveryHandshake.ApplicationRun
-        public var service: Service
+        public var discovery: ReceiverDiscovery
         public var seed: Seed
 
         public init(
             applicationRun: DiscoveryHandshake.ApplicationRun,
-            service: Service,
+            discovery: ReceiverDiscovery,
             seed: Seed) {
 
             self.applicationRun = applicationRun
-            self.service = service
+            self.discovery = discovery
             self.seed = seed
         }
 
@@ -99,7 +119,7 @@ public final class CaptainsLog {
     private var senders: [LogSender] = []
 
     private let configuration: Configuration
-    private let loggerService: NetService
+//    private let loggerService: NetService
     private let connector: DiscoveryLoggerConnector
     private let disposeBag = DisposeBag()
 
@@ -110,33 +130,30 @@ public final class CaptainsLog {
             applicationRun: configuration.applicationRun,
             certificate: configuration.seed.certificate)
 
-        loggerService = NetService.loggerService(
-            named: "device-name",
-            identifier: configuration.seed.commonName,
-            domain: configuration.service.domain,
-            type: configuration.service.type,
-            port: configuration.service.port)
 
-        loggerService.publish()
-            .flatMap(connector.connect)
-            .subscribe(onNext: { [unowned self] connection in
-                let initialQueue: [LogItem]
-                switch connection.lastReceivedItemId {
-                case .assigned(let lastItemId):
-                    if let lastReceivedIndex = self.logItems.lastIndex(where: { $0.id == lastItemId }) {
-                        let fromIndex = lastReceivedIndex + 1
-                        initialQueue = Array(self.logItems[fromIndex...])
-                    } else {
+
+        configuration.discovery.discover { [unowned self] service in
+            self.connector.connect(service: service)
+                .subscribe(onSuccess: { [unowned self] connection in
+                    let initialQueue: [LogItem]
+                    switch connection.lastReceivedItemId {
+                    case .assigned(let lastItemId):
+                        if let lastReceivedIndex = self.logItems.lastIndex(where: { $0.id == lastItemId }) {
+                            let fromIndex = lastReceivedIndex + 1
+                            initialQueue = Array(self.logItems[fromIndex...])
+                        } else {
+                            initialQueue = self.logItems
+                        }
+                    case .unassigned:
                         initialQueue = self.logItems
                     }
-                case .unassigned:
-                    initialQueue = self.logItems
-                }
 
-                let sender = LogSender(connection: connection, queue: initialQueue)
-                self.senders.append(sender)
-            })
-            .disposed(by: disposeBag)
+                    let sender = LogSender(connection: connection, queue: initialQueue)
+                    self.senders.append(sender)
+                })
+                .disposed(by: self.disposeBag)
+        }
+
     }
 
     func log(item: LogItem) {
@@ -185,10 +202,7 @@ public final class CaptainsLog {
 
         return CaptainsLog.Configuration(
             applicationRun: applicationRun,
-            service: CaptainsLog.Configuration.Service(
-                domain: Constants.domain,
-                type: Constants.type,
-                port: Constants.port),
+            discovery: NetServiceReceiverDiscovery(),
             seed: CaptainsLog.Configuration.Seed(
                 commonName: commonName,
                 certificate: certificate))
@@ -203,10 +217,11 @@ extension CaptainsLog {
 
     func simulateDisconnect(timeBetweenReconnect: TimeInterval) {
         senders = []
-        loggerService.stop()
-
-        Thread.sleep(forTimeInterval: timeBetweenReconnect)
-
-        loggerService.publish(options: .listenForConnections)
+        // FIXME Stop and start discovery
+//        loggerService.stop()
+//
+//        Thread.sleep(forTimeInterval: timeBetweenReconnect)
+//
+//        loggerService.publish(options: .listenForConnections)
     }
 }

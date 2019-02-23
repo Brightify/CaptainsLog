@@ -9,17 +9,21 @@
 import Foundation
 
 public final class LogViewerConnection {
+    public let service: NetService
     public let stream: TwoWayStream
-    public let logViewer: DiscoveryHandshake.LogViewer
+    public let logViewer: DiscoveryHandshake.LogReceiver
     public let lastReceivedItemId: LastLogItemId
 
-    init(stream: TwoWayStream, logViewer: DiscoveryHandshake.LogViewer, lastReceivedItemId: LastLogItemId) {
+    init(service: NetService, stream: TwoWayStream, logViewer: DiscoveryHandshake.LogReceiver, lastReceivedItemId: LastLogItemId) {
+        self.service = service
         self.stream = stream
         self.logViewer = logViewer
         self.lastReceivedItemId = lastReceivedItemId
     }
 
     func close() {
+        LOG.info("Closing connection for log receiver service:", service)
+        service.stop()
         stream.input.close()
         stream.output.close()
     }

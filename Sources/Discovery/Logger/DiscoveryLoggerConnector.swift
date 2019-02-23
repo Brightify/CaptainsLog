@@ -18,9 +18,30 @@ final class DiscoveryLoggerConnector {
         self.certificate = certificate
     }
 
-    func connect(stream: TwoWayStream) -> Single<LogViewerConnection> {
-        LOG.debug("Connect stream", stream)
+    func connect(service: NetService) -> Single<LogViewerConnection> {
+        LOG.debug("Connect service", service)
         return async {
+            LOG.debug("Will resolve service", service)
+            let resolvedService = try await(service.resolved(withTimeout: 30))
+            LOG.debug("Did resolve service", resolvedService)
+
+//            LOG.debug("Will fetch txt data")
+//            let okData = try await(resolvedService.txtData(containsKey: "OK", timeout: 10))
+//            LOG.debug("Did fetch txt data", okData)
+//
+//            LOG.debug("Will decode LoggerTXT")
+//            let txt = try DiscoveryLogViewerConnector.decoder.decode(LoggerTXT.self, from: okData)
+//            LOG.debug("Did decode LoggerTXT", txt)
+
+            var inputStream: InputStream?
+            var outputStream: OutputStream?
+
+            LOG.debug("Will get streams")
+            precondition(resolvedService.getInputStream(&inputStream, outputStream: &outputStream), "Couldn't get streams!")
+            LOG.debug("Did get streams", inputStream, outputStream)
+
+            let stream = TwoWayStream(input: inputStream!, output: outputStream!)
+
             let settings = [
                 kCFStreamSSLIsServer: false,
                 kCFStreamSSLLevel: StreamSocketSecurityLevel.tlSv1,
@@ -90,8 +111,8 @@ final class DiscoveryLoggerConnector {
             let lastItemId = try stream.input.readDecodable(LastLogItemId.self)
             LOG.debug("Did read last item id", lastItemId)
 
-            LOG.debug("LogViewerConnection created", stream, logViewer, lastItemId)
-            return LogViewerConnection(stream: stream, logViewer: logViewer, lastReceivedItemId: lastItemId)
+            LOG.debug("LogViewerConnection created", resolvedService, stream, logViewer, lastItemId)
+            return LogViewerConnection(service: resolvedService, stream: stream, logViewer: logViewer, lastReceivedItemId: lastItemId)
         }
     }
 }

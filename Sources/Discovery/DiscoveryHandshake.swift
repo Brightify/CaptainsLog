@@ -9,7 +9,7 @@
 import Foundation
 
 public final class DiscoveryHandshake {
-    public struct LogViewer: Codable, Equatable {
+    public struct LogReceiver: Codable, Equatable {
         public let id: String
         public let name: String
 
@@ -78,7 +78,7 @@ public final class DiscoveryHandshake {
         self.stream = stream
     }
 
-    func perform(for viewer: LogViewer) throws -> ApplicationRun {
+    func perform(for viewer: LogReceiver) throws -> ApplicationRun {
         LOG.info("Sending logger info:", viewer)
         try stream.output.write(encodable: viewer)
         LOG.info("Sent logger info.")
@@ -91,9 +91,9 @@ public final class DiscoveryHandshake {
     }
 
 
-    func perform(for applicationRun: ApplicationRun) throws -> LogViewer {
+    func perform(for applicationRun: ApplicationRun) throws -> LogReceiver {
         LOG.info("Receiving logger info.")
-        let logViewer = try stream.input.readDecodable(LogViewer.self)
+        let logViewer = try stream.input.readDecodable(LogReceiver.self)
         LOG.info("Receiving logger info:", logViewer)
 
         LOG.info("Sending app info:", applicationRun)
