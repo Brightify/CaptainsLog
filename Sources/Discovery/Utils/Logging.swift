@@ -68,31 +68,34 @@ public final class PrintLogging: Logging {
 
     public func verbose(_ items: [Any], file: String, function: String, line: Int) {
         guard canLog(level: .verbose) else { return }
-        logPrint(items: ["💜 V: "] + items)
+        logPrint(items: ["💜 V: "] + items, file: file, function: function, line: line)
     }
 
     public func debug(_ items: [Any], file: String, function: String, line: Int) {
         guard canLog(level: .debug) else { return }
-        logPrint(items: ["💚 D: "] + items)
+        logPrint(items: ["💚 D: "] + items, file: file, function: function, line: line)
     }
 
     public func info(_ items: [Any], file: String, function: String, line: Int) {
         guard canLog(level: .info) else { return }
-        logPrint(items: ["💙 I: "] + items)
+        logPrint(items: ["💙 I: "] + items, file: file, function: function, line: line)
     }
 
     public func warning(_ items: [Any], file: String, function: String, line: Int) {
         guard canLog(level: .warning) else { return }
-        logPrint(items: ["💛 W: "] + items)
+        logPrint(items: ["💛 W: "] + items, file: file, function: function, line: line)
     }
 
     public func error(_ items: [Any], file: String, function: String, line: Int) {
         guard canLog(level: .error) else { return }
-        logPrint(items: ["💔 E: "] + items)
+        logPrint(items: ["💔 E: "] + items, file: file, function: function, line: line)
     }
 
-    private func logPrint(items: [Any]) {
+    private func logPrint(items: [Any], file: String, function: String, line: Int) {
         print(items.map { String(describing: $0) }.joined(separator: ", "))
+        if limit == .verbose {
+            print("\(function) at \(file):\(line)")
+        }
     }
 
     private func canLog(level: Level) -> Bool {

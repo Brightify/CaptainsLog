@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 
 extension NetService {
     private final class ResolutionDelegate: NSObject, NetServiceDelegate {
@@ -34,74 +33,75 @@ extension NetService {
         }
     }
 
-    func resolved(withTimeout timeout: TimeInterval) -> Single<NetService> {
-        guard addresses == nil else { return .just(self) }
+    func resolved(withTimeout timeout: TimeInterval) -> Promise<NetService> {
+        guard addresses == nil else { return Promise.just(self) }
 
-        return Single.create { fullfill in
+        return Promise { resolve, fail in
             let delegate = ResolutionDelegate(serviceResolved: { error in
+                self.delegate = nil
                 if let error = error {
-                    fullfill(.error(error))
+                    fail(error)
                 } else {
-                    fullfill(.success(self))
+                    resolve(self)
                 }
             })
             self.delegate = delegate
 
             self.resolve(withTimeout: timeout)
 
-            return Disposables.create {
-                withExtendedLifetime(delegate) { }
-                self.delegate = nil
-            }
+//            return Disposables.create {
+//                withExtendedLifetime(delegate) { }
+//                self.delegate = nil
+//            }
         }
     }
 }
 
 extension NetService {
-    private final class TxtChangedDelegate: NSObject, NetServiceDelegate {
-        let txtRecordUpdated: (Data) -> Void
-
-        init(txtRecordUpdated: @escaping (Data) -> Void) {
-            self.txtRecordUpdated = txtRecordUpdated
-        }
-
-        func netService(_ sender: NetService, didUpdateTXTRecord data: Data) {
-            LOG.verbose(#function, sender, data)
-            txtRecordUpdated(data)
-        }
-    }
-
-    func txtData(containsKey key: String, timeout: TimeInterval = 0) -> Single<Data> {
-        let updatedTxtRecord = Observable<Data?>.create { observer in
-            let delegate = TxtChangedDelegate(txtRecordUpdated: observer.onNext)
-            self.delegate = delegate
-
-            self.startMonitoring()
-
-            return Disposables.create {
-                withExtendedLifetime(delegate) { }
-                self.stopMonitoring()
-                self.delegate = nil
-            }
-        }
-
-        let result = updatedTxtRecord.startWith(txtRecordData())
-            .flatMap { recordData -> Observable<Data> in
-                guard
-                    let records = recordData.map(NetService.dictionary(fromTXTRecord:)),
-                    let record = records[key] else {
-                        return .empty()
-                }
-
-                return .just(record)
-            }
-            .take(1)
-            .asSingle()
-
-        if timeout > 0 {
-            return result.timeout(timeout, scheduler: MainScheduler.instance)
-        } else {
-            return result
-        }
-    }
+//    private final class TxtChangedDelegate: NSObject, NetServiceDelegate {
+//        let txtRecordUpdated: (Data) -> Void
+//
+//        init(txtRecordUpdated: @escaping (Data) -> Void) {
+//            self.txtRecordUpdated = txtRecordUpdated
+//        }
+//
+//        func netService(_ sender: NetService, didUpdateTXTRecord data: Data) {
+//            LOG.verbose(#function, sender, data)
+//            txtRecordUpdated(data)
+//        }
+//    }
+//
+//    func txtData(containsKey key: String, timeout: TimeInterval = 0) -> Promise<Data> {
+//        let updatedTxtRecord = Observable<Data?>.create { observer in
+//            let delegate = TxtChangedDelegate(txtRecordUpdated: observer.onNext)
+//            self.delegate = delegate
+//
+//            self.startMonitoring()
+//
+//            return Disposables.create {
+//                withExtendedLifetime(delegate) { }
+//                self.stopMonitoring()
+//                self.delegate = nil
+//            }
+//        }
+//
+//        let result = updatedTxtRecord.startWith(txtRecordData())
+//            .flatMap { recordData -> Observable<Data> in
+//                guard
+//                    let records = recordData.map(NetService.dictionary(fromTXTRecord:)),
+//                    let record = records[key] else {
+//                        return .empty()
+//                }
+//
+//                return .just(record)
+//            }
+//            .take(1)
+//            .asSingle()
+//
+//        if timeout > 0 {
+//            return result.timeout(timeout, scheduler: MainScheduler.instance)
+//        } else {
+//            return result
+//        }
+//    }
 }

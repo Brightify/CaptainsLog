@@ -82,7 +82,7 @@ public final class DiscoveryHandshake {
         LOG.info("Sending logger info:", viewer)
         try stream.output.write(encodable: viewer)
         LOG.info("Sent logger info.")
-
+        
         LOG.info("Receiving app info.")
         let applicationRun = try stream.input.readDecodable(ApplicationRun.self)
         LOG.info("Receiving app info:", applicationRun)

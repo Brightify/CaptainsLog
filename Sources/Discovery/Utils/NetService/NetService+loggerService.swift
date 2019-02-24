@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 
 struct LoggerTXT: Codable {
     let identifier: String
@@ -30,49 +29,5 @@ extension NetService {
         let service = NetService(domain: domain, type: type, name: name, port: Int32(port))
         assert(service.setTXTRecord(txtRecordData), "Couldn't set TXT record")
         return service
-    }
-}
-
-extension NetService {
-    private class AcceptDelegate: NSObject, NetServiceDelegate {
-        private let didAcceptConnection: (TwoWayStream) -> Void
-
-        init(didAcceptConnection: @escaping (TwoWayStream) -> Void) {
-            self.didAcceptConnection = didAcceptConnection
-        }
-
-        func netService(_ sender: NetService, didAcceptConnectionWith inputStream: InputStream, outputStream: OutputStream) {
-            LOG.verbose(#function, sender)
-            didAcceptConnection(TwoWayStream(input: inputStream, output: outputStream))
-        }
-
-        func netServiceWillPublish(_ sender: NetService) {
-            LOG.verbose(#function, sender)
-        }
-
-        func netServiceDidPublish(_ sender: NetService) {
-            LOG.verbose(#function, sender)
-            sender.setTXTRecord(sender.txtRecordData())
-        }
-
-        func netService(_ sender: NetService, didNotPublish errorDict: [String : NSNumber]) {
-            LOG.verbose(#function, sender, errorDict)
-        }
-    }
-
-    func publish() -> Observable<TwoWayStream> {
-        return Observable.create { observer in
-            let delegate = AcceptDelegate(didAcceptConnection: observer.onNext)
-            self.delegate = delegate
-
-            self.schedule(in: .current, forMode: .default)
-            self.publish(options: .listenForConnections)
-
-            return Disposables.create {
-                withExtendedLifetime(delegate) { }
-                self.delegate = nil
-                self.stop()
-            }
-        }
     }
 }

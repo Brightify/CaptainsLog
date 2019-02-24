@@ -7,12 +7,8 @@
 //
 
 import Foundation
-import RxSwift
 
-public final class TwoWayStream {
-    private let inputDelegate = DefaultStreamDelegate()
-    private let outputDelegate = DefaultStreamDelegate()
-
+public final class TwoWayStream: NSObject, StreamDelegate {
     public let input: InputStream
     public let output: OutputStream
 
@@ -21,8 +17,16 @@ public final class TwoWayStream {
         case cantOpenOutput(Error?)
     }
 
-    public let hasBytesAvailable: Observable<Bool>
-    public let hasSpaceAvailable: Observable<Bool>
+    public var hasBytesAvailable: Bool {
+        return input.hasBytesAvailable
+    }
+
+    public var hasSpaceAvailable: Bool {
+        return output.hasSpaceAvailable
+    }
+
+//    public let hasBytesAvailable: Observable<Bool>
+//    public let hasSpaceAvailable: Observable<Bool>
 
     private let disposeBag = DisposeBag()
 
@@ -30,38 +34,38 @@ public final class TwoWayStream {
         self.input = input
         self.output = output
 
-        hasBytesAvailable = inputDelegate.event
-            .map { event in
-                switch event {
-                case Stream.Event.hasBytesAvailable:
-                    return true
-                default:
-                    return false
-                }
-            }
-            .distinctUntilChanged()
-            .share(replay: 1, scope: .forever)
-
-        hasSpaceAvailable = outputDelegate.event
-            .map { event in
-                switch event {
-                case .hasSpaceAvailable:
-                    return true
-                default:
-                    return false
-                }
-            }
-            .distinctUntilChanged()
-            .share(replay: 1, scope: .forever)
-
-        // This assures we have the latest value available on the observable
-        hasBytesAvailable.subscribe().disposed(by: disposeBag)
-        hasSpaceAvailable.subscribe().disposed(by: disposeBag)
+//        hasBytesAvailable = inputDelegate.event
+//            .map { event in
+//                switch event {
+//                case Stream.Event.hasBytesAvailable:
+//                    return true
+//                default:
+//                    return false
+//                }
+//            }
+//            .distinctUntilChanged()
+//            .share(replay: 1, scope: .forever)
+//
+//        hasSpaceAvailable = outputDelegate.event
+//            .map { event in
+//                switch event {
+//                case .hasSpaceAvailable:
+//                    return true
+//                default:
+//                    return false
+//                }
+//            }
+//            .distinctUntilChanged()
+//            .share(replay: 1, scope: .forever)
+//
+//        // This assures we have the latest value available on the observable
+//        hasBytesAvailable.subscribe().disposed(by: disposeBag)
+//        hasSpaceAvailable.subscribe().disposed(by: disposeBag)
     }
 
-    public func open(schedulingIn runLoop: RunLoop = .main, forMode runLoopMode: RunLoop.Mode = .default) -> Single<Void> {
+    public func open(schedulingIn runLoop: RunLoop = .main, forMode runLoopMode: RunLoop.Mode = .default) -> Promise<Void> {
         return async {
-            self.input.delegate = self.inputDelegate
+            self.input.delegate = self
             self.input.schedule(in: runLoop, forMode: runLoopMode)
             self.input.open()
             // Wait for input stream to open
@@ -70,7 +74,7 @@ public final class TwoWayStream {
                 throw OpenError.cantOpenInput(self.input.streamError)
             }
 
-            self.output.delegate = self.outputDelegate
+            self.output.delegate = self
             self.output.schedule(in: runLoop, forMode: runLoopMode)
             self.output.open()
             // Wait for output stream to open
@@ -86,26 +90,17 @@ public final class TwoWayStream {
         output.close()
     }
 
+    func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
+        LOG.verbose(#function, aStream, eventCode)
+//        eventSubject.onNext(eventCode)
+    }
+
     deinit {
         close()
 
         // We need to remove the delegate, otherwise it could get called later when it's deallocated.
         input.delegate = nil
         output.delegate = nil
-    }
-}
-
-private extension TwoWayStream {
-    final class DefaultStreamDelegate: NSObject, StreamDelegate {
-        private let eventSubject = PublishSubject<Stream.Event>()
-        var event: Observable<Stream.Event> {
-            return eventSubject
-        }
-
-        func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-            LOG.verbose(#function, aStream, eventCode)
-            eventSubject.onNext(eventCode)
-        }
     }
 }
 

@@ -7,12 +7,9 @@
 //
 
 import Foundation
-import RxSwift
 
 public protocol IdentityProvider: AnyObject {
     func identity(forId identifier: String) -> SecIdentity?
-
-    func enabledIdentities() -> [SecIdentity]
 }
 
 public struct ImportedIdentity {
@@ -128,6 +125,11 @@ func SecPKCS12Import(_ pkcs12_data: Data, _ options: CFDictionary) throws ->  [A
     }
 }
 
+enum StreamConnectionError: Error {
+    case problemSettingInputSSL
+    case problemSettingOutputSSL
+}
+
 final class DiscoveryLogViewerConnector {
     private static let decoder = JSONDecoder()
 
@@ -139,35 +141,9 @@ final class DiscoveryLogViewerConnector {
         self.identityProvider = identityProvider
     }
 
-    func connect(stream: TwoWayStream, lastLogItemId: @escaping (DiscoveryHandshake.ApplicationRun) -> LastLogItemId) -> Single<LoggerConnection> {
+    func connect(stream: TwoWayStream, lastLogItemId: @escaping (DiscoveryHandshake.ApplicationRun) -> LastLogItemId) -> Promise<LoggerConnection> {
         LOG.debug("Connect stream", stream)
         return async {
-            let identities = self.identityProvider.enabledIdentities()
-            let sslSettings = [
-                kCFStreamSSLIsServer: true,
-                kCFStreamSSLCertificates: identities as CFArray,
-                kCFStreamSSLValidatesCertificateChain: false,
-            ] as CFDictionary
-            do {
-                stream.input.setProperty(StreamSocketSecurityLevel.tlSv1, forKey: Stream.PropertyKey.socketSecurityLevelKey)
-
-                let success = CFReadStreamSetProperty(
-                    stream.input,
-                    CFStreamPropertyKey(kCFStreamPropertySSLSettings),
-                    sslSettings)
-                assert(success)
-            }
-
-            do {
-                stream.output.setProperty(StreamSocketSecurityLevel.tlSv1, forKey: Stream.PropertyKey.socketSecurityLevelKey)
-
-                let success = CFWriteStreamSetProperty(
-                    stream.output,
-                    CFStreamPropertyKey(kCFStreamPropertySSLSettings),
-                    sslSettings)
-                assert(success)
-            }
-
             LOG.debug("Will open stream", stream)
             try await(stream.open())
             LOG.debug("Did open stream", stream)
@@ -176,11 +152,67 @@ final class DiscoveryLogViewerConnector {
             let applicationRun = try DiscoveryHandshake(stream: stream).perform(for: self.logViewer)
             LOG.debug("Did perform handshake", applicationRun)
 
+            guard let identity = self.identityProvider.identity(forId: applicationRun.seedIdentifier) else {
+                fatalError("Identity not found")
+            }
+
+            let context: SSLContext = SSLCreateContext(kCFAllocatorDefault, SSLProtocolSide.serverSide, SSLConnectionType.streamType)!
+            SSLSetCertificate(context, [identity] as CFArray)
+            SSLSetSessionOption(context, SSLSessionOption.breakOnClientAuth, true)
+
+            LOG.debug("Will set context")
+            try stream.set(context: context)
+            LOG.debug("Did set context")
+
+            let hasShookHands = Promises.blockUntil {
+                var sessionState = SSLSessionState.idle
+                SSLGetSessionState(context, &sessionState)
+                return sessionState != SSLSessionState.handshake
+            }
+
+            LOG.debug("Will handshake", stream)
+            try await(hasShookHands)
+            LOG.debug("Did handshake", stream)
+
+            LOG.debug("Will write last log item id", stream, lastLogItemId(applicationRun))
             try stream.output.write(encodable: lastLogItemId(applicationRun))
+            LOG.debug("Did write last log item id", stream, lastLogItemId(applicationRun))
 
             LOG.debug("LoggerConnection created", stream, applicationRun)
             return LoggerConnection(stream: stream, applicationRun: applicationRun)
+        }.debug("LogViewerConnection")
+    }
+}
+
+extension TwoWayStream {
+    func set(context: SSLContext) throws {
+//        input.setProperty(StreamSocketSecurityLevel.tlSv1, forKey: Stream.PropertyKey.socketSecurityLevelKey)
+//        output.setProperty(StreamSocketSecurityLevel.tlSv1, forKey: Stream.PropertyKey.socketSecurityLevelKey)
+
+        var i = 0
+        var inputSuccess = false
+        while i < 10 && !inputSuccess {
+            inputSuccess = CFReadStreamSetProperty(
+                input,
+                CFStreamPropertyKey(kCFStreamPropertySSLContext),
+                context)
+            i += 1
+        }
+
+        var o = 0
+        let outputSuccess = CFWriteStreamSetProperty(
+            output,
+            CFStreamPropertyKey(kCFStreamPropertySSLContext),
+            context)
+
+        LOG.debug("Context set with results \(inputSuccess) and \(outputSuccess)")
+        if !inputSuccess && !outputSuccess {
+            if !inputSuccess {
+                throw StreamConnectionError.problemSettingInputSSL
+            }
+            if !outputSuccess {
+                throw StreamConnectionError.problemSettingOutputSSL
+            }
         }
     }
-
 }

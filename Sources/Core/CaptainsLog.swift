@@ -7,9 +7,6 @@
 //
 
 import Foundation
-#if canImport(RxSwift)
-import RxSwift
-#endif
 
 private func generatedDeviceId() -> String {
     let key = "CaptainsLog.DeviceId"
@@ -45,6 +42,10 @@ private func deviceInfo() -> DiscoveryHandshake.ApplicationRun.Device {
 
 public protocol ReceiverDiscovery {
     func discover(callback: @escaping (NetService) -> Void)
+
+    func start()
+
+    func stop()
 }
 
 public final class NetServiceReceiverDiscovery: ReceiverDiscovery {
@@ -52,14 +53,22 @@ public final class NetServiceReceiverDiscovery: ReceiverDiscovery {
 
     init(type: String? = nil, domain: String? = nil) {
         browser = DiscoveryServiceBrowser(serviceType: type ?? Constants.type, serviceDomain: domain ?? Constants.domain)
-
     }
 
     public func discover(callback: @escaping (NetService) -> Void) {
-        browser.unresolvedServices.subscribe(onNext: { services in
+        browser.observeUnresolvedServices { services in
             services.forEach(callback)
-        })
+        }
+
+        start()
+    }
+
+    public func start() {
         browser.search()
+    }
+
+    public func stop() {
+        browser.stop()
     }
 }
 
@@ -121,7 +130,6 @@ public final class CaptainsLog {
     private let configuration: Configuration
 //    private let loggerService: NetService
     private let connector: DiscoveryLoggerConnector
-    private let disposeBag = DisposeBag()
 
     init(configuration: Configuration) {
         self.configuration = configuration
@@ -130,11 +138,9 @@ public final class CaptainsLog {
             applicationRun: configuration.applicationRun,
             certificate: configuration.seed.certificate)
 
-
-
         configuration.discovery.discover { [unowned self] service in
             self.connector.connect(service: service)
-                .subscribe(onSuccess: { [unowned self] connection in
+                .done { connection in
                     let initialQueue: [LogItem]
                     switch connection.lastReceivedItemId {
                     case .assigned(let lastItemId):
@@ -150,14 +156,13 @@ public final class CaptainsLog {
 
                     let sender = LogSender(connection: connection, queue: initialQueue)
                     self.senders.append(sender)
-                })
-                .disposed(by: self.disposeBag)
+                }
         }
 
     }
 
     func log(item: LogItem) {
-        LOG.verbose("Sending item:", item)
+        LOG.verbose("Logging item:", item)
         senderLock.async {
             self.logItems.append(item)
 
@@ -211,17 +216,11 @@ public final class CaptainsLog {
 
 // XXX: This is for testing purposes only. Ideas how to compile it in only when testing?
 extension CaptainsLog {
-    func disconnectAll() {
-        senders = []
-    }
-
     func simulateDisconnect(timeBetweenReconnect: TimeInterval) {
+        configuration.discovery.stop()
+
         senders = []
-        // FIXME Stop and start discovery
-//        loggerService.stop()
-//
-//        Thread.sleep(forTimeInterval: timeBetweenReconnect)
-//
-//        loggerService.publish(options: .listenForConnections)
+        Thread.sleep(forTimeInterval: timeBetweenReconnect)
+        configuration.discovery.start()
     }
 }

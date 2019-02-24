@@ -7,14 +7,13 @@
 //
 
 import Foundation
-import RxSwift
 
 final class LogSender {
 
-    private let disconnectedSubject = PublishSubject<Void>()
-    var disconnected: Observable<Void> {
-        return disconnectedSubject
-    }
+//    private let disconnectedSubject = PublishSubject<Void>()
+//    var disconnected: Observable<Void> {
+//        return disconnectedSubject
+//    }
 
     private let flushLock = DispatchQueue(label: "org.brightify.CaptainsLog.flushlock")
     private let queueLock = DispatchQueue(label: "org.brightify.CaptainsLog.queuelock")
@@ -69,7 +68,8 @@ final class LogSender {
                         try self.connection.stream.output.write(encodable: item)
                     }
                 } catch {
-                    self.disconnectedSubject.onNext(())
+//                    fatalError("Disconnected")
+//                    self.disconnectedSubject.onNext(())
                 }
             }
 

@@ -8,12 +8,121 @@
 
 import Foundation
 
-import RxSwift
-
 public struct Queue {
-    public static var async = DispatchQueue(label: "org.brightify.CaptainsLog.async-queue", attributes: .concurrent)
+    public static let async = DispatchQueue(label: "org.brightify.CaptainsLog.async-queue", attributes: .concurrent)
     public static let await = DispatchQueue(label: "org.brightify.CaptainsLog.await-queue", attributes: .concurrent)
     public static let work = DispatchQueue(label: "org.brightify.CaptainsLog.work-queue", attributes: .concurrent)
+    public static let timer = DispatchQueue(label: "org.brightify.CaptainsLog.timer-queue", attributes: .concurrent)
+}
+
+public final class Async {
+    static func runTimer(queue: DispatchQueue = Queue.timer, work: @escaping () -> DispatchTimeInterval?) -> Disposable {
+        let disposable = Disposables.create()
+
+        func recursiveTimer() {
+            guard !disposable.isDisposed, let requestedDelay = work() else { return }
+            queue.asyncAfter(deadline: DispatchTime.now() + requestedDelay) {
+                if disposable.isDisposed { return }
+                runTimer(queue: queue, work: work)
+            }
+        }
+
+        queue.async {
+            recursiveTimer()
+        }
+
+        return disposable
+    }
+}
+
+public final class ObserverBag<T> {
+    typealias Observer = (T) -> Void
+
+    private var counter = Int.min
+    private var observers: [Int: Observer] = [:]
+
+    private let registrationLock = DispatchQueue(label: "org.brightify.CaptainsLog.observer-bag-registration-lock")
+
+    public init() {
+
+    }
+
+    func register(observer: @escaping Observer) -> Disposable {
+        let observerId: Int = registrationLock.sync {
+            let observerId = counter
+            observers[observerId] = observer
+            counter += 1
+            return observerId
+        }
+
+        return Disposables.create {
+            self.unregister(observerId: observerId)
+        }
+    }
+
+    private func unregister(observerId: Int) {
+        registrationLock.sync {
+            observers[observerId] = nil
+        }
+    }
+
+    public func notifyObservers(value: T) {
+        let observersCopy = observers.values
+        observersCopy.forEach {
+            $0(value)
+        }
+    }
+
+    public func dispose() {
+        registrationLock.sync {
+            observers.removeAll()
+        }
+    }
+}
+
+extension Disposable {
+    func disposed(by bag: DisposeBag) {
+        bag.add(self)
+    }
+}
+
+public class DisposeBag {
+    private var disposables: [Disposable] = []
+
+    func add(_ disposable: Disposable) {
+        disposables.append(disposable)
+    }
+
+    deinit {
+        disposables.forEach { $0.dispose() }
+    }
+}
+
+public protocol Disposable {
+    var isDisposed: Bool { get }
+
+    func dispose()
+}
+
+enum Disposables {
+    private class DefaultDisposable: Disposable {
+        private let doDispose: () -> Void
+
+        private(set) var isDisposed: Bool = false
+
+        init(doDispose: @escaping () -> Void) {
+            self.doDispose = doDispose
+        }
+
+        func dispose() {
+            defer { isDisposed = true }
+            doDispose()
+        }
+    }
+
+    static func create(_ doDispose: @escaping () -> Void = { }) -> Disposable {
+        return DefaultDisposable(doDispose: doDispose)
+    }
 }
 
 public struct AwaitTimeoutError: Error { }
@@ -66,15 +175,23 @@ public final class Promise<T> {
         }
     }
 
-    public func then<NEXT>(on otherQueue: DispatchQueue? = nil, do work: @escaping (T) -> Promise<NEXT>) -> Promise<NEXT> {
+    public func map<NEXT>(transform: @escaping (T) throws -> NEXT) -> Promise<NEXT> {
+        return then { try Promise<NEXT>.just(transform($0)) }
+    }
+
+    public func then<NEXT>(on otherQueue: DispatchQueue? = nil, do work: @escaping (T) throws -> Promise<NEXT>) -> Promise<NEXT> {
         let promise = Promise<NEXT>.pending()
 
         observeResult { result in
             switch result {
             case .success(let value):
                 (otherQueue ?? self.queue).async {
-                    let workPromise = work(value)
-                    workPromise.observeResult(promise.fullfill)
+                    do {
+                        let workPromise = try work(value)
+                        workPromise.observeResult(promise.fulfill)
+                    } catch {
+                        promise.reject(error)
+                    }
                 }
             case .error(let error):
                 promise.reject(error)
@@ -110,7 +227,7 @@ public final class Promise<T> {
     }
 
     @discardableResult
-    public func ensure(cleanup: @escaping () -> Void) -> Promise {
+    public func finally(cleanup: @escaping () -> Void) -> Promise {
         observeResult { _ in
             cleanup()
         }
@@ -119,17 +236,17 @@ public final class Promise<T> {
     }
 
     public func resolve(_ value: T) {
-        fullfill(result: .success(value))
+        fulfill(result: .success(value))
     }
 
     public func reject(_ error: Error) {
-        fullfill(result: .error(error))
+        fulfill(result: .error(error))
     }
 
-    public func fullfill(result: Result) {
+    public func fulfill(result: Result) {
         lock.sync {
             guard self.result == nil else {
-                fatalError("Promise canot be resolved more than once!")
+                fatalError("Promise can't be resolved more than once!")
             }
 
             self.result = result
@@ -140,52 +257,62 @@ public final class Promise<T> {
         }
     }
 
-    public func debug(_ label: String) {
+    public func debug(_ label: String) -> Promise {
         observeResult { result in
             switch result {
             case .success(let value):
-                print("\(label): Promise resolved:", value)
+                LOG.debug("\(label): Promise resolved:", value)
             case .error(let error):
-                print("\(label): Promise rejected:", error)
+                LOG.debug("\(label): Promise rejected:", error)
             }
         }
+
+        return self
     }
 
     public static func pending(queue: DispatchQueue = Queue.work) -> Promise<T> {
         return Promise(queue: queue, work: { _, _ in })
     }
+
+    public static func just(_ value: T) -> Promise<T> {
+        return Promise(work: { resolve, _ in resolve(value) })
+    }
+
+    public static func error(_ error: Error) -> Promise<T> {
+        return Promise(work: { _, reject in reject(error) })
+    }
+
 }
 
-public func await<T>(timeout: DispatchTime = .distantFuture, _ maybe: Maybe<T>) throws -> T? {
-    do {
-        return try await(timeout: timeout, maybe.asObservable().asSingle())
-    } catch RxError.noElements {
-        return nil
-    } catch {
-        throw error
+public enum Promises {
+    public static func blockUntil(queue: DispatchQueue = Queue.work, delay: DispatchTimeInterval = .milliseconds(50), condition: @escaping () -> Bool) -> Promise<Void> {
+        return Promise(queue: queue) { resolve, reject in
+            Async.runTimer(queue: queue) {
+                if condition() {
+                    resolve(())
+                    return nil
+                } else {
+                    return delay
+                }
+            }
+        }
     }
 }
 
-public func await<T>(timeout: DispatchTime = .distantFuture, _ single: Single<T>) throws -> T {
-    var event: SingleEvent<T>?
-    
+public func await<T>(timeout: DispatchTime = .distantFuture, _ promise: Promise<T>) throws -> T {
+    var promiseResult: Promise<T>.Result?
+
     let semaphore = DispatchSemaphore(value: 0)
 
-    let subscription = single
-        .subscribeOn(ConcurrentDispatchQueueScheduler(queue: Queue.await))
-        .observeOn(ConcurrentDispatchQueueScheduler(queue: Queue.await))
-        .subscribe { e in
-            dispatchPrecondition(condition: .onQueue(Queue.await))
+    promise.observeResult { result in
+        promiseResult = result
 
-            event = e
-
-            semaphore.signal()
-        }
-    defer { subscription.dispose() }
+        semaphore.signal()
+    }
 
     let waitingResult = semaphore.wait(timeout: timeout)
 
-    switch (waitingResult, event) {
+    switch (waitingResult, promiseResult) {
     case (.success, .success(let value)?):
         return value
 
@@ -201,33 +328,33 @@ public func await<T>(timeout: DispatchTime = .distantFuture, _ single: Single<T>
 }
 
 public func await<T>(timeout: DispatchTime = .distantFuture, _ body: @escaping () throws -> T) throws -> T {
-    let single = Single<T>.create { resolve in
-        dispatchPrecondition(condition: .onQueue(Queue.await))
-
+    let promise = Promise<T>() { resolve, reject in
         do {
-            resolve(.success(try body()))
+            resolve(try body())
         } catch {
-            resolve(.error(error))
+            reject(error)
         }
-
-        return Disposables.create()
     }
 
-    return try await(timeout: timeout, single)
+    return try await(timeout: timeout, promise)
 }
 
 @discardableResult
-public func async<T>(on queue: DispatchQueue = Queue.async, _ body: @escaping () throws -> T) -> Single<T> {
-    return Single<T>.create { resolved in
-        dispatchPrecondition(condition: .onQueue(queue))
-
+public func async<T>(on queue: DispatchQueue = Queue.async, _ body: @escaping () throws -> T) -> Promise<T> {
+//    LOG.verbose("Async will start")
+    return Promise<T>(queue: queue) { resolved, errored in
         do {
+//            LOG.verbose("Async did start")
             let value = try body()
-            resolved(.success(value))
+//            LOG.verbose("Async will resolve: \(value)")
+            resolved(value)
+//            LOG.verbose("Async did resolve: \(value)")
         } catch {
-            resolved(.error(error))
+//            LOG.verbose("Async will fail: \(error)")
+            errored(error)
+//            LOG.verbose("Async did fail: \(error)")
         }
-
-        return Disposables.create()
-    }.subscribeOn(ConcurrentDispatchQueueScheduler(queue: queue))
+    }.finally {
+//        LOG.verbose("Async completed")
+    }
 }

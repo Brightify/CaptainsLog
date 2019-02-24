@@ -7,21 +7,18 @@
 //
 
 import Foundation
-import RxSwift
 
 public extension Stream {
-    func observeStatus() -> Observable<Status> {
-        return Observable<Int>.interval(0.1, scheduler: MainScheduler.instance)
-            .map { _ in self.streamStatus }
-            .startWith(streamStatus)
-            .distinctUntilChanged()
-    }
+//    func observeStatus(observer: Observer) -> Disposable {
+//        return Observable<Int>.interval(0.1, scheduler: MainScheduler.instance)
+//            .map { _ in self.streamStatus }
+//            .startWith(streamStatus)
+//            .distinctUntilChanged()
+//    }
 
-    func status(isOneOf acceptedStates: Status...) -> Maybe<Status> {
-        let acceptedStateSet = Set(acceptedStates)
-        return observeStatus()
-            .filter(acceptedStateSet.contains)
-            .take(1)
-            .asMaybe()
+    func status(isOneOf acceptedStates: Status...) -> Promise<Status> {
+        return Promises.blockUntil {
+            acceptedStates.contains(self.streamStatus)
+        }.map { self.streamStatus }
     }
 }

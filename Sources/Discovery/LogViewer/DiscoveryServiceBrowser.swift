@@ -7,32 +7,8 @@
 //
 
 import Foundation
-import RxSwift
 
-final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
-    final class NetServiceClientDelegate: NSObject, NetServiceDelegate {
-        struct ResolutionError: Error {
-            let info: [String: NSNumber]
-        }
-
-        let serviceResolved: (ResolutionError?) -> Void
-
-        init(serviceResolved: @escaping (ResolutionError?) -> Void) {
-            self.serviceResolved = serviceResolved
-        }
-
-        func netServiceDidResolveAddress(_ sender: NetService) {
-            LOG.verbose(#function, sender)
-
-            serviceResolved(nil)
-        }
-
-        func netService(_ sender: NetService, didNotResolve errorDict: [String : NSNumber]) {
-            LOG.verbose(#function, sender, errorDict)
-
-            serviceResolved(ResolutionError(info: errorDict))
-        }
-    }
+final class DiscoveryServiceBrowser: NSObject {
 
     //    var didResolveServices: (([NetService]) -> Void)?
 
@@ -43,10 +19,12 @@ final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
 
     //    private let resolutionQueue = DispatchQueue(label: "org.brightify.CaptainsLog.resolution")
 
-    private let unresolvedServicesSubject = BehaviorSubject<[NetService]>(value: [])
-    public var unresolvedServices: Observable<[NetService]> {
-        return unresolvedServicesSubject
-    }
+//    private let unresolvedServicesSubject = BehaviorSubject<[NetService]>(value: [])
+//    public var unresolvedServices: Observable<[NetService]> {
+//        return unresolvedServicesSubject
+//    }
+
+    private let unresolvedSevicesObservers = ObserverBag<[NetService]>()
 
     init(serviceType: String, serviceDomain: String) {
         self.serviceType = serviceType
@@ -54,26 +32,44 @@ final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
 
         super.init()
 
+        browser.schedule(in: .main, forMode: .default)
         browser.delegate = self
     }
 
+    func observeUnresolvedServices(observer: @escaping ([NetService]) -> Void) -> Disposable {
+        return unresolvedSevicesObservers.register(observer: observer)
+    }
+
     func search() {
-        browser.schedule(in: .current, forMode: .default)
+        LOG.verbose("Will search for services \(serviceType) in \(serviceDomain)")
         browser.searchForServices(ofType: serviceType, inDomain: serviceDomain)
     }
 
+    func stop() {
+        LOG.verbose("Will stop search for services \(serviceType) in \(serviceDomain)")
+        browser.stop()
+    }
+
     deinit {
+        unresolvedSevicesObservers.dispose()
         browser.delegate = nil
         browser.stop()
     }
 
+    private func notifyObservers() {
+        unresolvedSevicesObservers.notifyObservers(value: services)
+    }
+}
+
+extension DiscoveryServiceBrowser: NetServiceBrowserDelegate {
     func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
         LOG.verbose(#function, browser, service, moreComing)
 
         services.append(service)
 
         if !moreComing {
-            unresolvedServicesSubject.onNext(services)
+            notifyObservers()
+//            unresolvedServicesSubject.onNext(services)
 
             //            let servicesCopy = unresolvedServices
             //
@@ -103,8 +99,8 @@ final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
         // FIXME Implement removing properly
         services.removeAll(where: { $0 == service })
 
-        if moreComing {
-            unresolvedServicesSubject.onNext(services)
+        if !moreComing {
+            notifyObservers()
         }
     }
 
@@ -114,5 +110,8 @@ final class DiscoveryServiceBrowser: NSObject, NetServiceBrowserDelegate {
 
     func netServiceBrowserDidStopSearch(_ browser: NetServiceBrowser) {
         LOG.verbose(#function, browser)
+
+        services.removeAll()
+        notifyObservers()
     }
 }

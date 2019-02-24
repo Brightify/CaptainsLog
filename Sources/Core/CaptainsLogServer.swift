@@ -7,24 +7,37 @@
 //
 
 import Foundation
-import RxSwift
 
-public final class CaptainsLogServer {
+public protocol CaptainsLogServerDelegate: AnyObject {
+    func server(_ server: CaptainsLogServer, didAcceptConnection connection: LoggerConnection)
+
+    func server(_ server: CaptainsLogServer, didReceive item: LogItem, connection: LoggerConnection)
+}
+
+extension CaptainsLogServerDelegate {
+    public func server(_ server: CaptainsLogServer, didAcceptConnection connection: LoggerConnection) { }
+
+    public func server(_ server: CaptainsLogServer, didReceive item: LogItem, connection: LoggerConnection) { }
+}
+
+public final class CaptainsLogServer: NSObject {
     public struct Configuration {
         public var logViewer: DiscoveryHandshake.LogReceiver
         public var service: Service
 
-        public init(logViewer: DiscoveryHandshake.LogReceiver, service: Service = Service()) {
+        public init(logViewer: DiscoveryHandshake.LogReceiver, service: Service) {
             self.logViewer = logViewer
             self.service = service
         }
 
         public struct Service {
+            public var name: String
             public var domain: String
             public var type: String
             public var port: Int
 
-            public init(domain: String? = nil, type: String? = nil, port: Int? = nil) {
+            public init(name: String, domain: String? = nil, type: String? = nil, port: Int? = nil) {
+                self.name = name
                 self.domain = domain ?? Constants.domain
                 self.type = type ?? Constants.type
                 self.port = port ?? Constants.port
@@ -35,63 +48,55 @@ public final class CaptainsLogServer {
     private let configuration: Configuration
     private let connector: DiscoveryLogViewerConnector
 
-    private let lastReceivedItemIdsSubject = BehaviorSubject<[String: LastLogItemId]>(value: [:])
+//    private let lastReceivedItemIdsSubject = BehaviorSubject<[String: LastLogItemId]>(value: [:])
     private var lastReceivedItemIds: [String: LastLogItemId] = [:] {
         didSet {
-            lastReceivedItemIdsSubject.onNext(lastReceivedItemIds)
+//            lastReceivedItemIdsSubject.onNext(lastReceivedItemIds)
         }
     }
 
-    private let newLoggerConnectionSubject = PublishSubject<LoggerConnection>()
-    public var newLoggerConnection: Observable<LoggerConnection> {
-        return newLoggerConnectionSubject
-    }
+//    private let newLoggerConnectionSubject = PublishSubject<LoggerConnection>()
+//    public var newLoggerConnection: Observable<LoggerConnection> {
+//        return newLoggerConnectionSubject
+//    }
+//
+//    private let itemReceivedSubject = PublishSubject<(connection: LoggerConnection, item: LogItem)>()
+//    public var itemReceived: Observable<(connection: LoggerConnection, item: LogItem)> {
+//        return itemReceivedSubject
+//    }
 
-    private let itemReceivedSubject = PublishSubject<(connection: LoggerConnection, item: LogItem)>()
-    public var itemReceived: Observable<(connection: LoggerConnection, item: LogItem)> {
-        return itemReceivedSubject
-    }
+    public weak var delegate: CaptainsLogServerDelegate?
+    private let delegateQueue = DispatchQueue.main
 
     private var logReceivers: [String: LogReceiver] = [:]
-    private let logReceiverService: NetService
+    let logReceiverService: NetService
     private let disposeBag = DisposeBag()
 
     public init(configuration: Configuration, identityProvider: IdentityProvider) {
         self.configuration = configuration
 
-        let connector = DiscoveryLogViewerConnector(logViewer: configuration.logViewer, identityProvider: identityProvider)
-        self.connector = connector
+        self.connector = DiscoveryLogViewerConnector(logViewer: configuration.logViewer, identityProvider: identityProvider)
 
         logReceiverService = NetService.loggerService(
-            named: "device-name",
+            named: configuration.service.name,
             identifier: "not important",
             domain: configuration.service.domain,
             type: configuration.service.type,
             port: configuration.service.port)
 
-        let lastItemIdForApplication: (DiscoveryHandshake.ApplicationRun) -> LastLogItemId = { [unowned self] application in
-            self.lastReceivedItemIds[application.id, default: .unassigned]
-        }
+        super.init()
 
-        func connect(stream: TwoWayStream, retry: RetryBehavior) -> Observable<LoggerConnection> {
-            return connector.connect(stream: stream, lastLogItemId: lastItemIdForApplication)
-                .asObservable()
-            #warning("FIXME This reconnect has to be on Logger side!")
-//            .catchError { error in
-//                    guard retry.canRetry else {
-//                        return .error(error)
-//                    }
+        logReceiverService.schedule(in: .main, forMode: .default)
+        logReceiverService.delegate = self
 //
-//                    return connect(stream: stream, retry: retry.next())
-//                        .delaySubscription(retry.delay, scheduler: MainScheduler.instance)
-//            }
-        }
 
-        let newLoggerConnection = logReceiverService.publish()
-            .flatMap {
-                connect(stream: $0, retry: .default)
-            }
-            .share()
+
+
+//        let newLoggerConnection = logReceiverService.publish()
+//            .flatMap {
+//                connect(stream: $0, retry: .default)
+//            }
+//            .share()
 
 
 //        let newLoggerConnection = browser.unresolvedServices
@@ -103,15 +108,86 @@ public final class CaptainsLogServer {
 //            .concat()
 //            .share()
 
-        #warning("FIXME: This function creates a retain cycle (usage of `self.lastReceivedItemIds`). This has to be corrected")
-        func receive(connection: LoggerConnection, retry: RetryBehavior) -> Observable<(connection: LoggerConnection, item: LogItem)> {
-            let receiver = LogReceiver(connection: connection)
 
-            logReceivers[connection.applicationRun.id] = receiver
 
-            return receiver.itemReceived
-                .map { (connection: receiver.connection, item: $0) }
-            #warning("FIXME This reconnect has to be on Logger side!")
+//        newLoggerConnection.subscribe(newLoggerConnectionSubject).disposed(by: disposeBag)
+
+//        newLoggerConnection
+//            .flatMap { connection in
+//                receive(connection: connection, retry: .default)
+//            }
+//            .do(onNext: { [unowned self] connection, item in
+//                self.lastReceivedItemIds[connection.applicationRun.id] = .assigned(item.id)
+//            })
+//            .subscribe(itemReceivedSubject)
+//            .disposed(by: disposeBag)
+    }
+
+    deinit {
+        print("whaaat")
+        logReceiverService.delegate = nil
+    }
+
+    public func start() {
+        logReceiverService.publish(options: .listenForConnections)
+    }
+
+    public func stop() {
+        logReceiverService.stop()
+    }
+
+    private func callDelegate(call: @escaping (CaptainsLogServerDelegate) -> Void) {
+        guard let delegate = delegate else { return }
+        delegateQueue.sync { call(delegate) }
+    }
+//
+//    public func startSearching() {
+//        browser.search()
+//    }
+}
+
+// MARK:- Connect services
+extension CaptainsLogServer {
+    private func didAcceptConnection(stream: TwoWayStream) {
+        async {
+            let connection = try await(self.connect(stream: stream, retry: .default))
+
+            self.callDelegate { $0.server(self, didAcceptConnection: connection) }
+
+            self.receive(connection: connection, retry: .default)
+        }
+    }
+
+    private func connect(stream: TwoWayStream, retry: RetryBehavior) -> Promise<LoggerConnection> {
+        return connector.connect(stream: stream, lastLogItemId: { [unowned self] application in
+            self.lastReceivedItemIds[application.id, default: .unassigned]
+        })
+
+        #warning("FIXME This reconnect has to be on Logger side!")
+//            .catchError { error in
+//                    guard retry.canRetry else {
+//                        return .error(error)
+//                    }
+//
+//                    return connect(stream: stream, retry: retry.next())
+//                        .delaySubscription(retry.delay, scheduler: MainScheduler.instance)
+//            }
+    }
+}
+
+// MARK:- Receive items
+extension CaptainsLogServer: LogReceiverDelegate {
+    #warning("FIXME: This function creates a retain cycle (usage of `self.lastReceivedItemIds`). This has to be corrected")
+    private func receive(connection: LoggerConnection, retry: RetryBehavior) {
+        let receiver = LogReceiver(connection: connection, queue: Queue.work)
+        receiver.delegate = self
+        logReceivers[connection.applicationRun.id] = receiver
+
+        receiver.startReceiving()
+
+//        return receiver.itemReceived
+//            .map { (connection: receiver.connection, item: $0) }
+        #warning("FIXME This reconnect has to be on Logger side!")
 //            .catchError { error in
 //                    guard retry.canRetry else {
 //                        // This means the stream got disconnected for good. We can do some cleanup here later.
@@ -129,22 +205,48 @@ public final class CaptainsLogServer {
 //                            receive(connection: connection, retry: retry.next())
 //                    }
 //            }
-        }
-
-        newLoggerConnection.subscribe(newLoggerConnectionSubject).disposed(by: disposeBag)
-
-        newLoggerConnection
-            .flatMap { connection in
-                receive(connection: connection, retry: .default)
-            }
-            .do(onNext: { [unowned self] connection, item in
-                self.lastReceivedItemIds[connection.applicationRun.id] = .assigned(item.id)
-            })
-            .subscribe(itemReceivedSubject)
-            .disposed(by: disposeBag)
     }
-//
-//    public func startSearching() {
-//        browser.search()
+
+    public func logReceiver(_ receiver: LogReceiver, received item: LogItem) {
+        let connection = receiver.connection
+        lastReceivedItemIds[connection.applicationRun.id] = .assigned(item.id)
+
+        callDelegate { $0.server(self, didReceive: item, connection: connection) }
+    }
+
+    public func logReceiver(_ receiver: LogReceiver, errored error: Error) {
+        #warning("FIXME We should check the error and decide if stopping receiving is the right call")
+        receiver.stopReceiving()
+        logReceivers.removeValue(forKey: receiver.connection.applicationRun.id)
+    }
+}
+
+// MARK:- NetServiceDelegate
+extension CaptainsLogServer: NetServiceDelegate {
+//    private let didAcceptConnection: (TwoWayStream) -> Void
+//    init(didAcceptConnection: @escaping (TwoWayStream) -> Void) {
+//        self.didAcceptConnection = didAcceptConnection
 //    }
+
+    @objc
+    public func netService(_ sender: NetService, didAcceptConnectionWith inputStream: InputStream, outputStream: OutputStream) {
+        LOG.verbose(#function, sender)
+        didAcceptConnection(stream: TwoWayStream(input: inputStream, output: outputStream))
+    }
+
+    @objc
+    public func netServiceWillPublish(_ sender: NetService) {
+        LOG.verbose(#function, sender)
+    }
+
+    @objc
+    public func netServiceDidPublish(_ sender: NetService) {
+        LOG.verbose(#function, sender)
+        sender.setTXTRecord(sender.txtRecordData())
+    }
+
+    @objc
+    public func netService(_ sender: NetService, didNotPublish errorDict: [String : NSNumber]) {
+        LOG.verbose(#function, sender, errorDict)
+    }
 }

@@ -7,7 +7,7 @@ abstract_target 'CaptainsLog' do
     pod 'SwiftyBeaver'
     pod 'CocoaLumberjack/Swift'
     # TODO Remove
-    pod 'RxSwift'
+    #pod 'RxSwift'
 
     target 'CaptainsLog-macOS'
     target 'CaptainsLog-iOS'
@@ -20,6 +20,7 @@ abstract_target 'CaptainsLog' do
         target 'CaptainsLog-iOSTests'
 #        target 'CaptainsLog-tvOSTests'
 
+        pod 'RxSwift'
         pod 'RxBlocking'
         pod 'RxNimble'
 

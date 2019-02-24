@@ -36,9 +36,7 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'Discovery' do |subspec|
     subspec.dependency 'CaptainsLog/Models'
-    # TODO Remove before going public
-    subspec.dependency 'RxSwift'
-    subspec.source_files = [ 
+    subspec.source_files = [
       'Sources/Discovery/**/*.swift'
     ]
   end
