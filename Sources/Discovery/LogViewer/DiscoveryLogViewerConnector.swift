@@ -128,6 +128,7 @@ func SecPKCS12Import(_ pkcs12_data: Data, _ options: CFDictionary) throws ->  [A
 enum StreamConnectionError: Error {
     case problemSettingInputSSL
     case problemSettingOutputSSL
+    case identityNotFound
 }
 
 final class DiscoveryLogViewerConnector {
@@ -153,7 +154,7 @@ final class DiscoveryLogViewerConnector {
             LOG.debug("Did perform handshake", applicationRun)
 
             guard let identity = self.identityProvider.identity(forId: applicationRun.seedIdentifier) else {
-                fatalError("Identity not found")
+                throw StreamConnectionError.identityNotFound
             }
 
             let context: SSLContext = SSLCreateContext(kCFAllocatorDefault, SSLProtocolSide.serverSide, SSLConnectionType.streamType)!
@@ -189,17 +190,12 @@ extension TwoWayStream {
 //        input.setProperty(StreamSocketSecurityLevel.tlSv1, forKey: Stream.PropertyKey.socketSecurityLevelKey)
 //        output.setProperty(StreamSocketSecurityLevel.tlSv1, forKey: Stream.PropertyKey.socketSecurityLevelKey)
 
-        var i = 0
-        var inputSuccess = false
-        while i < 10 && !inputSuccess {
-            inputSuccess = CFReadStreamSetProperty(
-                input,
-                CFStreamPropertyKey(kCFStreamPropertySSLContext),
-                context)
-            i += 1
-        }
+        let inputSuccess = CFReadStreamSetProperty(
+            input,
+            CFStreamPropertyKey(kCFStreamPropertySSLContext),
+            context)
 
-        var o = 0
+
         let outputSuccess = CFWriteStreamSetProperty(
             output,
             CFStreamPropertyKey(kCFStreamPropertySSLContext),
