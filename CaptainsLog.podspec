@@ -9,9 +9,9 @@
 Pod::Spec.new do |spec|
   spec.name         = "CaptainsLog"
   spec.version      = "0.0.1"
-  spec.summary      = "Lorem ipsum dolor sit amet."
+  spec.summary      = "Captain's Log logging library"
   spec.description  = <<-DESC
-                      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce nibh. Integer malesuada. Aliquam ornare wisi eu metus.
+                      Swift library to integrate in your project to enable logging using Captain's Log app.
                       DESC
   spec.homepage     = "https://www.reactant.tech"
   spec.license      = "MIT"
