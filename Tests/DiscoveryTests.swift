@@ -332,7 +332,7 @@ class DiscoverySpec: QuickSpec {
                 expect(logItem).toEventually(equal(mockLogItem1))
             }
 
-            fit("reconnects on connection closed") {
+            it("reconnects on connection closed") {
                 var logItem1: LogItem?
                 var logItem2: LogItem?
 
