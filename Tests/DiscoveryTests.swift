@@ -15,8 +15,6 @@ import XCTest
 @testable import CaptainsLog_tvOS
 #endif
 
-@testable import CaptainsLog_macOS
-
 import RxSwift
 import RxBlocking
 import RxNimble

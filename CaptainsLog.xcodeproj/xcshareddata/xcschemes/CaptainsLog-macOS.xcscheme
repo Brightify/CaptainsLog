@@ -27,7 +27,26 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "18CB4E492155C80A00D1A93C"
+               BuildableName = "CaptainsLog-macOSTests.xctest"
+               BlueprintName = "CaptainsLog-macOSTests"
+               ReferencedContainer = "container:CaptainsLog.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "18CB4E412155C80A00D1A93C"
+            BuildableName = "CaptainsLog_macOS.framework"
+            BlueprintName = "CaptainsLog-macOS"
+            ReferencedContainer = "container:CaptainsLog.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -59,6 +78,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "18CB4E412155C80A00D1A93C"
+            BuildableName = "CaptainsLog_macOS.framework"
+            BlueprintName = "CaptainsLog-macOS"
+            ReferencedContainer = "container:CaptainsLog.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
