@@ -49,6 +49,7 @@ public final class LogReceiver {
     private func receive() {
         while (isReceiving) {
             do {
+                try await(Promises.blockUntil { self.connection.stream.hasBytesAvailable })
                 let item = try connection.stream.input.readDecodable(LogItem.self)
 
                 LOG.verbose("Log receiver \(self) received: \(item)")
