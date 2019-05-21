@@ -105,8 +105,11 @@ final class DiscoveryLoggerConnector {
                 LOG.error("No trust found in context!")
                 throw SecurityError.missingTrust
             }
-            assert(SecTrustSetAnchorCertificates(trust, [self.certificate] as CFArray) == noErr)
-            assert(SecTrustSetAnchorCertificatesOnly(trust, true) == noErr)
+            
+            let setAnchorError = SecTrustSetAnchorCertificates(trust, [self.certificate] as CFArray)
+            assert(setAnchorError == noErr)
+            let setAnchorOnlyError = SecTrustSetAnchorCertificatesOnly(trust, true)
+            assert(setAnchorOnlyError == noErr)
 
             var trustResult: SecTrustResultType = .invalid
             LOG.debug("Will evaluate trust", trust)

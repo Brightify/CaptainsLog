@@ -27,7 +27,8 @@ extension NetService {
         let txtRecordData = NetService.data(fromTXTRecord: ["OK": txtData])
 
         let service = NetService(domain: domain, type: type, name: name, port: Int32(port))
-        assert(service.setTXTRecord(txtRecordData), "Couldn't set TXT record")
+        let txtRecordSet = service.setTXTRecord(txtRecordData)
+        assert(txtRecordSet, "Couldn't set TXT record")
         return service
     }
 }
