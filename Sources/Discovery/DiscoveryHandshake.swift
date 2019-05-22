@@ -8,6 +8,11 @@
 
 import Foundation
 
+public enum CommunicationProtocol: UInt8, Codable {
+    case standard = 0
+    case noSSL = 1
+}
+
 public final class DiscoveryHandshake {
     public struct LogReceiver: Codable, Equatable {
         public let id: String
@@ -23,6 +28,7 @@ public final class DiscoveryHandshake {
             public enum OperatingSystem: String, Codable {
                 case iOS
                 case macOS
+                case android
                 case unknown
 
                 public init(rawOrUnknown: String) {

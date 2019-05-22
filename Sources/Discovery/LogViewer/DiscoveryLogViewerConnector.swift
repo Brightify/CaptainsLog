@@ -129,6 +129,7 @@ enum StreamConnectionError: Error {
     case problemSettingInputSSL
     case problemSettingOutputSSL
     case identityNotFound
+    case unknownProtocol
 }
 
 final class DiscoveryLogViewerConnector {
@@ -149,6 +150,13 @@ final class DiscoveryLogViewerConnector {
             try await(stream.open())
             LOG.debug("Did open stream", stream)
 
+            LOG.info("Establishing communication protocol.")
+            guard let firstByte = try stream.input.readBytes(length: 1).first,
+                let communicationProtocol = CommunicationProtocol(rawValue: firstByte) else {
+                throw StreamConnectionError.unknownProtocol
+            }
+            LOG.info("Established communication protocol \(communicationProtocol)")
+
             LOG.debug("Will perform handshake")
             let applicationRun = try DiscoveryHandshake(stream: stream).perform(for: self.logViewer)
             LOG.debug("Did perform handshake", applicationRun)
@@ -157,23 +165,25 @@ final class DiscoveryLogViewerConnector {
                 throw StreamConnectionError.identityNotFound
             }
 
-            let context: SSLContext = SSLCreateContext(kCFAllocatorDefault, SSLProtocolSide.serverSide, SSLConnectionType.streamType)!
-            SSLSetCertificate(context, [identity] as CFArray)
-            SSLSetSessionOption(context, SSLSessionOption.breakOnClientAuth, true)
+            if case .standard = communicationProtocol {
+                let context: SSLContext = SSLCreateContext(kCFAllocatorDefault, SSLProtocolSide.serverSide, SSLConnectionType.streamType)!
+                SSLSetCertificate(context, [identity] as CFArray)
+                SSLSetSessionOption(context, SSLSessionOption.breakOnClientAuth, true)
 
-            LOG.debug("Will set context")
-            try stream.set(context: context)
-            LOG.debug("Did set context")
+                LOG.debug("Will set context")
+                try stream.set(context: context)
+                LOG.debug("Did set context")
 
-            let hasShookHands = Promises.blockUntil {
-                var sessionState = SSLSessionState.idle
-                SSLGetSessionState(context, &sessionState)
-                return sessionState != SSLSessionState.handshake
+                let hasShookHands = Promises.blockUntil {
+                    var sessionState = SSLSessionState.idle
+                    SSLGetSessionState(context, &sessionState)
+                    return sessionState != SSLSessionState.handshake
+                }
+
+                LOG.debug("Will handshake", stream)
+                try await(hasShookHands)
+                LOG.debug("Did handshake", stream)
             }
-
-            LOG.debug("Will handshake", stream)
-            try await(hasShookHands)
-            LOG.debug("Did handshake", stream)
 
             LOG.debug("Will write last log item id", stream, lastLogItemId(applicationRun))
             try stream.output.write(encodable: lastLogItemId(applicationRun))

@@ -54,4 +54,9 @@ public extension Request {
         guard let end = response?.time else { return nil }
         return end.timeIntervalSince(time)
     }
+
+    var durationFormatted: String? {
+        guard let end = response?.time else { return nil }
+        return String(format: "%.3f", end.timeIntervalSince(time))
+    }
 }

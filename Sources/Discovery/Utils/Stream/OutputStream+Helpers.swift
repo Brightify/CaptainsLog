@@ -9,12 +9,11 @@
 import Foundation
 
 public extension OutputStream {
-    private static let encoder = JSONEncoder()
-
-    func write<T>(raw value: T) throws {
-        let bytes = toByteArray(value)
-        try write(bytes: bytes)
-    }
+    private static let encoder: JSONEncoder = {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .millisecondsSince1970
+        return encoder
+    }()
 
     func write(bytes: [UInt8]) throws {
         let totalBytes = bytes.count
@@ -40,7 +39,7 @@ public extension OutputStream {
 
     func write(data: Data) throws {
         let bytes = Array(data)
-        try write(raw: bytes.count)
+        try write(raw: Int64(bytes.count))
         try write(bytes: bytes)
     }
 
@@ -48,9 +47,14 @@ public extension OutputStream {
         let data = try OutputStream.encoder.encode(value)
         try write(data: data)
     }
+
+    private func write<T>(raw value: T) throws {
+        let bytes = toByteArray(value)
+        try write(bytes: bytes)
+    }
     
     private func toByteArray<T>(_ value: T) -> [UInt8] {
         var value = value
-        return withUnsafeBytes(of: &value) { Array($0) }
+        return withUnsafeBytes(of: &value) { Array($0).reversed() }
     }
 }

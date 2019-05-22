@@ -24,7 +24,7 @@ final class DiscoveryServiceBrowser: NSObject {
 //        return unresolvedServicesSubject
 //    }
 
-    private let unresolvedSevicesObservers = ObserverBag<[NetService]>()
+    private let unresolvedServicesObservers = ObserverBag<[NetService]>()
 
     init(serviceType: String, serviceDomain: String) {
         self.serviceType = serviceType
@@ -37,7 +37,7 @@ final class DiscoveryServiceBrowser: NSObject {
     }
 
     func observeUnresolvedServices(observer: @escaping ([NetService]) -> Void) -> Disposable {
-        return unresolvedSevicesObservers.register(observer: observer)
+        return unresolvedServicesObservers.register(observer: observer)
     }
 
     func search() {
@@ -51,13 +51,13 @@ final class DiscoveryServiceBrowser: NSObject {
     }
 
     deinit {
-        unresolvedSevicesObservers.dispose()
+        unresolvedServicesObservers.dispose()
         browser.delegate = nil
         browser.stop()
     }
 
     private func notifyObservers() {
-        unresolvedSevicesObservers.notifyObservers(value: services)
+        unresolvedServicesObservers.notifyObservers(value: services)
     }
 }
 

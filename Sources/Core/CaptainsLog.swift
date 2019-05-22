@@ -178,7 +178,7 @@ public final class CaptainsLog {
         }
         guard let certificateData = try? Data(contentsOf: seedFileURL),
             let certificate = SecCertificateCreateWithData(nil, certificateData as CFData) else {
-                fatalError("Couldn't load seed file from `\(seedFileURL)`")
+            fatalError("Couldn't load seed file from `\(seedFileURL)`")
         }
 
         var optionalCommonName: CFString?
